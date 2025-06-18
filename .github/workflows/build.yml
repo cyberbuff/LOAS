@@ -1,0 +1,50 @@
+name: Build OSAScript Applications
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+on:
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
+
+      - name: Install Python dependencies
+        run: uv sync --no-dev
+
+      - name: Run complete build process
+        run: uv run main.py build
+
+      - name: Gather stats
+        run: |
+          uv run main.py stats
+
+      - name: Upload OSAScript files as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: osascripts
+          path: osascripts/
+          retention-days: 30
+
+      - name: Upload compiled applications as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: compiled-apps
+          path: releases/
+          retention-days: 30
