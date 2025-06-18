@@ -1,0 +1,36 @@
+name: Validate YAML files
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
+
+      - name: Install Python dependencies
+        run: uv sync --no-dev
+
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1
+
+      - name: Run complete build process
+        run: uv run main.py validate
