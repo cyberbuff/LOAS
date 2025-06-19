@@ -157,12 +157,7 @@ pasteboard's setString:"Hello, world!" forType:"public.utf8-plain-text"
 
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
-osascript -e 'use framework "Foundation"
-use framework "AppKit"
-
-set pasteboard to current application\'s NSPasteboard\'s generalPasteboard()
-pasteboard\'s setString:"Hello, world!" forType:"public.utf8-plain-text"
-'
+osascript -e 'use framework "Foundation"\nuse framework "AppKit"\n\nset pasteboard to current application\'s NSPasteboard\'s generalPasteboard()\npasteboard\'s setString:"Hello, world!" forType:"public.utf8-plain-text"'
 
 # Or save to file and execute
 osascript t1115_6.scpt
