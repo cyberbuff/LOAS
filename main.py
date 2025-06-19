@@ -634,7 +634,7 @@ def generate_technique_markdown(
                 markdown_lines.append('```bash tab="<Terminal /> Execution"')
                 markdown_lines.append("# Execute with default arguments")
                 markdown_lines.append(
-                    f"osascript -e '{display_command.replace("'", "\\'")}'"
+                    f"osascript -e '{display_command.strip().replace("'", "\\'").replace('\n', '\\n')}'"
                 )
                 markdown_lines.append("")
                 markdown_lines.append("# Or save to file and execute")
