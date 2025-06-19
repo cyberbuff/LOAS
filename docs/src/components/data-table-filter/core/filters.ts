@@ -211,7 +211,7 @@ export function getColumnOptions<TData, TType extends ColumnDataType, TVal>(
 			column.orderFn?.(
 				m1 as ElementType<NonNullable<TVal>>,
 				m2 as ElementType<NonNullable<TVal>>,
-			),
+			) ?? 0,
 		);
 	}
 
@@ -220,9 +220,11 @@ export function getColumnOptions<TData, TType extends ColumnDataType, TVal>(
 		const memoizedTransform = memo(
 			() => [models],
 			(deps) =>
-				deps[0].map((m) =>
-					column.transformOptionFn?.(m as ElementType<NonNullable<TVal>>),
-				),
+				deps[0]
+					.map((m) =>
+						column.transformOptionFn?.(m as ElementType<NonNullable<TVal>>),
+					)
+					.filter((option): option is ColumnOption => option !== undefined),
 			{ key: `transform-${column.id}` },
 		);
 		return memoizedTransform();
