@@ -1,0 +1,82 @@
+[
+	{
+		"name": "Create a login item",
+		"command": "tell application \"System Events\" to make login item at end with properties {path:\"#{itemPath}\", hidden:\"#{isHidden}\"}\n",
+		"language": "AppleScript",
+		"elevation_required": false,
+		"tcc_required": false,
+		"technique_id": "T1547.015",
+		"technique_name": "Boot or Logon Autostart Execution: Login Items",
+		"test_number": 1
+	},
+	{
+		"name": "Delete a login item",
+		"command": "tell application \"System Events\" to delete login item \"#{loginItemName}\"\n",
+		"language": "AppleScript",
+		"elevation_required": false,
+		"tcc_required": false,
+		"technique_id": "T1547.015",
+		"technique_name": "Boot or Logon Autostart Execution: Login Items",
+		"test_number": 2
+	},
+	{
+		"name": "Get clipboard content (using System Events)",
+		"command": "tell application \"System Events\" to get the clipboard",
+		"language": "AppleScript",
+		"elevation_required": false,
+		"tcc_required": false,
+		"technique_id": "T1115",
+		"technique_name": "Clipboard Data",
+		"test_number": 1
+	},
+	{
+		"name": "Set clipboard content (using System Events)",
+		"command": "tell application \"System Events\" to set the clipboard to \"#{clipboardContent}\"",
+		"language": "AppleScript",
+		"elevation_required": false,
+		"tcc_required": false,
+		"technique_id": "T1115",
+		"technique_name": "Clipboard Data",
+		"test_number": 2
+	},
+	{
+		"name": "Get clipboard content (using AppleScript defaults)",
+		"command": "the clipboard",
+		"language": "AppleScript",
+		"elevation_required": false,
+		"tcc_required": false,
+		"technique_id": "T1115",
+		"technique_name": "Clipboard Data",
+		"test_number": 3
+	},
+	{
+		"name": "Set clipboard content (using AppleScript defaults)",
+		"command": "set the clipboard to \"#{textContent}\"",
+		"language": "AppleScript",
+		"elevation_required": false,
+		"tcc_required": false,
+		"technique_id": "T1115",
+		"technique_name": "Clipboard Data",
+		"test_number": 4
+	},
+	{
+		"name": "Get clipboard content (using Cocoa)",
+		"command": "use framework \"Foundation\"\nuse framework \"AppKit\"\n\nset pasteboard to current application's NSPasteboard's generalPasteboard()\nset clipboardContent to pasteboard's stringForType:\"public.utf8-plain-text\"\nclipboardContent\n",
+		"language": "AppleScript",
+		"elevation_required": false,
+		"tcc_required": false,
+		"technique_id": "T1115",
+		"technique_name": "Clipboard Data",
+		"test_number": 5
+	},
+	{
+		"name": "Set clipboard content (using Cocoa)",
+		"command": "use framework \"Foundation\"\nuse framework \"AppKit\"\n\nset pasteboard to current application's NSPasteboard's generalPasteboard()\npasteboard's setString:\"#{textContent}\" forType:\"public.utf8-plain-text\"\n",
+		"language": "AppleScript",
+		"elevation_required": false,
+		"tcc_required": false,
+		"technique_id": "T1115",
+		"technique_name": "Clipboard Data",
+		"test_number": 6
+	}
+]

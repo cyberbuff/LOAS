@@ -27,13 +27,15 @@ repos:
           - --fix
       - id: ruff-format
 
-  - repo: https://github.com/biomejs/pre-commit
-    rev: "v2.0.0-beta.5"
+  - repo: local
     hooks:
-      - id: biome-check
-        additional_dependencies:
-          - "@biomejs/biome"
-        files: '^docs/.*\.(js|ts|jsx|tsx|json)$'
+      - id: local-biome-check
+        name: biome check
+        entry: cd docs && pnpm run format
+        language: system
+        types:
+          - text
+        files: '^docs/.*\.(js|ts|jsx|tsx|json|mdx|md)$'
 
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.7.13

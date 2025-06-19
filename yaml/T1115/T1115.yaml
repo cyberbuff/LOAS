@@ -1,22 +1,27 @@
 name: Clipboard Data
 tests:
   - name: Get clipboard content (using System Events)
+    language: AppleScript
     command: tell application "System Events" to get the clipboard
 
   - name: Set clipboard content (using System Events)
+    language: AppleScript
     command: tell application "System Events" to set the clipboard to "#{clipboardContent}"
     args:
       clipboardContent: "Hello, world!"
 
   - name: Get clipboard content (using AppleScript defaults)
+    language: AppleScript
     command: the clipboard
 
   - name: Set clipboard content (using AppleScript defaults)
+    language: AppleScript
     command: set the clipboard to "#{textContent}"
     args:
       textContent: "Hello, world!"
 
   - name: Get clipboard content (using Cocoa)
+    language: AppleScript
     command: |
       use framework "Foundation"
       use framework "AppKit"
@@ -26,6 +31,7 @@ tests:
       clipboardContent
 
   - name: Set clipboard content (using Cocoa)
+    language: AppleScript
     command: |
       use framework "Foundation"
       use framework "AppKit"
