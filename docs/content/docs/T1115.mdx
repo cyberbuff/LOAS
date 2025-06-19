@@ -1,0 +1,177 @@
+---
+title: T1115
+description: "Clipboard Data"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may collect data stored in the clipboard from users copying information within or between applications.
+
+For example, on Windows adversaries can access clipboard data by using <code>clip.exe</code> or <code>Get-Clipboard</code>.(Citation: MSDN Clipboard)(Citation: clip_win_server)(Citation: CISA_AA21_200B) Additionally, adversaries may monitor then replace users’ clipboard with their data (e.g., [Transmitted Data Manipulation](https://attack.mitre.org/techniques/T1565/002)).(Citation: mining_ruby_reversinglabs)
+
+macOS and Linux also have commands, such as <code>pbpaste</code>, to grab clipboard contents.(Citation: Operating with EmPyre)
+
+
+## Atomic Tests
+
+### Atomic Test #1 - Get clipboard content (using System Events)
+
+This test get clipboard content (using system events) using AppleScript.
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events" to get the clipboard
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "System Events" to get the clipboard'
+```
+
+---
+
+### Atomic Test #2 - Set clipboard content (using System Events)
+
+This test set clipboard content (using system events) using AppleScript.
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| clipboardContent | str | `Hello, world!` |
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events" to set the clipboard to "Hello, world!"
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "System Events" to set the clipboard to "Hello, world!"'
+
+# Or save to file and execute
+osascript t1115_2.scpt
+
+# With custom arguments
+osascript t1115_2.scpt "Hello, world!"
+```
+
+---
+
+### Atomic Test #3 - Get clipboard content (using AppleScript defaults)
+
+This test get clipboard content (using applescript defaults) using AppleScript.
+
+
+```applescript tab="<Code /> Script"
+the clipboard
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'the clipboard'
+```
+
+---
+
+### Atomic Test #4 - Set clipboard content (using AppleScript defaults)
+
+This test set clipboard content (using applescript defaults) using AppleScript.
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| textContent | str | `Hello, world!` |
+
+
+```applescript tab="<Code /> Script"
+set the clipboard to "Hello, world!"
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'set the clipboard to "Hello, world!"'
+
+# Or save to file and execute
+osascript t1115_4.scpt
+
+# With custom arguments
+osascript t1115_4.scpt "Hello, world!"
+```
+
+---
+
+### Atomic Test #5 - Get clipboard content (using Cocoa)
+
+This test get clipboard content (using cocoa) using AppleScript.
+
+
+```applescript tab="<Code /> Script"
+use framework "Foundation"
+use framework "AppKit"
+
+set pasteboard to current application's NSPasteboard's generalPasteboard()
+set clipboardContent to pasteboard's stringForType:"public.utf8-plain-text"
+clipboardContent
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'use framework "Foundation"
+use framework "AppKit"
+
+set pasteboard to current application's NSPasteboard's generalPasteboard()
+set clipboardContent to pasteboard's stringForType:"public.utf8-plain-text"
+clipboardContent
+'
+```
+
+---
+
+### Atomic Test #6 - Set clipboard content (using Cocoa)
+
+This test set clipboard content (using cocoa) using AppleScript.
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| textContent | str | `Hello, world!` |
+
+
+```applescript tab="<Code /> Script"
+use framework "Foundation"
+use framework "AppKit"
+
+set pasteboard to current application's NSPasteboard's generalPasteboard()
+pasteboard's setString:"Hello, world!" forType:"public.utf8-plain-text"
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'use framework "Foundation"
+use framework "AppKit"
+
+set pasteboard to current application\'s NSPasteboard\'s generalPasteboard()
+pasteboard\'s setString:"Hello, world!" forType:"public.utf8-plain-text"
+'
+
+# Or save to file and execute
+osascript t1115_6.scpt
+
+# With custom arguments
+osascript t1115_6.scpt "Hello, world!"
+```
+
+## References
+
+- [MITRE ATT&CK T1115](https://attack.mitre.org/techniques/T1115/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)
