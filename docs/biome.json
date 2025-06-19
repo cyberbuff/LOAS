@@ -33,14 +33,6 @@
 			}
 		}
 	},
-	"overrides": [
-		{
-			"includes": ["src/components/**/*"],
-			"linter": {
-				"enabled": false
-			}
-		}
-	],
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double"
