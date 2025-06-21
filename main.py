@@ -100,7 +100,7 @@ class Script(BaseModel):
 
     def to_osascript(self) -> str:
         """Convert the script to OSAScript/JavaScript format with help function and parameter handling"""
-        script_lines = []
+        script_lines = ["#!/usr/bin/osascript\n"]
 
         # Check if command uses frameworks and add them at the top level
         if "use framework" in self.command:
@@ -252,7 +252,7 @@ class Script(BaseModel):
 
     def to_javascript(self) -> str:
         """Convert the script to JavaScript format"""
-        return self.command
+        return "\n".join(["#!/usr/bin/osascript -l JavaScript", self.command])
 
     def get_filename(self) -> str:
         """Generate a safe filename for the script"""
@@ -583,13 +583,13 @@ def format_osascript_command(command: str) -> str:
         # Single line command - use simple format
         # Properly escape single quotes for shell
         escaped_line = lines[0].replace("'", "'\"'\"'")
-        return f"osascript -e '{escaped_line}'"
+        return f"-e '{escaped_line}'"
     else:
         # Multiline command - use chained -e format
         # Properly escape single quotes for shell
         escaped_lines = [line.replace("'", "'\"'\"'") for line in lines]
         chained_args = " ".join([f"-e '{line}'" for line in escaped_lines])
-        return f"osascript {chained_args}"
+        return f"{chained_args}"
 
 
 def generate_technique_markdown(
@@ -685,7 +685,9 @@ def generate_technique_markdown(
 
                 markdown_lines.append('```bash tab="<Terminal /> Execution"')
                 markdown_lines.append("# Execute with default arguments")
-                markdown_lines.append(format_osascript_command(display_command))
+                markdown_lines.append(
+                    f"osascript {format_osascript_command(display_command)}"
+                )
                 markdown_lines.append("")
                 markdown_lines.append("# Or save to file and execute")
                 markdown_lines.append(f"osascript {technique_id.lower()}_{i}.scpt")
@@ -697,11 +699,15 @@ def generate_technique_markdown(
                 markdown_lines.append("```")
             else:
                 markdown_lines.append('```bash tab="<Terminal /> Execution"')
-                markdown_lines.append(format_osascript_command(display_command))
+                markdown_lines.append(
+                    f"osascript {format_osascript_command(display_command)}"
+                )
                 markdown_lines.append("```")
         else:
             markdown_lines.append('```bash tab="<Terminal /> Execution"')
-            markdown_lines.append(f"osascript -l JavaScript -e '{display_command}'")
+            markdown_lines.append(
+                f"osascript -l JavaScript {format_osascript_command(display_command)}"
+            )
             markdown_lines.append("```")
 
         markdown_lines.append("")
@@ -809,6 +815,13 @@ def build(
 ):
     """Complete build process: validate, convert, compile, generate docs, and dump JSON"""
     console.print("[bold blue]🚀 Starting complete build process...[/bold blue]")
+    # Clean
+    console.print("\n[bold]Step 0: Cleaning[/bold]")
+    try:
+        clean(osascript_dir, output_dir, confirm=True)
+    except Exception as e:
+        console.print(f"[red]❌ Failed to clean[/red]: {e}")
+        raise typer.Exit(1)
 
     # Validate
     console.print("\n[bold]Step 1: Validation[/bold]")
@@ -911,6 +924,14 @@ def clean(
         str,
         typer.Option("--output-dir", "-o", help="Directory containing compiled apps"),
     ] = "releases",
+    docs_dir: Annotated[
+        str,
+        typer.Option("--docs-dir", "-d", help="Directory containing markdown files"),
+    ] = "docs/content/docs",
+    scripts_json: Annotated[
+        str,
+        typer.Option("--scripts-json", "-j", help="Output JSON file path"),
+    ] = "docs/public/data/scripts.json",
     confirm: Annotated[
         bool, typer.Option("--yes", "-y", help="Skip confirmation prompt")
     ] = False,
@@ -918,20 +939,39 @@ def clean(
     """Clean generated files (OSAScript files and compiled apps)"""
 
     dirs_to_clean = []
+    files_to_clean = []
+
     if os.path.exists(osascript_dir):
         dirs_to_clean.append(osascript_dir)
     if os.path.exists(output_dir):
         dirs_to_clean.append(output_dir)
+    if os.path.exists(scripts_json):
+        files_to_clean.append(scripts_json)
 
-    if not dirs_to_clean:
-        console.print("[yellow]No directories to clean[/yellow]")
+    # Handle docs_dir specially - only remove technique files
+    docs_files_to_clean = []
+    if os.path.exists(docs_dir):
+        # Find files matching T1000 or T1000.001 pattern
+        for file in os.listdir(docs_dir):
+            if re.match(r"T\d{4}\.mdx$", file) or re.match(
+                r"T\d{4}\.\d{3}\.mdx$", file
+            ):
+                docs_files_to_clean.append(os.path.join(docs_dir, file))
+
+    if not dirs_to_clean and not files_to_clean and not docs_files_to_clean:
+        console.print("[yellow]No directories or files to clean[/yellow]")
         return
 
     if not confirm:
-        console.print("[yellow]This will delete the following directories:[/yellow]")
+        console.print(
+            "[yellow]This will delete the following directories and files:[/yellow]"
+        )
         for dir_path in dirs_to_clean:
             console.print(f"  • {dir_path}")
-
+        for file_path in files_to_clean:
+            console.print(f"  • {file_path}")
+        for file_path in docs_files_to_clean:
+            console.print(f"  • {file_path}")
         if not typer.confirm("Are you sure you want to continue?"):
             console.print("[yellow]Operation cancelled[/yellow]")
             return
@@ -944,6 +984,20 @@ def clean(
             console.print(f"✅ [green]Cleaned[/green] {dir_path}")
         except Exception as e:
             console.print(f"❌ [red]Failed to clean[/red] {dir_path}: {e}")
+
+    for file_path in files_to_clean:
+        try:
+            os.remove(file_path)
+            console.print(f"✅ [green]Cleaned[/green] {file_path}")
+        except Exception as e:
+            console.print(f"❌ [red]Failed to clean[/red] {file_path}: {e}")
+
+    for file_path in docs_files_to_clean:
+        try:
+            os.remove(file_path)
+            console.print(f"✅ [green]Cleaned[/green] {file_path}")
+        except Exception as e:
+            console.print(f"❌ [red]Failed to clean[/red] {file_path}: {e}")
 
 
 @app.command()
