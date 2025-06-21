@@ -1,0 +1,59 @@
+---
+title: T1057
+description: "Process Discovery"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may attempt to get information about running processes on a system. Information obtained could be used to gain an understanding of common software/applications running on systems within the network. Administrator or otherwise elevated access may provide better process details. Adversaries may use the information from [Process Discovery](https://attack.mitre.org/techniques/T1057) during automated discovery to shape follow-on behaviors, including whether or not the adversary fully infects the target and/or attempts specific actions.
+
+In Windows environments, adversaries could obtain details on running processes using the [Tasklist](https://attack.mitre.org/software/S0057) utility via [cmd](https://attack.mitre.org/software/S0106) or <code>Get-Process</code> via [PowerShell](https://attack.mitre.org/techniques/T1059/001). Information about processes can also be extracted from the output of [Native API](https://attack.mitre.org/techniques/T1106) calls such as <code>CreateToolhelp32Snapshot</code>. In Mac and Linux, this is accomplished with the <code>ps</code> command. Adversaries may also opt to enumerate processes via `/proc`. ESXi also supports use of the `ps` command, as well as `esxcli system process list`.(Citation: Sygnia ESXi Ransomware 2025)(Citation: Crowdstrike Hypervisor Jackpotting Pt 2 2021)
+
+On network devices, [Network Device CLI](https://attack.mitre.org/techniques/T1059/008) commands such as `show processes` can be used to display current running processes.(Citation: US-CERT-TA18-106A)(Citation: show_processes_cisco_cmd)
+
+
+## Atomic Tests
+
+### Atomic Test #1 - Get all processes
+
+Retrieves a list of all running processes on the system using System Events. This provides comprehensive process enumeration capabilities and may require TCC approval for System Events access.
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events" to get name of every process
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "System Events" to get name of every process'
+```
+
+---
+
+### Atomic Test #2 - Get all application processes (User facing applications)
+
+Retrieves only user-facing application processes (excluding system processes and daemons). This focuses on applications that users typically interact with and may require TCC approval for System Events access.
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events"
+  set runningApps to name of every application process
+  repeat with appName in runningApps
+    log appName
+  end repeat
+end tell
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "System Events"' -e 'set runningApps to name of every application process' -e 'repeat with appName in runningApps' -e 'log appName' -e 'end repeat' -e 'end tell'
+```
+
+## References
+
+- [MITRE ATT&CK T1057](https://attack.mitre.org/techniques/T1057/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

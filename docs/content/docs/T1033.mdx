@@ -1,0 +1,74 @@
+---
+title: T1033
+description: "System Owner/User Discovery"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may attempt to identify the primary user, currently logged in user, set of users that commonly uses a system, or whether a user is actively using the system. They may do this, for example, by retrieving account usernames or by using [OS Credential Dumping](https://attack.mitre.org/techniques/T1003). The information may be collected in a number of different ways using other Discovery techniques, because user and username details are prevalent throughout a system and include running process ownership, file/directory ownership, session information, and system logs. Adversaries may use the information from [System Owner/User Discovery](https://attack.mitre.org/techniques/T1033) during automated discovery to shape follow-on behaviors, including whether or not the adversary fully infects the target and/or attempts specific actions.
+
+Various utilities and commands may acquire this information, including <code>whoami</code>. In macOS and Linux, the currently logged in user can be identified with <code>w</code> and <code>who</code>. On macOS the <code>dscl . list /Users | grep -v '_'</code> command can also be used to enumerate user accounts. Environment variables, such as <code>%USERNAME%</code> and <code>$USER</code>, may also be used to access this information.
+
+On network devices, [Network Device CLI](https://attack.mitre.org/techniques/T1059/008) commands such as `show users` and `show ssh` can be used to display users currently logged into the device.(Citation: show_ssh_users_cmd_cisco)(Citation: US-CERT TA18-106A Network Infrastructure Devices 2018)
+
+
+## Atomic Tests
+
+### Atomic Test #1 - Get user (using System Info)
+
+Retrieves the current user's short and long names using the system info command.
+
+
+```applescript tab="<Code /> Script"
+short user name of (system info)
+long user name of (system info)
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'short user name of (system info)' -e 'long user name of (system info)'
+```
+
+---
+
+### Atomic Test #2 - Get user (using environment variable)
+
+Retrieves the current user's username using the USER environment variable.
+
+
+```applescript tab="<Code /> Script"
+return (system attribute "USER")
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'return (system attribute "USER")'
+```
+
+---
+
+### Atomic Test #3 - Get user (using list folder)
+
+By default, the user's home directory is /Users/username. 
+Listing the /Users folder will return the list of users on the system.
+
+
+
+```applescript tab="<Code /> Script"
+return (list folder "/Users")
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'return (list folder "/Users")'
+```
+
+## References
+
+- [MITRE ATT&CK T1033](https://attack.mitre.org/techniques/T1033/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

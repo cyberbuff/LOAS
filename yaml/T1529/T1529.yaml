@@ -1,0 +1,7 @@
+name: "System Shutdown/Reboot"
+tests:
+  - name: Shutdown system (using System Events)
+    language: AppleScript
+    description: Shuts down the system using the shutdown command from System Events. 
+    command: |
+      tell application "System Events" to shutdown

@@ -1,0 +1,48 @@
+---
+title: T1070.009
+description: "Indicator Removal  Clear Persistence"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may clear artifacts associated with previously established persistence on a host system to remove evidence of their activity. This may involve various actions, such as removing services, deleting executables, [Modify Registry](https://attack.mitre.org/techniques/T1112), [Plist File Modification](https://attack.mitre.org/techniques/T1647), or other methods of cleanup to prevent defenders from collecting evidence of their persistent presence.(Citation: Cylance Dust Storm) Adversaries may also delete accounts previously created to maintain persistence (i.e. [Create Account](https://attack.mitre.org/techniques/T1136)).(Citation: Talos - Cisco Attack 2022)
+
+In some instances, artifacts of persistence may also be removed once an adversary’s persistence is executed in order to prevent errors with the new instance of the malware.(Citation: NCC Group Team9 June 2020)
+
+
+## Atomic Tests
+
+### Atomic Test #1 - Delete a login item
+
+Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| loginItemName | str | `Calculator` |
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events" to delete login item "Calculator"
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "System Events" to delete login item "Calculator"'
+
+# Or save to file and execute
+osascript t1070.009_1.scpt
+
+# With custom arguments
+osascript t1070.009_1.scpt "Calculator"
+```
+
+## References
+
+- [MITRE ATT&CK T1070.009](https://attack.mitre.org/techniques/T1070/009/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)
