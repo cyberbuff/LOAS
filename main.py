@@ -96,6 +96,7 @@ class Script(BaseModel):
     elevation_required: Optional[bool] = False
     tcc_required: Optional[bool] = False
     args: Optional[dict] = None
+    description: str
 
     def to_osascript(self) -> str:
         """Convert the script to OSAScript/JavaScript format with help function and parameter handling"""
@@ -273,12 +274,37 @@ def validate_yaml_files(yaml_dir: str = "yaml") -> bool:
     """Validate all YAML files in the specified directory"""
     errors = []
     files_validated = 0
+    all_script_names = {}  # Dict to track script names and their file locations
 
     for file in glob.glob(f"{yaml_dir}/**/*.yaml", recursive=True):
         with open(file, "r") as f:
             try:
                 script = yaml.safe_load(f)
-                script = File(**script)
+                file_obj = File(**script)
+                
+                # Check for duplicate script names within this file
+                script_names_in_file = []
+                for test in file_obj.tests:
+                    script_names_in_file.append(test.name)
+                
+                # Check for duplicates within the same file
+                if len(script_names_in_file) != len(set(script_names_in_file)):
+                    duplicates = [name for name in set(script_names_in_file) if script_names_in_file.count(name) > 1]
+                    for duplicate in duplicates:
+                        error_msg = f"Duplicate script name '{duplicate}' found multiple times in {file}"
+                        errors.append(error_msg)
+                        console.print(f"❌ [red]Error[/red] {error_msg}")
+                
+                # Check for duplicates across all files
+                for test in file_obj.tests:
+                    if test.name in all_script_names:
+                        existing_file = all_script_names[test.name]
+                        error_msg = f"Duplicate script name '{test.name}' found in {file} and {existing_file}"
+                        errors.append(error_msg)
+                        console.print(f"❌ [red]Error[/red] {error_msg}")
+                    else:
+                        all_script_names[test.name] = file
+                
                 files_validated += 1
                 console.print(f"✅ [green]Validated[/green] {file}")
             except ValidationError as e:
@@ -297,6 +323,7 @@ def validate_yaml_files(yaml_dir: str = "yaml") -> bool:
     console.print(
         f"\n[green]✅ All {files_validated} YAML files validated successfully[/green]"
     )
+    console.print(f"[green]✅ All {len(all_script_names)} script names are unique[/green]")
     return True
 
 
@@ -443,6 +470,7 @@ def dump_scripts_json(
                         "language": script.language,
                         "elevation_required": script.elevation_required or False,
                         "tcc_required": script.tcc_required or False,
+                        "description": script.description,
                         "technique_id": technique_id,
                         "technique_name": technique_name,
                         "test_number": test_index,
@@ -540,6 +568,24 @@ def generate_markdown_docs(
     return True
 
 
+def format_osascript_command(command: str) -> str:
+    """Format a multiline AppleScript command as chained -e arguments"""
+    # Split the command into lines and strip whitespace
+    lines = [line.strip() for line in command.strip().split('\n') if line.strip()]
+    
+    if len(lines) == 1:
+        # Single line command - use simple format
+        # Properly escape single quotes for shell
+        escaped_line = lines[0].replace("'", "'\"'\"'")
+        return f"osascript -e '{escaped_line}'"
+    else:
+        # Multiline command - use chained -e format
+        # Properly escape single quotes for shell
+        escaped_lines = [line.replace("'", "'\"'\"'") for line in lines]
+        chained_args = ' '.join([f"-e '{line}'" for line in escaped_lines])
+        return f"osascript {chained_args}"
+
+
 def generate_technique_markdown(
     technique_id: str, technique_name: str, tests: list[Script]
 ) -> str:
@@ -569,7 +615,7 @@ def generate_technique_markdown(
         markdown_lines.append("")
 
         # Test description
-        markdown_lines.append(f"This test {test.name.lower()} using {test.language}.")
+        markdown_lines.append(test.description)
         markdown_lines.append("")
 
         # Requirements
@@ -634,7 +680,7 @@ def generate_technique_markdown(
                 markdown_lines.append('```bash tab="<Terminal /> Execution"')
                 markdown_lines.append("# Execute with default arguments")
                 markdown_lines.append(
-                    f"osascript -e '{display_command.strip().replace("'", "\\'").replace('\n', '\\n')}'"
+                    format_osascript_command(display_command)
                 )
                 markdown_lines.append("")
                 markdown_lines.append("# Or save to file and execute")
@@ -647,7 +693,7 @@ def generate_technique_markdown(
                 markdown_lines.append("```")
             else:
                 markdown_lines.append('```bash tab="<Terminal /> Execution"')
-                markdown_lines.append(f"osascript -e '{display_command}'")
+                markdown_lines.append(format_osascript_command(display_command))
                 markdown_lines.append("```")
         else:
             markdown_lines.append('```bash tab="<Terminal /> Execution"')

@@ -1,12 +1,13 @@
 [
   {
-    "name": "Create a login item",
-    "command": "tell application \"System Events\" to make login item at end with properties {path:\"#{itemPath}\", hidden:\"#{isHidden}\"}\n",
+    "name": "Shutdown system (using System Events)",
+    "command": "tell application \"System Events\" to shutdown\n",
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": false,
-    "technique_id": "T1547.015",
-    "technique_name": "Boot or Logon Autostart Execution: Login Items",
+    "description": "Shuts down the system using the shutdown command from System Events.",
+    "technique_id": "T1529",
+    "technique_name": "System Shutdown/Reboot",
     "test_number": 1
   },
   {
@@ -15,9 +16,98 @@
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": false,
+    "description": "Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.",
+    "technique_id": "T1070.009",
+    "technique_name": "Indicator Removal: Clear Persistence",
+    "test_number": 1
+  },
+  {
+    "name": "Get system information",
+    "command": "return (system info)\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Retrieves comprehensive system information including OS version, hardware details, and system configuration using the system info command. This provides detailed system reconnaissance capabilities without requiring elevated privileges.",
+    "technique_id": "T1082",
+    "technique_name": "System Information Discovery",
+    "test_number": 1
+  },
+  {
+    "name": "Get disks",
+    "command": "return (list disks)\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Lists all connected disks on the system using the list disks command.",
+    "technique_id": "T1082",
+    "technique_name": "System Information Discovery",
+    "test_number": 2
+  },
+  {
+    "name": "Get all processes",
+    "command": "tell application \"System Events\" to get name of every process\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Retrieves a list of all running processes on the system using System Events. This provides comprehensive process enumeration capabilities and may require TCC approval for System Events access.",
+    "technique_id": "T1057",
+    "technique_name": "Process Discovery",
+    "test_number": 1
+  },
+  {
+    "name": "Get all application processes (User facing applications)",
+    "command": "tell application \"System Events\"\n  set runningApps to name of every application process\n  repeat with appName in runningApps\n    log appName\n  end repeat\nend tell\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Retrieves only user-facing application processes (excluding system processes and daemons). This focuses on applications that users typically interact with and may require TCC approval for System Events access.",
+    "technique_id": "T1057",
+    "technique_name": "Process Discovery",
+    "test_number": 2
+  },
+  {
+    "name": "Create a login item",
+    "command": "tell application \"System Events\" to make login item at end with properties {path:\"#{itemPath}\", hidden:\"#{isHidden}\"}\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Creates a new login item that will automatically start when the user logs in.",
     "technique_id": "T1547.015",
     "technique_name": "Boot or Logon Autostart Execution: Login Items",
+    "test_number": 1
+  },
+  {
+    "name": "Get user (using System Info)",
+    "command": "short user name of (system info)\nlong user name of (system info)\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Retrieves the current user's short and long names using the system info command.",
+    "technique_id": "T1033",
+    "technique_name": "System Owner/User Discovery",
+    "test_number": 1
+  },
+  {
+    "name": "Get user (using environment variable)",
+    "command": "return (system attribute \"USER\")\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Retrieves the current user's username using the USER environment variable.",
+    "technique_id": "T1033",
+    "technique_name": "System Owner/User Discovery",
     "test_number": 2
+  },
+  {
+    "name": "Get user (using list folder)",
+    "command": "return (list folder \"/Users\")\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "By default, the user's home directory is /Users/username. \nListing the /Users folder will return the list of users on the system.\n",
+    "technique_id": "T1033",
+    "technique_name": "System Owner/User Discovery",
+    "test_number": 3
   },
   {
     "name": "Get clipboard content (using System Events)",
@@ -25,6 +115,7 @@
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": false,
+    "description": "Retrieves the current clipboard content using System Events.",
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
     "test_number": 1
@@ -35,6 +126,7 @@
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": false,
+    "description": "Sets the clipboard content to a specified value using System Events.",
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
     "test_number": 2
@@ -45,6 +137,7 @@
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": false,
+    "description": "Retrieves the current clipboard content using AppleScript's built-in clipboard command.",
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
     "test_number": 3
@@ -55,6 +148,7 @@
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": false,
+    "description": "Sets the clipboard content to a specified value using AppleScript's built-in clipboard command.",
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
     "test_number": 4
@@ -65,6 +159,7 @@
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": false,
+    "description": "Retrieves clipboard content using Cocoa frameworks (Foundation and AppKit).",
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
     "test_number": 5
@@ -75,6 +170,7 @@
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": false,
+    "description": "Sets clipboard content using Cocoa frameworks (Foundation and AppKit).",
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
     "test_number": 6

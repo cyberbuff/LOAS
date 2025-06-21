@@ -7,7 +7,7 @@ description: "Clipboard Data"
 
 
 
-Adversaries may collect data stored in the clipboard from users copying information within or between applications.
+Adversaries may collect data stored in the clipboard from users copying information within or between applications. 
 
 For example, on Windows adversaries can access clipboard data by using <code>clip.exe</code> or <code>Get-Clipboard</code>.(Citation: MSDN Clipboard)(Citation: clip_win_server)(Citation: CISA_AA21_200B) Additionally, adversaries may monitor then replace users’ clipboard with their data (e.g., [Transmitted Data Manipulation](https://attack.mitre.org/techniques/T1565/002)).(Citation: mining_ruby_reversinglabs)
 
@@ -18,7 +18,7 @@ macOS and Linux also have commands, such as <code>pbpaste</code>, to grab clipbo
 
 ### Atomic Test #1 - Get clipboard content (using System Events)
 
-This test get clipboard content (using system events) using AppleScript.
+Retrieves the current clipboard content using System Events.
 
 
 ```applescript tab="<Code /> Script"
@@ -34,7 +34,7 @@ osascript -e 'tell application "System Events" to get the clipboard'
 
 ### Atomic Test #2 - Set clipboard content (using System Events)
 
-This test set clipboard content (using system events) using AppleScript.
+Sets the clipboard content to a specified value using System Events.
 
 **Input Arguments:**
 
@@ -63,7 +63,7 @@ osascript t1115_2.scpt "Hello, world!"
 
 ### Atomic Test #3 - Get clipboard content (using AppleScript defaults)
 
-This test get clipboard content (using applescript defaults) using AppleScript.
+Retrieves the current clipboard content using AppleScript's built-in clipboard command.
 
 
 ```applescript tab="<Code /> Script"
@@ -79,7 +79,7 @@ osascript -e 'the clipboard'
 
 ### Atomic Test #4 - Set clipboard content (using AppleScript defaults)
 
-This test set clipboard content (using applescript defaults) using AppleScript.
+Sets the clipboard content to a specified value using AppleScript's built-in clipboard command.
 
 **Input Arguments:**
 
@@ -108,7 +108,7 @@ osascript t1115_4.scpt "Hello, world!"
 
 ### Atomic Test #5 - Get clipboard content (using Cocoa)
 
-This test get clipboard content (using cocoa) using AppleScript.
+Retrieves clipboard content using Cocoa frameworks (Foundation and AppKit).
 
 
 ```applescript tab="<Code /> Script"
@@ -123,20 +123,14 @@ clipboardContent
 
 
 ```bash tab="<Terminal /> Execution"
-osascript -e 'use framework "Foundation"
-use framework "AppKit"
-
-set pasteboard to current application's NSPasteboard's generalPasteboard()
-set clipboardContent to pasteboard's stringForType:"public.utf8-plain-text"
-clipboardContent
-'
+osascript -e 'use framework "Foundation"' -e 'use framework "AppKit"' -e 'set pasteboard to current application'"'"'s NSPasteboard'"'"'s generalPasteboard()' -e 'set clipboardContent to pasteboard'"'"'s stringForType:"public.utf8-plain-text"' -e 'clipboardContent'
 ```
 
 ---
 
 ### Atomic Test #6 - Set clipboard content (using Cocoa)
 
-This test set clipboard content (using cocoa) using AppleScript.
+Sets clipboard content using Cocoa frameworks (Foundation and AppKit).
 
 **Input Arguments:**
 
@@ -157,7 +151,7 @@ pasteboard's setString:"Hello, world!" forType:"public.utf8-plain-text"
 
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
-osascript -e 'use framework "Foundation"\nuse framework "AppKit"\n\nset pasteboard to current application\'s NSPasteboard\'s generalPasteboard()\npasteboard\'s setString:"Hello, world!" forType:"public.utf8-plain-text"'
+osascript -e 'use framework "Foundation"' -e 'use framework "AppKit"' -e 'set pasteboard to current application'"'"'s NSPasteboard'"'"'s generalPasteboard()' -e 'pasteboard'"'"'s setString:"Hello, world!" forType:"public.utf8-plain-text"'
 
 # Or save to file and execute
 osascript t1115_6.scpt
