@@ -3,30 +3,32 @@ tests:
   - name: Get clipboard content (using System Events)
     language: AppleScript
     description: Retrieves the current clipboard content using System Events.
+    tcc_required: true
     command: tell application "System Events" to get the clipboard
 
   - name: Set clipboard content (using System Events)
     language: AppleScript
-    description: Sets the clipboard content to a specified value using System Events. 
+    description: Sets the clipboard content to a specified value using System Events.
+    tcc_required: true
     command: tell application "System Events" to set the clipboard to "#{clipboardContent}"
     args:
       clipboardContent: "Hello, world!"
 
   - name: Get clipboard content (using AppleScript defaults)
     language: AppleScript
-    description: Retrieves the current clipboard content using AppleScript's built-in clipboard command. 
+    description: Retrieves the current clipboard content using AppleScript's built-in clipboard command.
     command: the clipboard
 
   - name: Set clipboard content (using AppleScript defaults)
     language: AppleScript
-    description: Sets the clipboard content to a specified value using AppleScript's built-in clipboard command. 
+    description: Sets the clipboard content to a specified value using AppleScript's built-in clipboard command.
     command: set the clipboard to "#{textContent}"
     args:
       textContent: "Hello, world!"
 
   - name: Get clipboard content (using Cocoa)
     language: AppleScript
-    description: Retrieves clipboard content using Cocoa frameworks (Foundation and AppKit). 
+    description: Retrieves clipboard content using Cocoa frameworks (Foundation and AppKit).
     command: |
       use framework "Foundation"
       use framework "AppKit"
@@ -37,7 +39,7 @@ tests:
 
   - name: Set clipboard content (using Cocoa)
     language: AppleScript
-    description: Sets clipboard content using Cocoa frameworks (Foundation and AppKit). 
+    description: Sets clipboard content using Cocoa frameworks (Foundation and AppKit).
     command: |
       use framework "Foundation"
       use framework "AppKit"

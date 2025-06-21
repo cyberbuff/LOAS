@@ -3,13 +3,15 @@ tests:
   - name: Get all processes
     language: AppleScript
     description: "Retrieves a list of all running processes on the system using System Events. This provides comprehensive process enumeration capabilities and may require TCC approval for System Events access."
+    tcc_required: true
     command: |
       tell application "System Events" to get name of every process
 
   - name: Get all application processes (User facing applications)
     language: AppleScript
     description: "Retrieves only user-facing application processes (excluding system processes and daemons). This focuses on applications that users typically interact with and may require TCC approval for System Events access."
-    command: |
+    tcc_required: true
+    command: |-
       tell application "System Events"
         set runningApps to name of every application process
         repeat with appName in runningApps
