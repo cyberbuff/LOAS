@@ -20,6 +20,10 @@ On network devices, [Network Device CLI](https://attack.mitre.org/techniques/T10
 
 Retrieves a list of all running processes on the system using System Events. This provides comprehensive process enumeration capabilities and may require TCC approval for System Events access.
 
+**Requirements:**
+
+- TCC Required: ✅
+
 
 ```applescript tab="<Code /> Script"
 tell application "System Events" to get name of every process
@@ -37,6 +41,10 @@ osascript -e 'tell application "System Events" to get name of every process'
 
 Retrieves only user-facing application processes (excluding system processes and daemons). This focuses on applications that users typically interact with and may require TCC approval for System Events access.
 
+**Requirements:**
+
+- TCC Required: ✅
+
 
 ```applescript tab="<Code /> Script"
 tell application "System Events"
@@ -45,7 +53,6 @@ tell application "System Events"
     log appName
   end repeat
 end tell
-
 ```
 
 

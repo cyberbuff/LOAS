@@ -8,6 +8,6 @@ tests:
 
   - name: Get disks
     language: AppleScript
-    description: Lists all connected disks on the system using the list disks command. 
-    command: |
+    description: Lists all connected disks on the system using the list disks command.
+    command: |-
       return (list disks)

@@ -3,6 +3,7 @@ tests:
   - name: Delete a login item
     language: AppleScript
     description: Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.
+    tcc_required: true
     command: |
       tell application "System Events" to delete login item "#{loginItemName}"
     args:
