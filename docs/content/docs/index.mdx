@@ -7,3 +7,139 @@ icon: CircleHelp
 <b>L</b>iving off the <b>O</b>rchard: <b>A</b>pple <b>S</b>cript is
 designed to provide detailed information on various scripts(AppleScript, JXA) and how
 they are being used by threat actors for malicious purposes.
+
+## Writing YAML Test Files
+
+This repository uses YAML files to define offensive security tests that can be executed on macOS systems. Each YAML file represents a specific MITRE ATT&CK technique and contains multiple atomic tests.
+
+### YAML File Structure
+The reason for using YAML instead of script files(`.scpt`) is to make it easier to generate the files for each of the execution methods(`.scpt`, `.swift`, `.app`, `binary`).
+
+Also it's easier to make slight transformations to add these tests to [Atomic Red Team](https://github.com/redcanaryco/atomic-red-team).
+
+You can use the following command to generate the atomics:
+
+ ```bash
+ uv run main.py generate-atomics
+ ```
+
+Each YAML file should be placed in a directory named after the MITRE ATT&CK technique ID (e.g., `yaml/T1033/T1033.yaml`). The file structure follows this format:
+
+```yaml
+name: "Technique Name"
+tests:
+  - name: "Test Name"
+    language: AppleScript | JavaScript
+    description: "Detailed description of what this test does"
+    tcc_required: true | false # default: false
+    elevation_required: true | false # default: false
+    command: |
+      # Your AppleScript or JavaScript code here
+    args:
+      argumentName: "default_value"
+```
+
+### Required Fields
+
+- **`name`** (string): The name of the MITRE ATT&CK technique
+- **`tests`** (array): List of atomic tests for this technique
+
+### Test Object Fields
+
+- **`name`** (string, required): Unique name for the test within the file
+- **`language`** (string, required): Either `"AppleScript"` or `"JavaScript"`
+- **`description`** (string, required): Detailed description of what the test does
+- **`command`** (string, required): The actual script code to execute
+- **`tcc_required`** (boolean, optional): Whether the test requires TCC (Transparency, Consent, and Control) approval
+- **`elevation_required`** (boolean, optional): Whether the test requires elevated privileges
+- **`args`** (object, optional): Input arguments with default values
+
+### Example YAML File
+
+Here's a complete example of a YAML test file:
+
+```yaml
+name: "System Owner/User Discovery"
+tests:
+  - name: Get user (using System Info)
+    language: AppleScript
+    description: Retrieves the current user's short and long names using the system info command.
+    command: |
+      short user name of (system info)
+      long user name of (system info)
+
+  - name: Get user (using environment variable)
+    language: AppleScript
+    description: Retrieves the current user's username using the USER environment variable.
+    command: |
+      return (system attribute "USER")
+
+  - name: Get user information (using System Events JXA)
+    language: JavaScript
+    description: Retrieves the current user's username using the System Events JXA command.
+    tcc_required: true
+    command: |-
+      const app = Application("System Events")
+      const user = app.currentUser();
+      const longName = user.fullName();
+      const shortName = user.name();
+      const userHome = user.homeDirectory();
+
+      console.log("Name:", longName)
+      console.log("Username:", shortName)
+      console.log("Home Directory:", userHome)
+```
+
+### Using Arguments
+
+For tests that accept parameters, use the `args` field to define input arguments with default values:
+
+```yaml
+  - name: Delete a login item
+    language: AppleScript
+    description: Removes a specified login item from the user's login items list.
+    tcc_required: true
+    command: |
+      tell application "System Events" to delete login item "#{loginItemName}"
+    args:
+      loginItemName: "Calculator"
+```
+
+In the command, use `#{argumentName}` syntax to reference arguments. These will be replaced with the provided values when the script is executed.
+
+### Best Practices
+
+1. **Unique Test Names**: Ensure each test name is unique across all YAML files
+2. **Descriptive Names**: Use clear, descriptive names that indicate what the test does
+3. **Detailed Descriptions**: Provide comprehensive descriptions explaining the test's purpose and potential impact
+4. **Proper Permissions**: Set `tcc_required` and `elevation_required` flags appropriately
+5. **Code Formatting**: Use proper indentation and formatting for readability using [pre-commit hooks](https://pre-commit.com/).
+6. **Argument Validation**: Provide sensible default values for all arguments
+
+### Validation
+
+The repository includes a validation system that checks YAML files for:
+- Required field presence
+- Unique test names across all files
+- Proper YAML syntax
+- Valid field types and values
+
+Run validation using:
+```bash
+uv sync
+uv run main.py validate
+```
+
+### File Organization
+
+- Create a directory for each MITRE ATT&CK technique under `yaml/`
+- Name the directory after the technique ID (e.g., `T1033`)
+- Place the YAML file inside with the same name (e.g., `T1033.yaml`)
+- Use descriptive technique names that match MITRE ATT&CK definitions
+
+### Supported Languages
+
+- **AppleScript**: Traditional AppleScript syntax
+- **JavaScript**: JXA (JavaScript for Automation) syntax
+
+Both languages can access macOS system APIs and applications, but they have different syntax and capabilities.

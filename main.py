@@ -254,6 +254,191 @@ class Script(BaseModel):
         """Convert the script to JavaScript format"""
         return "\n".join(["#!/usr/bin/osascript -l JavaScript", self.command])
 
+    def to_swift_wrapper(self) -> str:
+        """Convert the AppleScript to a Swift wrapper that executes it via NSAppleScript"""
+        swift_lines = []
+
+        # Add header comment
+        swift_lines.append("#!/usr/bin/env swift")
+        swift_lines.append("")
+        swift_lines.append("import Foundation")
+        swift_lines.append("")
+
+        # Add help function
+        swift_lines.append("func showHelp() {")
+        swift_lines.append(f'    print("{self.name}")')
+        swift_lines.append('    print("")')
+        swift_lines.append(
+            '    print("Usage: Run this script to execute the AppleScript command.")'
+        )
+
+        if self.args:
+            swift_lines.append('    print("")')
+            swift_lines.append('    print("Available arguments (in order):")')
+            for i, (arg_name, default_value) in enumerate(self.args.items(), 1):
+                swift_lines.append(
+                    f'    print("  {i}. {arg_name}: {type(default_value).__name__} (default: {default_value})")'
+                )
+
+            swift_lines.append('    print("")')
+            swift_lines.append('    print("Usage examples:")')
+            swift_lines.append(
+                '    print("  swift script.swift                    # Use all defaults")'
+            )
+
+            if len(self.args) == 1:
+                arg_name = list(self.args.keys())[0]
+                swift_lines.append(
+                    f'    print("  swift script.swift [value]            # Set {arg_name}")'
+                )
+            else:
+                swift_lines.append(
+                    '    print("  swift script.swift [arg1]             # Set first argument")'
+                )
+                swift_lines.append(
+                    '    print("  swift script.swift [arg1] [arg2] ...  # Set all arguments")'
+                )
+
+        swift_lines.append("}")
+        swift_lines.append("")
+
+        # Add main function
+        if self.args:
+            param_list = list(self.args.keys())
+            param_types = []
+            for arg_name, default_value in self.args.items():
+                if isinstance(default_value, str):
+                    param_types.append(f"{arg_name}: String")
+                elif isinstance(default_value, bool):
+                    param_types.append(f"{arg_name}: Bool")
+                elif isinstance(default_value, int):
+                    param_types.append(f"{arg_name}: Int")
+                elif isinstance(default_value, float):
+                    param_types.append(f"{arg_name}: Double")
+                else:
+                    param_types.append(f"{arg_name}: String")
+
+            swift_lines.append(f"func main({', '.join(param_types)}) {{")
+        else:
+            swift_lines.append("func main() {")
+
+        # Process the AppleScript command
+        command = self.command
+
+        # Replace template variables if args exist
+        if self.args:
+            for arg_name, default_value in self.args.items():
+                # Replace #{arg_name} (without quotes) with the parameter name
+                command = command.replace(f"#{{{arg_name}}}", f"\\({arg_name})")
+
+        # Create the NSAppleScript execution
+        swift_lines.append('    let script = """')
+        # Add proper indentation to each line of the AppleScript command
+        for line in command.strip().split("\n"):
+            if line.strip():  # Only add non-empty lines
+                swift_lines.append(f"    {line.strip()}")
+        swift_lines.append('    """')
+        swift_lines.append("")
+        swift_lines.append("    let appleScript = NSAppleScript(source: script)")
+        swift_lines.append("    var error: NSDictionary?")
+        swift_lines.append(
+            "    let result = appleScript?.executeAndReturnError(&error)"
+        )
+        swift_lines.append("")
+        swift_lines.append("    if let error = error {")
+        swift_lines.append('        print("Error executing AppleScript: \\(error)")')
+        swift_lines.append("    } else {")
+        swift_lines.append(
+            '        print("\\(result?.stringValue ?? result?.debugDescription ?? "No output")")'
+        )
+        swift_lines.append("    }")
+        swift_lines.append("}")
+        swift_lines.append("")
+
+        # Add example usage with default values
+        if self.args:
+            swift_lines.append("// Example usage with default values:")
+            example_params = []
+            for arg_name, default_value in self.args.items():
+                if isinstance(default_value, str):
+                    example_params.append(f'{arg_name}: "{default_value}"')
+                elif isinstance(default_value, bool):
+                    example_params.append(f"{arg_name}: {str(default_value).lower()}")
+                else:
+                    example_params.append(f"{arg_name}: {default_value}")
+
+            swift_lines.append(f"// main({', '.join(example_params)})")
+            swift_lines.append("")
+
+        # Add command line argument handling
+        swift_lines.append("// Handle command line arguments")
+        swift_lines.append("let arguments = CommandLine.arguments")
+        swift_lines.append("")
+        swift_lines.append('if arguments.count > 1 && arguments[1] == "-h" {')
+        swift_lines.append("    showHelp()")
+        swift_lines.append("    exit(0)")
+        swift_lines.append("}")
+        swift_lines.append("")
+
+        if self.args:
+            # Generate argument parsing logic
+            arg_names = list(self.args.keys())
+            for i, (arg_name, default_value) in enumerate(self.args.items()):
+                swift_lines.append(f"// Parse {arg_name} (argument {i + 1})")
+
+                # Map Python types to Swift types
+                if isinstance(default_value, str):
+                    swift_type = "String"
+                elif isinstance(default_value, bool):
+                    swift_type = "Bool"
+                elif isinstance(default_value, int):
+                    swift_type = "Int"
+                elif isinstance(default_value, float):
+                    swift_type = "Double"
+                else:
+                    swift_type = "String"
+
+                swift_lines.append(f"var {arg_name}: {swift_type}")
+
+                if isinstance(default_value, str):
+                    swift_lines.append(f'    = "{default_value}"')
+                elif isinstance(default_value, bool):
+                    swift_lines.append(f"    = {str(default_value).lower()}")
+                elif isinstance(default_value, int):
+                    swift_lines.append(f"    = {default_value}")
+                elif isinstance(default_value, float):
+                    swift_lines.append(f"    = {default_value}")
+                else:
+                    swift_lines.append(f'    = "{default_value}"')
+
+                swift_lines.append(f"if arguments.count > {i + 1} {{")
+                if isinstance(default_value, str):
+                    swift_lines.append(f"    {arg_name} = arguments[{i + 1}]")
+                elif isinstance(default_value, bool):
+                    swift_lines.append(
+                        f'    {arg_name} = arguments[{i + 1}].lowercased() == "true"'
+                    )
+                elif isinstance(default_value, int):
+                    swift_lines.append(
+                        f"    {arg_name} = Int(arguments[{i + 1}]) ?? {default_value}"
+                    )
+                elif isinstance(default_value, float):
+                    swift_lines.append(
+                        f"    {arg_name} = Double(arguments[{i + 1}]) ?? {default_value}"
+                    )
+                else:
+                    swift_lines.append(f"    {arg_name} = arguments[{i + 1}]")
+                swift_lines.append("}")
+                swift_lines.append("")
+
+            # Call main with parsed arguments
+            param_list = [f"{arg_name}: {arg_name}" for arg_name in arg_names]
+            swift_lines.append(f"main({', '.join(param_list)})")
+        else:
+            swift_lines.append("main()")
+
+        return "\n".join(swift_lines)
+
     def get_filename(self) -> str:
         """Generate a safe filename for the script"""
         # Remove special characters and replace spaces with underscores
@@ -385,6 +570,64 @@ def compile_osascript_files(
     return True
 
 
+def compile_swift_files(swift_dir: str = "swift", output_dir: str = "binaries") -> bool:
+    """Compile Swift files to executables"""
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    # Create subdirectories for each technique
+    if os.path.exists(swift_dir):
+        for folder in os.listdir(swift_dir):
+            folder_path = os.path.join(swift_dir, folder)
+            if os.path.isdir(folder_path):
+                os.makedirs(os.path.join(output_dir, folder), exist_ok=True)
+
+    compiled_count = 0
+    errors = []
+
+    for file in glob.glob(f"{swift_dir}/**/*.swift", recursive=True):
+        try:
+            # Get the base name without extension
+            base_name = os.path.splitext(os.path.basename(file))[0]
+            output_file = os.path.join(
+                os.path.dirname(file).replace(swift_dir, output_dir), base_name
+            )
+
+            # Compile Swift file to executable
+            result = subprocess.run(
+                ["swiftc", "-o", output_file, file], capture_output=True, text=True
+            )
+
+            if result.returncode == 0:
+                compiled_count += 1
+                console.print(f"✅ [green]Compiled[/green] {file} → {output_file}")
+            else:
+                error_msg = f"Failed to compile {file}: {result.stderr}"
+                errors.append(error_msg)
+                console.print(
+                    f"❌ [red]Failed[/red] to compile {file}: {result.stderr}"
+                )
+
+        except Exception as e:
+            error_msg = f"Unexpected error compiling {file}: {e}"
+            errors.append(error_msg)
+            console.print(f"❌ [red]Unexpected error[/red] compiling {file}: {e}")
+
+    if errors:
+        console.print(
+            f"\n[red]Swift compilation completed with {len(errors)} errors[/red]"
+        )
+        console.print(
+            f"[green]Successfully compiled: {compiled_count} Swift files[/green]"
+        )
+        return False
+
+    console.print(
+        f"\n[green]✅ Successfully compiled {compiled_count} Swift files[/green]"
+    )
+    return True
+
+
 def convert_yaml_to_script(
     yaml_dir: str = "yaml", output_dir: str = "osascripts"
 ) -> bool:
@@ -394,7 +637,13 @@ def convert_yaml_to_script(
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
+    # Create Swift output directory
+    swift_output_dir = output_dir.replace("osascripts", "swift")
+    if not os.path.exists(swift_output_dir):
+        os.makedirs(swift_output_dir)
+
     converted_count = 0
+    swift_converted_count = 0
     errors = []
 
     for file_path in glob.glob(f"{yaml_dir}/**/*.yaml", recursive=True):
@@ -407,15 +656,19 @@ def convert_yaml_to_script(
                 yaml_dir_path = os.path.dirname(file_path)
                 technique_name = os.path.basename(yaml_dir_path)
                 script_output_dir = os.path.join(output_dir, technique_name)
+                swift_script_output_dir = os.path.join(swift_output_dir, technique_name)
 
                 if not os.path.exists(script_output_dir):
                     os.makedirs(script_output_dir)
+                if not os.path.exists(swift_script_output_dir):
+                    os.makedirs(swift_script_output_dir)
 
-                # Convert each test to an OSAScript/JavaScript file
+                # Convert each test to an OSAScript/JavaScript/Swift file
                 for script in file_obj.tests:
+                    # Create AppleScript/JavaScript file
                     if script.language == "AppleScript":
                         script_content = script.to_osascript()
-                    else:
+                    elif script.language == "JavaScript":
                         script_content = script.to_javascript()
 
                     filename = script.get_filename()
@@ -426,6 +679,24 @@ def convert_yaml_to_script(
 
                     converted_count += 1
                     console.print(f"✅ [green]Created[/green] {output_path}")
+
+                    # Create Swift wrapper only for AppleScript scripts
+                    if script.language == "AppleScript":
+                        swift_filename = script.get_filename().replace(
+                            ".scpt", ".swift"
+                        )
+                        swift_output_path = os.path.join(
+                            swift_script_output_dir, swift_filename
+                        )
+
+                        # Create Swift version that wraps the original AppleScript
+                        swift_wrapper = script.to_swift_wrapper()
+
+                        with open(swift_output_path, "w") as swift_file:
+                            swift_file.write(swift_wrapper)
+
+                        swift_converted_count += 1
+                        console.print(f"✅ [green]Created[/green] {swift_output_path}")
 
         except ValidationError as e:
             error_msg = f"Validation error in {file_path}: {e}"
@@ -441,10 +712,16 @@ def convert_yaml_to_script(
         console.print(
             f"[green]Successfully converted: {converted_count} scripts[/green]"
         )
+        console.print(
+            f"[green]Successfully created: {swift_converted_count} Swift wrappers[/green]"
+        )
         return False
 
     console.print(
         f"\n[green]✅ Successfully converted {converted_count} scripts[/green]"
+    )
+    console.print(
+        f"[green]✅ Successfully created {swift_converted_count} Swift wrappers[/green]"
     )
     return True
 
@@ -654,7 +931,7 @@ def generate_technique_markdown(
 
         if test.language == "AppleScript":
             markdown_lines.append('```applescript tab="<Code /> Script"')
-        else:
+        elif test.language == "JavaScript":
             markdown_lines.append('```javascript tab="<Code /> Script"')
 
         # Format command for display
@@ -703,7 +980,7 @@ def generate_technique_markdown(
                     f"osascript {format_osascript_command(display_command)}"
                 )
                 markdown_lines.append("```")
-        else:
+        elif test.language == "JavaScript":
             markdown_lines.append('```bash tab="<Terminal /> Execution"')
             markdown_lines.append(
                 f"osascript -l JavaScript {format_osascript_command(display_command)}"
@@ -801,6 +1078,31 @@ def compile(
 
 
 @app.command()
+def compile_swift(
+    swift_dir: Annotated[
+        str,
+        typer.Option("--swift-dir", "-s", help="Directory containing Swift files"),
+    ] = "swift",
+    output_dir: Annotated[
+        str,
+        typer.Option(
+            "--output-dir", "-o", help="Output directory for compiled executables"
+        ),
+    ] = "binaries",
+):
+    """Compile Swift files to executables"""
+    console.print("[bold blue]🔨 Compiling Swift files to executables...[/bold blue]")
+
+    if not os.path.exists(swift_dir):
+        os.makedirs(swift_dir)
+        console.print(f"[yellow]⚠️ Created Swift directory '{swift_dir}'[/yellow]")
+
+    success = compile_swift_files(swift_dir, output_dir)
+    if not success:
+        raise typer.Exit(1)
+
+
+@app.command()
 def build(
     yaml_dir: Annotated[
         str, typer.Option("--yaml-dir", "-y", help="Directory containing YAML files")
@@ -833,18 +1135,24 @@ def build(
     if not convert_yaml_to_script(yaml_dir, osascript_dir):
         raise typer.Exit(1)
 
-    # Compile
-    console.print("\n[bold]Step 3: Compilation[/bold]")
+    # Compile OSAScript
+    console.print("\n[bold]Step 3: OSAScript Compilation[/bold]")
     if not compile_osascript_files(osascript_dir, output_dir):
         raise typer.Exit(1)
 
+    # Compile Swift
+    console.print("\n[bold]Step 4: Swift Compilation[/bold]")
+    swift_dir = osascript_dir.replace("osascripts", "swift")
+    if not compile_swift_files(swift_dir, "binaries"):
+        raise typer.Exit(1)
+
     # Generate markdown docs
-    console.print("\n[bold]Step 4: Documentation Generation[/bold]")
+    console.print("\n[bold]Step 5: Documentation Generation[/bold]")
     if not generate_markdown_docs(yaml_dir):
         raise typer.Exit(1)
 
     # Dump JSON
-    console.print("\n[bold]Step 5: JSON Export[/bold]")
+    console.print("\n[bold]Step 6: JSON Export[/bold]")
     if not dump_scripts_json(yaml_dir):
         raise typer.Exit(1)
 
@@ -862,6 +1170,10 @@ def stats(
             "--osascript-dir", "-s", help="Directory containing OSAScript files"
         ),
     ] = "osascripts",
+    swift_dir: Annotated[
+        str,
+        typer.Option("--swift-dir", help="Directory containing Swift files"),
+    ] = "swift",
     output_dir: Annotated[
         str,
         typer.Option("--output-dir", "-o", help="Directory containing compiled apps"),
@@ -892,6 +1204,22 @@ def stats(
     )
     osascript_count = len(osascript_files)
 
+    # Count JavaScript files
+    js_files = (
+        glob.glob(f"{osascript_dir}/**/*.js", recursive=True)
+        if os.path.exists(osascript_dir)
+        else []
+    )
+    js_count = len(js_files)
+
+    # Count Swift files
+    swift_files = (
+        glob.glob(f"{swift_dir}/**/*.swift", recursive=True)
+        if os.path.exists(swift_dir)
+        else []
+    )
+    swift_count = len(swift_files)
+
     # Count compiled apps
     app_files = (
         glob.glob(f"{output_dir}/**/*.app", recursive=True)
@@ -900,9 +1228,23 @@ def stats(
     )
     app_count = len(app_files)
 
+    # Count compiled executables
+    exe_files = []
+    if os.path.exists(output_dir):
+        for root, dirs, files in os.walk(output_dir):
+            for file in files:
+                if not file.endswith(".app") and os.access(
+                    os.path.join(root, file), os.X_OK
+                ):
+                    exe_files.append(os.path.join(root, file))
+    exe_count = len(exe_files)
+
     table.add_row("YAML Files", str(yaml_count), f"Across {len(techniques)} techniques")
-    table.add_row("OSAScript Files", str(osascript_count), "Generated from YAML")
+    table.add_row("AppleScript Files", str(osascript_count), "Generated from YAML")
+    table.add_row("JavaScript Files", str(js_count), "Generated from YAML")
+    table.add_row("Swift Wrappers", str(swift_count), "For AppleScript commands")
     table.add_row("Compiled Apps", str(app_count), "Ready to execute")
+    table.add_row("Compiled Executables", str(exe_count), "Swift executables")
 
     console.print(table)
 
@@ -920,6 +1262,10 @@ def clean(
             "--osascript-dir", "-s", help="Directory containing OSAScript files"
         ),
     ] = "osascripts",
+    swift_dir: Annotated[
+        str,
+        typer.Option("--swift-dir", help="Directory containing Swift files"),
+    ] = "swift",
     output_dir: Annotated[
         str,
         typer.Option("--output-dir", "-o", help="Directory containing compiled apps"),
@@ -943,6 +1289,8 @@ def clean(
 
     if os.path.exists(osascript_dir):
         dirs_to_clean.append(osascript_dir)
+    if os.path.exists(swift_dir):
+        dirs_to_clean.append(swift_dir)
     if os.path.exists(output_dir):
         dirs_to_clean.append(output_dir)
     if os.path.exists(scripts_json):

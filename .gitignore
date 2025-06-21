@@ -2,4 +2,6 @@
 .venv
 releases/
 osascripts/
+swift/
+binaries/
 .DS_Store

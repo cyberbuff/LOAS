@@ -111,7 +111,7 @@
   },
   {
     "name": "Get user information (using System Events JXA)",
-    "command": "const app = Application(\"System Events\")\nconst user = app.currentUser();\nconst longName =user.fullName();\nconst shortName = user.name();\nconst userHome = user.homeDirectory();\n\nconsole.log(\"Name:\", longName)\nconsole.log(\"Username:\", shortName)\nconsole.log(\"Home Directory:\", userHome)\n",
+    "command": "const app = Application(\"System Events\")\nconst user = app.currentUser();\nconst longName =user.fullName();\nconst shortName = user.name();\nconst userHome = user.homeDirectory();\n\nconsole.log(\"Name:\", longName)\nconsole.log(\"Username:\", shortName)\nconsole.log(\"Home Directory:\", userHome)",
     "language": "JavaScript",
     "elevation_required": false,
     "tcc_required": true,
