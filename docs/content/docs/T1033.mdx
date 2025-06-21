@@ -67,6 +67,35 @@ return (list folder "/Users")
 osascript -e 'return (list folder "/Users")'
 ```
 
+---
+
+### Atomic Test #4 - Get user information (using System Events JXA)
+
+Retrieves the current user's username using the System Events JXA command.
+
+**Requirements:**
+
+- TCC Required: ✅
+
+
+```javascript tab="<Code /> Script"
+const app = Application("System Events")
+const user = app.currentUser();
+const longName =user.fullName();
+const shortName = user.name();
+const userHome = user.homeDirectory();
+
+console.log("Name:", longName)
+console.log("Username:", shortName)
+console.log("Home Directory:", userHome)
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -l JavaScript -e 'const app = Application("System Events")' -e 'const user = app.currentUser();' -e 'const longName =user.fullName();' -e 'const shortName = user.name();' -e 'const userHome = user.homeDirectory();' -e 'console.log("Name:", longName)' -e 'console.log("Username:", shortName)' -e 'console.log("Home Directory:", userHome)'
+```
+
 ## References
 
 - [MITRE ATT&CK T1033](https://attack.mitre.org/techniques/T1033/)

@@ -110,6 +110,17 @@
     "test_number": 3
   },
   {
+    "name": "Get user information (using System Events JXA)",
+    "command": "const app = Application(\"System Events\")\nconst user = app.currentUser();\nconst longName =user.fullName();\nconst shortName = user.name();\nconst userHome = user.homeDirectory();\n\nconsole.log(\"Name:\", longName)\nconsole.log(\"Username:\", shortName)\nconsole.log(\"Home Directory:\", userHome)\n",
+    "language": "JavaScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Retrieves the current user's username using the System Events JXA command.",
+    "technique_id": "T1033",
+    "technique_name": "System Owner/User Discovery",
+    "test_number": 4
+  },
+  {
     "name": "Get clipboard content (using System Events)",
     "command": "tell application \"System Events\" to get the clipboard",
     "language": "AppleScript",

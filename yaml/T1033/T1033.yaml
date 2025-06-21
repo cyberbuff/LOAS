@@ -20,3 +20,18 @@ tests:
       Listing the /Users folder will return the list of users on the system.
     command: |-
       return (list folder "/Users")
+
+  - name: Get user information (using System Events JXA)
+    description: Retrieves the current user's username using the System Events JXA command.
+    language: JavaScript
+    tcc_required: true
+    command: |-
+      const app = Application("System Events")
+      const user = app.currentUser();
+      const longName =user.fullName();
+      const shortName = user.name();
+      const userHome = user.homeDirectory();
+
+      console.log("Name:", longName)
+      console.log("Username:", shortName)
+      console.log("Home Directory:", userHome)
