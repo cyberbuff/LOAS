@@ -18,7 +18,7 @@ Adversaries can utilize [AppleScript](https://attack.mitre.org/techniques/T1059/
 
 ### Atomic Test #1 - Create a login item
 
-This test create a login item using AppleScript.
+Creates a new login item that will automatically start when the user logs in.
 
 **Input Arguments:**
 
@@ -43,36 +43,6 @@ osascript t1547.015_1.scpt
 
 # With custom arguments
 osascript t1547.015_1.scpt "/System/Applications/Calculator.app" False
-```
-
----
-
-### Atomic Test #2 - Delete a login item
-
-This test delete a login item using AppleScript.
-
-**Input Arguments:**
-
-| Argument | Type | Default Value |
-|----------|------|---------------|
-| loginItemName | str | `Calculator` |
-
-
-```applescript tab="<Code /> Script"
-tell application "System Events" to delete login item "Calculator"
-
-```
-
-
-```bash tab="<Terminal /> Execution"
-# Execute with default arguments
-osascript -e 'tell application "System Events" to delete login item "Calculator"'
-
-# Or save to file and execute
-osascript t1547.015_2.scpt
-
-# With custom arguments
-osascript t1547.015_2.scpt "Calculator"
 ```
 
 ## References
