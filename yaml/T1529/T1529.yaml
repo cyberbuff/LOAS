@@ -1,8 +1,17 @@
 name: "System Shutdown/Reboot"
 tests:
   - name: Shutdown system (using System Events)
+    reference: https://research.checkpoint.com/2021/time-proven-tricks-in-a-new-environment-the-macos-evolution-of-formbook/
     language: AppleScript
     description: Shuts down the system using the shutdown command from System Events.
     tcc_required: true
     command: |-
       tell application "System Events" to shutdown
+
+  - name: Reboot system (using System Events)
+    reference: https://research.checkpoint.com/2021/time-proven-tricks-in-a-new-environment-the-macos-evolution-of-formbook/
+    language: AppleScript
+    description: Reboots the system using the reboot command from System Events.
+    tcc_required: true
+    command: |-
+      tell application "System Events" to reboot

@@ -40,7 +40,7 @@ osascript -e 'tell application "System Events" to get name of every process'
 <DownloadButton filename="get_all_processes.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="get_all_processes.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="get_all_processes" type="binary" label="Download Binary" />
-<DownloadButton filename="get_all_processes.app" type="app" label="Download .app" />
+<DownloadButton filename="get_all_processes.app" type="app" label="Download Applet" />
 
 ---
 
@@ -72,7 +72,49 @@ osascript -e 'tell application "System Events"' -e 'set runningApps to name of e
 <DownloadButton filename="get_all_application_processes_user_facing_applications.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="get_all_application_processes_user_facing_applications.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="get_all_application_processes_user_facing_applications" type="binary" label="Download Binary" />
-<DownloadButton filename="get_all_application_processes_user_facing_applications.app" type="app" label="Download .app" />
+<DownloadButton filename="get_all_application_processes_user_facing_applications.app" type="app" label="Download Applet" />
+
+---
+
+### Atomic Test #3 - Get list of running processes using AppKit
+
+Retrieves running applications using AppKit framework.
+
+**Requirements:**
+
+- TCC Required: ✅
+
+
+```applescript tab="<Code /> Script"
+use framework "AppKit"
+use framework "Foundation"
+
+set r to {}
+set activeApps to current application's NSWorkspace's sharedWorkspace's runningApplications()
+repeat with anApp in activeApps
+    try
+        set this_app to anApp's localizedName() as text
+        if this_app is not missing value and this_app is not "" then
+            set end of r to this_app
+        end if
+    on error
+        -- Skip apps without names
+    end try
+end repeat
+return r
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'use framework "AppKit"' -e 'use framework "Foundation"' -e 'set r to {}' -e 'set activeApps to current application'"'"'s NSWorkspace'"'"'s sharedWorkspace'"'"'s runningApplications()' -e 'repeat with anApp in activeApps' -e 'try' -e 'set this_app to anApp'"'"'s localizedName() as text' -e 'if this_app is not missing value and this_app is not "" then' -e 'set end of r to this_app' -e 'end if' -e 'on error' -e '-- Skip apps without names' -e 'end try' -e 'end repeat' -e 'return r'
+```
+
+**Download Files**
+
+<DownloadButton filename="get_list_of_running_processes_using_appkit.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="get_list_of_running_processes_using_appkit.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="get_list_of_running_processes_using_appkit" type="binary" label="Download Binary" />
+<DownloadButton filename="get_list_of_running_processes_using_appkit.app" type="app" label="Download Applet" />
 
 ## References
 

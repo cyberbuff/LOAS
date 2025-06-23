@@ -1,0 +1,41 @@
+name: "Command and Scripting Interpreter: AppleScript"
+tests:
+  - name: Display dialog box to capture user password
+    reference: https://www.picussecurity.com/resource/blog/atomic-stealer-amos-macos-threat-analysis
+    language: AppleScript
+    description: Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.
+    tcc_required: true
+    command: |
+      display dialog "#{description}" with title "#{title}" default answer "" with icon caution buttons {"Continue"} default button "Continue" with hidden answer
+    args:
+      title: "Auto-Updates System"
+      description: "The launcher needs permissions to enable background auto-updates.Please enter your password."
+
+  - name: Open application
+    language: AppleScript
+    description: Opens an application on the system. The application will be in focus after running the command.
+    tcc_required: true
+    command: |
+      tell application "#{applicationName}" to activate
+    args:
+      applicationName: "Finder"
+
+  - name: Launch application
+    language: AppleScript
+    reference: https://redcanary.com/threat-detection-report/techniques/applescript/
+    description: Lauches an application on the system. The application will be in the background after running the command.
+    tcc_required: true
+    command: |
+      tell application "#{applicationName}" to launch
+    args:
+      applicationName: "Finder"
+
+  - name: Close application
+    language: AppleScript
+    reference: https://redcanary.com/threat-detection-report/techniques/applescript/
+    description: Closes an application on the system.
+    tcc_required: true
+    command: |
+      tell application "#{applicationName}" to close windows
+    args:
+      applicationName: "Finder"

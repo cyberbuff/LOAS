@@ -39,7 +39,34 @@ osascript -e 'tell application "System Events" to shutdown'
 <DownloadButton filename="shutdown_system_using_system_events.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="shutdown_system_using_system_events.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="shutdown_system_using_system_events" type="binary" label="Download Binary" />
-<DownloadButton filename="shutdown_system_using_system_events.app" type="app" label="Download .app" />
+<DownloadButton filename="shutdown_system_using_system_events.app" type="app" label="Download Applet" />
+
+---
+
+### Atomic Test #2 - Reboot system (using System Events)
+
+Reboots the system using the reboot command from System Events.
+
+**Requirements:**
+
+- TCC Required: ✅
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events" to reboot
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "System Events" to reboot'
+```
+
+**Download Files**
+
+<DownloadButton filename="reboot_system_using_system_events.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="reboot_system_using_system_events.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="reboot_system_using_system_events" type="binary" label="Download Binary" />
+<DownloadButton filename="reboot_system_using_system_events.app" type="app" label="Download Applet" />
 
 ## References
 
