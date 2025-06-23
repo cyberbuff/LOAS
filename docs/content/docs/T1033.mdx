@@ -102,26 +102,26 @@ Retrieves the current user's username using the System Events JXA command.
 ```javascript tab="<Code /> Script"
 const app = Application("System Events")
 const user = app.currentUser();
-const longName =user.fullName();
+const longName = user.fullName();
 const shortName = user.name();
 const userHome = user.homeDirectory();
 
-console.log("Name:", longName)
-console.log("Username:", shortName)
-console.log("Home Directory:", userHome)
+`Name: ${longName}
+Username: ${shortName}
+Home Directory: ${userHome}`
 ```
 
 
 ```bash tab="<Terminal /> Execution"
-osascript -l JavaScript -e 'const app = Application("System Events")' -e 'const user = app.currentUser();' -e 'const longName =user.fullName();' -e 'const shortName = user.name();' -e 'const userHome = user.homeDirectory();' -e 'console.log("Name:", longName)' -e 'console.log("Username:", shortName)' -e 'console.log("Home Directory:", userHome)'
+osascript -l JavaScript -e 'const app = Application("System Events")' -e 'const user = app.currentUser();' -e 'const longName = user.fullName();' -e 'const shortName = user.name();' -e 'const userHome = user.homeDirectory();' -e '`Name: ${longName}' -e 'Username: ${shortName}' -e 'Home Directory: ${userHome}`'
 ```
 
 #### Download Files
 
 <DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_information_using_system_events_jxa.js" label="Download .js" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_information_using_system_events_jxa.swift" label="Download .swift" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_information_using_system_events_jxa" label="Download Binary" />
 <DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_information_using_system_events_jxa.app" label="Download .app" />
-*Note: JavaScript files are compiled to app bundles but do not have Swift wrappers*
-
 
 ## References
 
