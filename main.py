@@ -10,6 +10,9 @@ from rich.console import Console
 from rich.table import Table
 import json
 from pathlib import Path
+import requests
+import tempfile
+import shutil
 from mitreattack.stix20 import MitreAttackData
 
 app = typer.Typer(
@@ -23,19 +26,32 @@ console = Console()
 _mitre_attack_data = None
 
 
+def check_directory_exists(directory: str, name: str) -> bool:
+    """Check if a directory exists and print error if not"""
+    if not os.path.exists(directory):
+        console.print(f"[red]❌ {name} directory '{directory}' does not exist[/red]")
+        return False
+    return True
+
+
+def count_files(directory: str, pattern: str) -> int:
+    """Count files matching pattern in directory, return 0 if directory doesn't exist"""
+    if not os.path.exists(directory):
+        return 0
+    return len(glob.glob(f"{directory}/**/{pattern}", recursive=True))
+
+
 def get_mitre_attack_data():
     """Get or initialize MITRE ATT&CK data"""
     global _mitre_attack_data
     if _mitre_attack_data is None:
         try:
             # Download the latest enterprise attack data from MITRE's GitHub
-            import requests
-            import tempfile
-
-            url = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"
             console.print("[blue]Downloading MITRE ATT&CK data...[/blue]")
 
-            response = requests.get(url)
+            response = requests.get(
+                "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"
+            )
             response.raise_for_status()
 
             # Save to temporary file
@@ -49,8 +65,6 @@ def get_mitre_attack_data():
             console.print("[green]✅ MITRE ATT&CK data loaded successfully[/green]")
 
             # Clean up temp file
-            import os
-
             os.unlink(temp_file)
 
         except Exception as e:
@@ -654,9 +668,12 @@ def convert_yaml_to_script(
 
                 # Create subdirectory based on the YAML file structure
                 yaml_dir_path = os.path.dirname(file_path)
-                technique_name = os.path.basename(yaml_dir_path)
-                script_output_dir = os.path.join(output_dir, technique_name)
-                swift_script_output_dir = os.path.join(swift_output_dir, technique_name)
+                technique_id = os.path.basename(yaml_dir_path)
+
+                directory_name = f"{technique_id}"
+
+                script_output_dir = os.path.join(output_dir, directory_name)
+                swift_script_output_dir = os.path.join(swift_output_dir, directory_name)
 
                 if not os.path.exists(script_output_dir):
                     os.makedirs(script_output_dir)
@@ -891,6 +908,7 @@ def generate_technique_markdown(
     # Tests section
     markdown_lines.append("## Atomic Tests")
     markdown_lines.append("")
+    directory_name = f"{technique_id}"
 
     for i, test in enumerate(tests, 1):
         # Test header
@@ -989,6 +1007,59 @@ def generate_technique_markdown(
 
         markdown_lines.append("")
 
+        # Download buttons section
+        markdown_lines.append("#### Download Files")
+        markdown_lines.append("")
+
+        # Generate safe filename for the test
+        safe_name = re.sub(r"[^\w\s-]", "", test.name)
+        safe_name = re.sub(r"[-\s]+", "_", safe_name)
+        safe_name = safe_name.lower()
+
+        # AppleScript file download
+        if test.language == "AppleScript":
+            scpt_filename = f"{safe_name}.scpt"
+            markdown_lines.append(
+                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{scpt_filename}" label="Download .scpt" />'
+            )
+
+            # Swift file download (only for AppleScript tests)
+            swift_filename = f"{safe_name}.swift"
+            markdown_lines.append(
+                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{swift_filename}" label="Download .swift" />'
+            )
+
+            # Binary download (Swift executable)
+            binary_filename = safe_name
+            markdown_lines.append(
+                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{binary_filename}" label="Download Binary" />'
+            )
+
+            # App bundle download
+            app_filename = f"{safe_name}.app"
+            markdown_lines.append(
+                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{app_filename}" label="Download .app" />'
+            )
+
+        elif test.language == "JavaScript":
+            js_filename = f"{safe_name}.js"
+            markdown_lines.append(
+                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{js_filename}" label="Download .js" />'
+            )
+
+            # App bundle download (JavaScript files are compiled to .app)
+            app_filename = f"{safe_name}.app"
+            markdown_lines.append(
+                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{app_filename}" label="Download .app" />'
+            )
+
+            markdown_lines.append(
+                "*Note: JavaScript files are compiled to app bundles but do not have Swift wrappers*"
+            )
+            markdown_lines.append("")
+
+        markdown_lines.append("")
+
         # Separator between tests
         if i < len(tests):
             markdown_lines.append("---")
@@ -1017,8 +1088,7 @@ def validate(
     """Validate YAML test definition files"""
     console.print("[bold blue]🔍 Validating YAML files...[/bold blue]")
 
-    if not os.path.exists(yaml_dir):
-        console.print(f"[red]❌ YAML directory '{yaml_dir}' does not exist[/red]")
+    if not check_directory_exists(yaml_dir, "YAML"):
         raise typer.Exit(1)
 
     success = validate_yaml_files(yaml_dir)
@@ -1039,8 +1109,7 @@ def convert(
     """Convert YAML test definitions to OSAScript files"""
     console.print("[bold blue]🔄 Converting YAML to OSAScript files...[/bold blue]")
 
-    if not os.path.exists(yaml_dir):
-        console.print(f"[red]❌ YAML directory '{yaml_dir}' does not exist[/red]")
+    if not check_directory_exists(yaml_dir, "YAML"):
         raise typer.Exit(1)
 
     success = convert_yaml_to_script(yaml_dir, output_dir)
@@ -1120,7 +1189,12 @@ def build(
     # Clean
     console.print("\n[bold]Step 0: Cleaning[/bold]")
     try:
-        clean(osascript_dir, output_dir, confirm=True)
+        clean(
+            osascript_dir=osascript_dir,
+            output_dir=output_dir,
+            binaries_dir="binaries",
+            confirm=True,
+        )
     except Exception as e:
         console.print(f"[red]❌ Failed to clean[/red]: {e}")
         raise typer.Exit(1)
@@ -1178,6 +1252,10 @@ def stats(
         str,
         typer.Option("--output-dir", "-o", help="Directory containing compiled apps"),
     ] = "releases",
+    binaries_dir: Annotated[
+        str,
+        typer.Option("--binaries-dir", help="Directory containing compiled binaries"),
+    ] = "binaries",
 ):
     """Show statistics about YAML files, OSAScript files, and compiled apps"""
 
@@ -1196,55 +1274,28 @@ def stats(
         technique = os.path.basename(os.path.dirname(file))
         techniques.add(technique)
 
-    # Count OSAScript files
-    osascript_files = (
-        glob.glob(f"{osascript_dir}/**/*.scpt", recursive=True)
-        if os.path.exists(osascript_dir)
-        else []
-    )
-    osascript_count = len(osascript_files)
+    # Count files using helper function
+    osascript_count = count_files(osascript_dir, "*.scpt")
+    js_count = count_files(osascript_dir, "*.js")
+    swift_count = count_files(swift_dir, "*.swift")
+    app_count = count_files(output_dir, "*.app")
 
-    # Count JavaScript files
-    js_files = (
-        glob.glob(f"{osascript_dir}/**/*.js", recursive=True)
-        if os.path.exists(osascript_dir)
-        else []
-    )
-    js_count = len(js_files)
-
-    # Count Swift files
-    swift_files = (
-        glob.glob(f"{swift_dir}/**/*.swift", recursive=True)
-        if os.path.exists(swift_dir)
-        else []
-    )
-    swift_count = len(swift_files)
-
-    # Count compiled apps
-    app_files = (
-        glob.glob(f"{output_dir}/**/*.app", recursive=True)
-        if os.path.exists(output_dir)
-        else []
-    )
-    app_count = len(app_files)
-
-    # Count compiled executables
-    exe_files = []
-    if os.path.exists(output_dir):
-        for root, dirs, files in os.walk(output_dir):
+    # Count compiled executables (requires special handling)
+    exe_count = 0
+    if os.path.exists(binaries_dir):
+        for root, dirs, files in os.walk(binaries_dir):
             for file in files:
                 if not file.endswith(".app") and os.access(
                     os.path.join(root, file), os.X_OK
                 ):
-                    exe_files.append(os.path.join(root, file))
-    exe_count = len(exe_files)
+                    exe_count += 1
 
     table.add_row("YAML Files", str(yaml_count), f"Across {len(techniques)} techniques")
     table.add_row("AppleScript Files", str(osascript_count), "Generated from YAML")
     table.add_row("JavaScript Files", str(js_count), "Generated from YAML")
     table.add_row("Swift Wrappers", str(swift_count), "For AppleScript commands")
     table.add_row("Compiled Apps", str(app_count), "Ready to execute")
-    table.add_row("Compiled Executables", str(exe_count), "Swift executables")
+    table.add_row("Executables", str(exe_count), "Compiled executables")
 
     console.print(table)
 
@@ -1270,6 +1321,10 @@ def clean(
         str,
         typer.Option("--output-dir", "-o", help="Directory containing compiled apps"),
     ] = "releases",
+    binaries_dir: Annotated[
+        str,
+        typer.Option("--binaries-dir", help="Directory containing compiled binaries"),
+    ] = "binaries",
     docs_dir: Annotated[
         str,
         typer.Option("--docs-dir", "-d", help="Directory containing markdown files"),
@@ -1293,6 +1348,8 @@ def clean(
         dirs_to_clean.append(swift_dir)
     if os.path.exists(output_dir):
         dirs_to_clean.append(output_dir)
+    if os.path.exists(binaries_dir):
+        dirs_to_clean.append(binaries_dir)
     if os.path.exists(scripts_json):
         files_to_clean.append(scripts_json)
 
@@ -1323,8 +1380,6 @@ def clean(
         if not typer.confirm("Are you sure you want to continue?"):
             console.print("[yellow]Operation cancelled[/yellow]")
             return
-
-    import shutil
 
     for dir_path in dirs_to_clean:
         try:
@@ -1360,8 +1415,7 @@ def dump_json(
     """Dump all scripts as JSON array for web consumption"""
     console.print("[bold blue]📄 Dumping scripts to JSON...[/bold blue]")
 
-    if not os.path.exists(yaml_dir):
-        console.print(f"[red]❌ YAML directory '{yaml_dir}' does not exist[/red]")
+    if not check_directory_exists(yaml_dir, "YAML"):
         raise typer.Exit(1)
 
     success = dump_scripts_json(yaml_dir, output_file)
@@ -1382,8 +1436,7 @@ def generate_docs(
     """Generate markdown documentation files from YAML test definitions"""
     console.print("[bold blue]📝 Generating markdown documentation...[/bold blue]")
 
-    if not os.path.exists(yaml_dir):
-        console.print(f"[red]❌ YAML directory '{yaml_dir}' does not exist[/red]")
+    if not check_directory_exists(yaml_dir, "YAML"):
         raise typer.Exit(1)
 
     success = generate_markdown_docs(yaml_dir, output_dir)
