@@ -54,7 +54,36 @@ osascript t1547.015_1.scpt "/System/Applications/Calculator.app" False
 <DownloadButton filename="create_a_login_item.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="create_a_login_item.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="create_a_login_item" type="binary" label="Download Binary" />
-<DownloadButton filename="create_a_login_item.app" type="app" label="Download .app" />
+<DownloadButton filename="create_a_login_item.app" type="app" label="Download Applet" />
+
+---
+
+### Atomic Test #2 - Discover login items
+
+Lists all login items.
+
+**Requirements:**
+
+- TCC Required: ✅
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events" to get name of every login item
+tell application "System Events" to get the hidden of every login item
+tell application "System Events" to get the path of every login item
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "System Events" to get name of every login item' -e 'tell application "System Events" to get the hidden of every login item' -e 'tell application "System Events" to get the path of every login item'
+```
+
+**Download Files**
+
+<DownloadButton filename="discover_login_items.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="discover_login_items.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="discover_login_items" type="binary" label="Download Binary" />
+<DownloadButton filename="discover_login_items.app" type="app" label="Download Applet" />
 
 ## References
 

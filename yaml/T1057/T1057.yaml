@@ -18,3 +18,26 @@ tests:
           log appName
         end repeat
       end tell
+
+  - name: Get list of running processes using AppKit
+    reference: https://www.sentinelone.com/blog/how-offensive-actors-use-applescript-for-attacking-macos/
+    language: AppleScript
+    description: "Retrieves running applications using AppKit framework."
+    tcc_required: true
+    command: |-
+      use framework "AppKit"
+      use framework "Foundation"
+
+      set r to {}
+      set activeApps to current application's NSWorkspace's sharedWorkspace's runningApplications()
+      repeat with anApp in activeApps
+          try
+              set this_app to anApp's localizedName() as text
+              if this_app is not missing value and this_app is not "" then
+                  set end of r to this_app
+              end if
+          on error
+              -- Skip apps without names
+          end try
+      end repeat
+      return r

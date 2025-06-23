@@ -11,6 +11,17 @@
     "test_number": 1
   },
   {
+    "name": "Reboot system (using System Events)",
+    "command": "tell application \"System Events\" to reboot",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Reboots the system using the reboot command from System Events.",
+    "technique_id": "T1529",
+    "technique_name": "System Shutdown/Reboot",
+    "test_number": 2
+  },
+  {
     "name": "Delete a login item",
     "command": "tell application \"System Events\" to delete login item \"#{loginItemName}\"\n",
     "language": "AppleScript",
@@ -66,6 +77,17 @@
     "test_number": 2
   },
   {
+    "name": "Get list of running processes using AppKit",
+    "command": "use framework \"AppKit\"\nuse framework \"Foundation\"\n\nset r to {}\nset activeApps to current application's NSWorkspace's sharedWorkspace's runningApplications()\nrepeat with anApp in activeApps\n    try\n        set this_app to anApp's localizedName() as text\n        if this_app is not missing value and this_app is not \"\" then\n            set end of r to this_app\n        end if\n    on error\n        -- Skip apps without names\n    end try\nend repeat\nreturn r",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Retrieves running applications using AppKit framework.",
+    "technique_id": "T1057",
+    "technique_name": "Process Discovery",
+    "test_number": 3
+  },
+  {
     "name": "Create a login item",
     "command": "tell application \"System Events\" to make login item at end with properties {path:\"#{itemPath}\", hidden:\"#{isHidden}\"}\n",
     "language": "AppleScript",
@@ -75,6 +97,17 @@
     "technique_id": "T1547.015",
     "technique_name": "Boot or Logon Autostart Execution: Login Items",
     "test_number": 1
+  },
+  {
+    "name": "Discover login items",
+    "command": "tell application \"System Events\" to get name of every login item\ntell application \"System Events\" to get the hidden of every login item\ntell application \"System Events\" to get the path of every login item",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Lists all login items.",
+    "technique_id": "T1547.015",
+    "technique_name": "Boot or Logon Autostart Execution: Login Items",
+    "test_number": 2
   },
   {
     "name": "Get user (using System Info)",
@@ -119,6 +152,17 @@
     "technique_id": "T1033",
     "technique_name": "System Owner/User Discovery",
     "test_number": 4
+  },
+  {
+    "name": "Hide Application Window",
+    "command": "tell application \"#{applicationName}\" to set visible of front window to false\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Hides the Application window",
+    "technique_id": "T1564.003",
+    "technique_name": "Hide Artifacts: Hidden Window",
+    "test_number": 1
   },
   {
     "name": "Get clipboard content (using System Events)",
@@ -185,5 +229,49 @@
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
     "test_number": 6
+  },
+  {
+    "name": "Display dialog box to capture user password",
+    "command": "display dialog \"#{description}\" with title \"#{title}\" default answer \"\" with icon caution buttons {\"Continue\"} default button \"Continue\" with hidden answer\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.",
+    "technique_id": "T1059.002",
+    "technique_name": "Command and Scripting Interpreter: AppleScript",
+    "test_number": 1
+  },
+  {
+    "name": "Open application",
+    "command": "tell application \"#{applicationName}\" to activate\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Opens an application on the system. The application will be in focus after running the command.",
+    "technique_id": "T1059.002",
+    "technique_name": "Command and Scripting Interpreter: AppleScript",
+    "test_number": 2
+  },
+  {
+    "name": "Launch application",
+    "command": "tell application \"#{applicationName}\" to launch\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Lauches an application on the system. The application will be in the background after running the command.",
+    "technique_id": "T1059.002",
+    "technique_name": "Command and Scripting Interpreter: AppleScript",
+    "test_number": 3
+  },
+  {
+    "name": "Close application",
+    "command": "tell application \"#{applicationName}\" to close windows\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Closes an application on the system.",
+    "technique_id": "T1059.002",
+    "technique_name": "Command and Scripting Interpreter: AppleScript",
+    "test_number": 4
   }
 ]

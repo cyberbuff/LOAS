@@ -12,9 +12,9 @@ on:
   workflow_dispatch:
     inputs:
       bump_version:
-        description: 'Bump version type'
+        description: "Bump version type"
         required: false
-        default: 'patch'
+        default: "patch"
         type: choice
         options:
           - none
@@ -22,7 +22,7 @@ on:
           - minor
           - major
       custom_version:
-        description: 'Custom version (e.g., 1.2.3)'
+        description: "Custom version (e.g., 1.2.3)"
         required: false
         type: string
 
@@ -56,12 +56,12 @@ jobs:
       - name: Run pre-commit
         run: uv run pre-commit run --all-files || exit 0
 
-      - name: Zip .app files individually
+      - name: Zip applets files individually
         run: |
-          # Find all .app files in the releases/T****/ subdirectories and zip them individually
+          # Find all applets in the releases/T****/ subdirectories and zip them individually
           if [ -d "./releases" ]; then
             cd releases
-            # Find all .app files in T**** subdirectories
+            # Find all applets in T**** subdirectories
             for app_file in T*/*.app; do
               if [ -d "$app_file" ]; then
                 echo "Zipping $app_file..."
