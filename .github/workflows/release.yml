@@ -73,7 +73,7 @@ jobs:
               echo "Bumping $BUMP_TYPE version"
 
               # Get the new version that would be created (dry run)
-              NEW_VERSION=$(uv run bump2version --dry-run --list $BUMP_TYPE | grep new_version | sed 's/.*=//')
+              NEW_VERSION=$(uv run bump2version --dry-run --list --allow-dirty $BUMP_TYPE  | grep new_version | sed 's/.*=//')
               echo "New version: $NEW_VERSION"
               echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
