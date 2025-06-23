@@ -7,52 +7,14 @@ import { File, Folder, Files } from 'fumadocs-ui/components/files';
 
 This project provides multiple ways to execute Apple Script. You can execute it via CLI, osascript, Swift, `.app` file or run the binary directly.
 
-The GitHub releases page provides all of these different files for each test.
+The [GitHub releases page](https://github.com/cyberbuff/loas/releases/latest) provides all of these different files for each test.
 
-- [osascript](https://github.com/loas-project/loas/releases/download/latest/osascript.zip)
-- [Swift](https://github.com/loas-project/loas/releases/download/latest/swift.zip)
-- [`.app` file](https://github.com/loas-project/loas/releases/download/latest/app.zip)
-- [Binary](https://github.com/loas-project/loas/releases/download/latest/binaries.zip)
-
-
-<Files>
-  <Folder name="osascript" defaultOpen>
-    <Folder name="T1033">
-        <File name="get_user_information_using_system_events_jxa.js" />
-        <File name="get_user_using_system_info.scpt" />
-    </Folder>
-    <Folder name="T1082" defaultOpen>
-        <File name="get_system_information.scpt" />
-    </Folder>
-  </Folder>
-  <Folder name="swift" defaultOpen>
-    <Folder name="T1033">
-        <File name="get_user_information_using_system_events_jxa.swift" />
-        <File name="get_user_using_system_info.swift" />
-    </Folder>
-    <Folder name="T1082" defaultOpen>
-        <File name="get_system_information.swift" />
-    </Folder>
-  </Folder>
-    <Folder name="apps" defaultOpen>
-    <Folder name="T1033">
-        <File name="get_user_information_using_system_events_jxa.app" />
-        <File name="get_user_using_system_info.app" />
-    </Folder>
-    <Folder name="T1082" defaultOpen>
-        <File name="get_system_information.app" />
-    </Folder>
-  </Folder>
-  <Folder name="binaries" defaultOpen>
-    <Folder name="T1033">
-        <File name="get_user_information_using_system_events_jxa" />
-        <File name="get_user_using_system_info" />
-    </Folder>
-    <Folder name="T1082" defaultOpen>
-        <File name="get_system_information" />
-    </Folder>
-  </Folder>
-</Files>
+<Folder name="releases" defaultOpen>
+  <File name="get_user_using_system_info.scpt" />
+  <File name="get_user_using_system_info.swift" />
+  <File name="get_user_using_system_info.app.zip" />
+  <File name="get_user_using_system_info" />
+</Folder>
 
 
 If you would like to compile the files yourself, you can use the following command:
@@ -95,6 +57,8 @@ osascript get_clipboard_content_using_applescript_defaults.scpt
 ## Swift
 
 Download the Swift file from the [releases page](https://github.com/loas-project/loas/releases) and execute it with Swift.
+
+Note: You might need to install XCode Developer Tools to run Swift files.
 
 ```bash
 swift get_clipboard_content_using_applescript_defaults.swift
