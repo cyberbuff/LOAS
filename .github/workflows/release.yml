@@ -75,29 +75,31 @@ jobs:
       - name: Bump version
         id: bump_version
         run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
           if [ "${{ github.event.inputs.bump_version }}" != "none" ]; then
             if [ "${{ github.event.inputs.custom_version }}" != "" ]; then
               # Set custom version
               NEW_VERSION="${{ github.event.inputs.custom_version }}"
               echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
-              # Update both files with custom version using bump2version
-              uv run bump2version --new-version $NEW_VERSION --allow-dirty
+              # Update both files with custom version using bump-my-version
+              uv run bump-my-version --new-version $NEW_VERSION --allow-dirty
             else
-              # Bump version based on type using bump2version
+              # Bump version based on type using bump-my-version
               BUMP_TYPE="${{ github.event.inputs.bump_version }}"
               echo "Bumping $BUMP_TYPE version"
 
               # Get the new version that would be created (dry run)
-              NEW_VERSION=$(uv run bump2version --dry-run --list --allow-dirty $BUMP_TYPE  | grep new_version | sed 's/.*=//')
+              NEW_VERSION=$(uv run bump-my-version show --increment $BUMP_TYPE new_version)
               echo "New version: $NEW_VERSION"
               echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
               # Actually bump the version
-              uv run bump2version --allow-dirty $BUMP_TYPE
+              uv run bump-my-version bump --allow-dirty $BUMP_TYPE
             fi
 
-            # Push the changes (bump2version handles the commit)
+            # Push the changes (bump-my-version handles the commit)
             git push
           else
             # Use run number as version if no bump specified
