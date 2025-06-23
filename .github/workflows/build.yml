@@ -2,6 +2,11 @@ name: Build OSAScript Applications
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: write
+  packages: write
+
 on:
   workflow_dispatch:
     inputs:
@@ -46,6 +51,9 @@ jobs:
       - name: Gather stats
         run: |
           uv run main.py stats
+
+      - name: Run pre-commit
+        run: uv run pre-commit run --all-files
 
       - name: Bump version
         id: bump_version

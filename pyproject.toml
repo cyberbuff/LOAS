@@ -15,6 +15,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "bump2version>=1.0.1",
+    "pre-commit>=4.2.0",
     "ruff>=0.12.0",
 ]
 
