@@ -453,6 +453,194 @@ class Script(BaseModel):
 
         return "\n".join(swift_lines)
 
+    def to_swift_javascript_wrapper(self) -> str:
+        """Convert the JavaScript to a Swift wrapper that executes it via OSAKit"""
+        swift_lines = []
+
+        # Add header comment
+        swift_lines.append("#!/usr/bin/env swift")
+        swift_lines.append("")
+        swift_lines.append("import Foundation")
+        swift_lines.append("import OSAKit")
+        swift_lines.append("")
+
+        # Add help function
+        swift_lines.append("func showHelp() {")
+        swift_lines.append(f'    print("{self.name}")')
+        swift_lines.append('    print("")')
+        swift_lines.append('    print("Usage: Run this script to execute the JXA.")')
+
+        if self.args:
+            swift_lines.append('    print("")')
+            swift_lines.append('    print("Available arguments (in order):")')
+            for i, (arg_name, default_value) in enumerate(self.args.items(), 1):
+                swift_lines.append(
+                    f'    print("  {i}. {arg_name}: {type(default_value).__name__} (default: {default_value})")'
+                )
+
+            swift_lines.append('    print("")')
+            swift_lines.append('    print("Usage examples:")')
+            swift_lines.append(
+                '    print("  swift script.swift                    # Use all defaults")'
+            )
+
+            if len(self.args) == 1:
+                arg_name = list(self.args.keys())[0]
+                swift_lines.append(
+                    f'    print("  swift script.swift [value]            # Set {arg_name}")'
+                )
+            else:
+                swift_lines.append(
+                    '    print("  swift script.swift [arg1]             # Set first argument")'
+                )
+                swift_lines.append(
+                    '    print("  swift script.swift [arg1] [arg2] ...  # Set all arguments")'
+                )
+
+        swift_lines.append("}")
+        swift_lines.append("")
+
+        # Add JXA execution function
+        swift_lines.append("// Execute JXA using OSAKit")
+        swift_lines.append("func executeJXA(_ script: String) -> String {")
+        swift_lines.append("    // Create an OSA script with JavaScript language")
+        swift_lines.append(
+            '    let osaScript = OSAScript(source: script, language: OSALanguage(forName: "JavaScript"))'
+        )
+        swift_lines.append("    ")
+        swift_lines.append("    // Execute the script")
+        swift_lines.append("    let result = osaScript.executeAndReturnError(nil)")
+        swift_lines.append("    ")
+        swift_lines.append("    return result?.stringValue ?? result.debugDescription")
+        swift_lines.append("}")
+        swift_lines.append("")
+
+        # Add main function
+        if self.args:
+            param_list = list(self.args.keys())
+            param_types = []
+            for arg_name, default_value in self.args.items():
+                if isinstance(default_value, str):
+                    param_types.append(f"{arg_name}: String")
+                elif isinstance(default_value, bool):
+                    param_types.append(f"{arg_name}: Bool")
+                elif isinstance(default_value, int):
+                    param_types.append(f"{arg_name}: Int")
+                elif isinstance(default_value, float):
+                    param_types.append(f"{arg_name}: Double")
+                else:
+                    param_types.append(f"{arg_name}: String")
+
+            swift_lines.append(f"func main({', '.join(param_types)}) {{")
+        else:
+            swift_lines.append("func main() {")
+
+        # Process the JavaScript command
+        command = self.command
+
+        # Replace template variables if args exist
+        if self.args:
+            for arg_name, default_value in self.args.items():
+                # Replace #{arg_name} (without quotes) with the parameter name
+                command = command.replace(f"#{{{arg_name}}}", f"\\({arg_name})")
+
+        # Create the JXA script execution
+        swift_lines.append('    let jxaScript = """')
+        # Add proper indentation to each line of the JavaScript command
+        for line in command.strip().split("\n"):
+            if line.strip():  # Only add non-empty lines
+                swift_lines.append(f"    {line.strip()}")
+        swift_lines.append('    """')
+        swift_lines.append("")
+        swift_lines.append('    print("JXA Output:")')
+        swift_lines.append("    print(executeJXA(jxaScript))")
+        swift_lines.append("}")
+        swift_lines.append("")
+
+        # Add example usage with default values
+        if self.args:
+            swift_lines.append("// Example usage with default values:")
+            example_params = []
+            for arg_name, default_value in self.args.items():
+                if isinstance(default_value, str):
+                    example_params.append(f'{arg_name}: "{default_value}"')
+                elif isinstance(default_value, bool):
+                    example_params.append(f"{arg_name}: {str(default_value).lower()}")
+                else:
+                    example_params.append(f"{arg_name}: {default_value}")
+
+            swift_lines.append(f"// main({', '.join(example_params)})")
+            swift_lines.append("")
+
+        # Add command line argument handling
+        swift_lines.append("// Handle command line arguments")
+        swift_lines.append("let arguments = CommandLine.arguments")
+        swift_lines.append("")
+        swift_lines.append('if arguments.count > 1 && arguments[1] == "-h" {')
+        swift_lines.append("    showHelp()")
+        swift_lines.append("    exit(0)")
+        swift_lines.append("}")
+        swift_lines.append("")
+
+        if self.args:
+            # Generate argument parsing logic
+            arg_names = list(self.args.keys())
+            for i, (arg_name, default_value) in enumerate(self.args.items()):
+                swift_lines.append(f"// Parse {arg_name} (argument {i + 1})")
+
+                # Map Python types to Swift types
+                if isinstance(default_value, str):
+                    swift_type = "String"
+                elif isinstance(default_value, bool):
+                    swift_type = "Bool"
+                elif isinstance(default_value, int):
+                    swift_type = "Int"
+                elif isinstance(default_value, float):
+                    swift_type = "Double"
+                else:
+                    swift_type = "String"
+
+                swift_lines.append(f"var {arg_name}: {swift_type}")
+
+                if isinstance(default_value, str):
+                    swift_lines.append(f'    = "{default_value}"')
+                elif isinstance(default_value, bool):
+                    swift_lines.append(f"    = {str(default_value).lower()}")
+                elif isinstance(default_value, int):
+                    swift_lines.append(f"    = {default_value}")
+                elif isinstance(default_value, float):
+                    swift_lines.append(f"    = {default_value}")
+                else:
+                    swift_lines.append(f'    = "{default_value}"')
+
+                swift_lines.append(f"if arguments.count > {i + 1} {{")
+                if isinstance(default_value, str):
+                    swift_lines.append(f"    {arg_name} = arguments[{i + 1}]")
+                elif isinstance(default_value, bool):
+                    swift_lines.append(
+                        f'    {arg_name} = arguments[{i + 1}].lowercased() == "true"'
+                    )
+                elif isinstance(default_value, int):
+                    swift_lines.append(
+                        f"    {arg_name} = Int(arguments[{i + 1}]) ?? {default_value}"
+                    )
+                elif isinstance(default_value, float):
+                    swift_lines.append(
+                        f"    {arg_name} = Double(arguments[{i + 1}]) ?? {default_value}"
+                    )
+                else:
+                    swift_lines.append(f"    {arg_name} = arguments[{i + 1}]")
+                swift_lines.append("}")
+                swift_lines.append("")
+
+            # Call main with parsed arguments
+            param_list = [f"{arg_name}: {arg_name}" for arg_name in arg_names]
+            swift_lines.append(f"main({', '.join(param_list)})")
+        else:
+            swift_lines.append("main()")
+
+        return "\n".join(swift_lines)
+
     def get_filename(self) -> str:
         """Generate a safe filename for the script"""
         # Remove special characters and replace spaces with underscores
@@ -697,7 +885,7 @@ def convert_yaml_to_script(
                     converted_count += 1
                     console.print(f"✅ [green]Created[/green] {output_path}")
 
-                    # Create Swift wrapper only for AppleScript scripts
+                    # Create Swift wrapper for both AppleScript and JavaScript scripts
                     if script.language == "AppleScript":
                         swift_filename = script.get_filename().replace(
                             ".scpt", ".swift"
@@ -708,6 +896,21 @@ def convert_yaml_to_script(
 
                         # Create Swift version that wraps the original AppleScript
                         swift_wrapper = script.to_swift_wrapper()
+
+                        with open(swift_output_path, "w") as swift_file:
+                            swift_file.write(swift_wrapper)
+
+                        swift_converted_count += 1
+                        console.print(f"✅ [green]Created[/green] {swift_output_path}")
+
+                    elif script.language == "JavaScript":
+                        swift_filename = script.get_filename().replace(".js", ".swift")
+                        swift_output_path = os.path.join(
+                            swift_script_output_dir, swift_filename
+                        )
+
+                        # Create Swift version that wraps the original JavaScript
+                        swift_wrapper = script.to_swift_javascript_wrapper()
 
                         with open(swift_output_path, "w") as swift_file:
                             swift_file.write(swift_wrapper)
@@ -1023,7 +1226,7 @@ def generate_technique_markdown(
                 f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{scpt_filename}" label="Download .scpt" />'
             )
 
-            # Swift file download (only for AppleScript tests)
+            # Swift file download (for AppleScript tests)
             swift_filename = f"{safe_name}.swift"
             markdown_lines.append(
                 f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{swift_filename}" label="Download .swift" />'
@@ -1047,16 +1250,23 @@ def generate_technique_markdown(
                 f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{js_filename}" label="Download .js" />'
             )
 
+            # Swift file download (for JavaScript tests)
+            swift_filename = f"{safe_name}.swift"
+            markdown_lines.append(
+                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{swift_filename}" label="Download .swift" />'
+            )
+
+            # Binary download (Swift executable)
+            binary_filename = safe_name
+            markdown_lines.append(
+                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{binary_filename}" label="Download Binary" />'
+            )
+
             # App bundle download (JavaScript files are compiled to .app)
             app_filename = f"{safe_name}.app"
             markdown_lines.append(
                 f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{app_filename}" label="Download .app" />'
             )
-
-            markdown_lines.append(
-                "*Note: JavaScript files are compiled to app bundles but do not have Swift wrappers*"
-            )
-            markdown_lines.append("")
 
         markdown_lines.append("")
 
