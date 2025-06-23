@@ -6,6 +6,7 @@ concurrency:
 permissions:
   contents: write
   packages: write
+  actions: read
 
 on:
   workflow_dispatch:
@@ -87,6 +88,13 @@ jobs:
             echo "version=v${{ github.run_number }}" >> $GITHUB_OUTPUT
           fi
 
+      - name: Create and push tag
+        if: github.event.inputs.bump_version != 'none'
+        run: |
+          VERSION="${{ steps.bump_version.outputs.version }}"
+          git tag -a "$VERSION" -m "Release $VERSION"
+          git push origin "$VERSION"
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -109,5 +117,6 @@ jobs:
             binaries/**/*
           draft: false
           prerelease: false
+          fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
