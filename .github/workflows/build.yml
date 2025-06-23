@@ -38,10 +38,7 @@ jobs:
           python-version-file: "pyproject.toml"
 
       - name: Install Python dependencies
-        run: uv sync --no-dev
-
-      - name: Install bumpversion
-        run: uv add bumpversion
+        run: uv sync
 
       - name: Run complete build process
         run: uv run main.py build
@@ -59,37 +56,23 @@ jobs:
               NEW_VERSION="${{ github.event.inputs.custom_version }}"
               echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
-              # Update pyproject.toml
-              uv run bumpversion --new-version $NEW_VERSION --allow-dirty pyproject.toml
-
-              # Update package.json
-              cd docs
-              uv run bumpversion --new-version $NEW_VERSION --allow-dirty package.json
-              cd ..
+              # Update both files with custom version using bump2version
+              uv run bump2version --new-version $NEW_VERSION --allow-dirty
             else
-              # Bump version based on type
+              # Bump version based on type using bump2version
               BUMP_TYPE="${{ github.event.inputs.bump_version }}"
               echo "Bumping $BUMP_TYPE version"
 
-              # Bump pyproject.toml
-              uv run bumpversion --allow-dirty $BUMP_TYPE pyproject.toml
-
-              # Get new version from pyproject.toml
-              NEW_VERSION=$(grep '^version = ' pyproject.toml | cut -d'"' -f2)
+              # Get the new version that would be created (dry run)
+              NEW_VERSION=$(uv run bump2version --dry-run --list $BUMP_TYPE | grep new_version | sed 's/.*=//')
               echo "New version: $NEW_VERSION"
               echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
-              # Update package.json with same version
-              cd docs
-              uv run bumpversion --new-version $NEW_VERSION --allow-dirty package.json
-              cd ..
+              # Actually bump the version
+              uv run bump2version --allow-dirty $BUMP_TYPE
             fi
 
-            # Commit and push the version bump
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git add pyproject.toml docs/package.json
-            git commit -m "Bump version to $NEW_VERSION"
+            # Push the changes (bump2version handles the commit)
             git push
           else
             # Use run number as version if no bump specified
