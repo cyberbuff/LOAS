@@ -87,14 +87,11 @@ jobs:
             echo "version=v${{ github.run_number }}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.bump_version.outputs.version }}
-          release_name: Release ${{ steps.bump_version.outputs.version }}
+          name: Release ${{ steps.bump_version.outputs.version }}
           body: |
             Automated build release
 
@@ -105,45 +102,12 @@ jobs:
             - **Compiled binaries**: Executable binaries
 
             Download the files above to get the complete build output.
+          files: |
+            osascripts/**/*
+            releases/**/*
+            swift/**/*
+            binaries/**/*
           draft: false
           prerelease: false
-
-      - name: Upload OSAScript files to release
-        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./osascripts/
-          asset_name: osascripts
-          asset_content_type: application/octet-stream
-
-      - name: Upload compiled applications to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./releases/
-          asset_name: apps
-          asset_content_type: application/octet-stream
-
-      - name: Upload swift files to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./swift/
-          asset_name: swift
-          asset_content_type: application/octet-stream
-
-      - name: Upload compiled binaries to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./binaries/
-          asset_name: binaries
-          asset_content_type: application/octet-stream
