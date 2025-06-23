@@ -104,13 +104,9 @@ export const columns: ColumnDef<Script>[] = [
 			return (
 				<div className="flex items-center gap-2">
 					{elevationRequired ? (
-						<>
-							<CircleCheckBig className="h-4 w-4 text-green-500" />
-						</>
+						<CircleCheckBig className="h-4 w-4 text-green-500" />
 					) : (
-						<>
-							<CircleMinus className="h-4 w-4 text-red-500" />
-						</>
+						<CircleMinus className="h-4 w-4 text-red-500" />
 					)}
 				</div>
 			);
@@ -124,13 +120,9 @@ export const columns: ColumnDef<Script>[] = [
 			return (
 				<div className="flex items-center gap-2">
 					{tccRequired ? (
-						<>
-							<CircleCheckBig className="h-4 w-4 text-green-500" />
-						</>
+						<CircleCheckBig className="h-4 w-4 text-green-500" />
 					) : (
-						<>
-							<CircleMinus className="h-4 w-4 text-red-500" />
-						</>
+						<CircleMinus className="h-4 w-4 text-red-500" />
 					)}
 				</div>
 			);

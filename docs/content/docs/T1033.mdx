@@ -32,6 +32,13 @@ long user name of (system info)
 osascript -e 'short user name of (system info)' -e 'long user name of (system info)'
 ```
 
+#### Download Files
+
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_using_system_info.scpt" label="Download .scpt" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_using_system_info.swift" label="Download .swift" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_using_system_info" label="Download Binary" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_using_system_info.app" label="Download .app" />
+
 ---
 
 ### Atomic Test #2 - Get user (using environment variable)
@@ -48,6 +55,13 @@ return (system attribute "USER")
 ```bash tab="<Terminal /> Execution"
 osascript -e 'return (system attribute "USER")'
 ```
+
+#### Download Files
+
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_using_environment_variable.scpt" label="Download .scpt" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_using_environment_variable.swift" label="Download .swift" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_using_environment_variable" label="Download Binary" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_using_environment_variable.app" label="Download .app" />
 
 ---
 
@@ -66,6 +80,13 @@ return (list folder "/Users")
 ```bash tab="<Terminal /> Execution"
 osascript -e 'return (list folder "/Users")'
 ```
+
+#### Download Files
+
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_using_list_folder.scpt" label="Download .scpt" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_using_list_folder.swift" label="Download .swift" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_using_list_folder" label="Download Binary" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_using_list_folder.app" label="Download .app" />
 
 ---
 
@@ -94,6 +115,13 @@ console.log("Home Directory:", userHome)
 ```bash tab="<Terminal /> Execution"
 osascript -l JavaScript -e 'const app = Application("System Events")' -e 'const user = app.currentUser();' -e 'const longName =user.fullName();' -e 'const shortName = user.name();' -e 'const userHome = user.homeDirectory();' -e 'console.log("Name:", longName)' -e 'console.log("Username:", shortName)' -e 'console.log("Home Directory:", userHome)'
 ```
+
+#### Download Files
+
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_information_using_system_events_jxa.js" label="Download .js" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1033/get_user_information_using_system_events_jxa.app" label="Download .app" />
+*Note: JavaScript files are compiled to app bundles but do not have Swift wrappers*
+
 
 ## References
 

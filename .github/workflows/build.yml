@@ -3,17 +3,29 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 on:
-  # push:
-  #   branches:
-  #     - main
   workflow_dispatch:
+    inputs:
+      bump_version:
+        description: 'Bump version type'
+        required: false
+        default: 'none'
+        type: choice
+        options:
+          - none
+          - patch
+          - minor
+          - major
+      custom_version:
+        description: 'Custom version (e.g., 1.2.3)'
+        required: false
+        type: string
 
 jobs:
   build:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -28,6 +40,9 @@ jobs:
       - name: Install Python dependencies
         run: uv sync --no-dev
 
+      - name: Install bumpversion
+        run: uv add bumpversion
+
       - name: Run complete build process
         run: uv run main.py build
 
@@ -35,16 +50,109 @@ jobs:
         run: |
           uv run main.py stats
 
-      - name: Upload OSAScript files as artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: osascripts
-          path: osascripts/
-          retention-days: 30
+      - name: Bump version
+        id: bump_version
+        run: |
+          if [ "${{ github.event.inputs.bump_version }}" != "none" ]; then
+            if [ "${{ github.event.inputs.custom_version }}" != "" ]; then
+              # Set custom version
+              NEW_VERSION="${{ github.event.inputs.custom_version }}"
+              echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Upload compiled applications as artifacts
-        uses: actions/upload-artifact@v3
+              # Update pyproject.toml
+              uv run bumpversion --new-version $NEW_VERSION --allow-dirty pyproject.toml
+
+              # Update package.json
+              cd docs
+              uv run bumpversion --new-version $NEW_VERSION --allow-dirty package.json
+              cd ..
+            else
+              # Bump version based on type
+              BUMP_TYPE="${{ github.event.inputs.bump_version }}"
+              echo "Bumping $BUMP_TYPE version"
+
+              # Bump pyproject.toml
+              uv run bumpversion --allow-dirty $BUMP_TYPE pyproject.toml
+
+              # Get new version from pyproject.toml
+              NEW_VERSION=$(grep '^version = ' pyproject.toml | cut -d'"' -f2)
+              echo "New version: $NEW_VERSION"
+              echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+              # Update package.json with same version
+              cd docs
+              uv run bumpversion --new-version $NEW_VERSION --allow-dirty package.json
+              cd ..
+            fi
+
+            # Commit and push the version bump
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add pyproject.toml docs/package.json
+            git commit -m "Bump version to $NEW_VERSION"
+            git push
+          else
+            # Use run number as version if no bump specified
+            echo "version=v${{ github.run_number }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: compiled-apps
-          path: releases/
-          retention-days: 30
+          tag_name: ${{ steps.bump_version.outputs.version }}
+          release_name: Release ${{ steps.bump_version.outputs.version }}
+          body: |
+            Automated build release
+
+            ## Artifacts
+            - **OSAScript files**: AppleScript source files
+            - **Compiled applications**: Built application bundles
+            - **Swift files**: Swift source code
+            - **Compiled binaries**: Executable binaries
+
+            Download the files above to get the complete build output.
+          draft: false
+          prerelease: false
+
+      - name: Upload OSAScript files to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./osascripts/
+          asset_name: osascripts
+          asset_content_type: application/octet-stream
+
+      - name: Upload compiled applications to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./releases/
+          asset_name: apps
+          asset_content_type: application/octet-stream
+
+      - name: Upload swift files to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./swift/
+          asset_name: swift
+          asset_content_type: application/octet-stream
+
+      - name: Upload compiled binaries to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./binaries/
+          asset_name: binaries
+          asset_content_type: application/octet-stream

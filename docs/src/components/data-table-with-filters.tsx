@@ -76,7 +76,8 @@ function applyFilters<T>(data: T[], filters: any[], columns: any[]): T[] {
 					const searchTerm = String(filterValues[0] || "").toLowerCase();
 					if (filter.operator === "contains") {
 						return textValue.includes(searchTerm);
-					} else if (filter.operator === "does not contain") {
+					}
+					if (filter.operator === "does not contain") {
 						return !textValue.includes(searchTerm);
 					}
 					return true;
@@ -86,11 +87,14 @@ function applyFilters<T>(data: T[], filters: any[], columns: any[]): T[] {
 					const stringValue = String(value);
 					if (filter.operator === "is") {
 						return filterValues.includes(stringValue);
-					} else if (filter.operator === "is not") {
+					}
+					if (filter.operator === "is not") {
 						return !filterValues.includes(stringValue);
-					} else if (filter.operator === "is any of") {
+					}
+					if (filter.operator === "is any of") {
 						return filterValues.includes(stringValue);
-					} else if (filter.operator === "is none of") {
+					}
+					if (filter.operator === "is none of") {
 						return !filterValues.includes(stringValue);
 					}
 					return true;
@@ -200,7 +204,7 @@ export function DataTableWithFilters<TData, TValue>({
 		(row: any) => {
 			const script = row.original as Script;
 			const techniqueId = script.technique_id;
-			const techniqueName = script.technique_name;
+			const _techniqueName = script.technique_name;
 
 			// Convert technique name to URL-friendly anchor format
 			const anchor = script.name

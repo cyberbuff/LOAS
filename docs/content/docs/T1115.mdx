@@ -34,6 +34,13 @@ tell application "System Events" to get the clipboard
 osascript -e 'tell application "System Events" to get the clipboard'
 ```
 
+#### Download Files
+
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/get_clipboard_content_using_system_events.scpt" label="Download .scpt" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/get_clipboard_content_using_system_events.swift" label="Download .swift" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/get_clipboard_content_using_system_events" label="Download Binary" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/get_clipboard_content_using_system_events.app" label="Download .app" />
+
 ---
 
 ### Atomic Test #2 - Set clipboard content (using System Events)
@@ -67,6 +74,13 @@ osascript t1115_2.scpt
 osascript t1115_2.scpt "Hello, world!"
 ```
 
+#### Download Files
+
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/set_clipboard_content_using_system_events.scpt" label="Download .scpt" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/set_clipboard_content_using_system_events.swift" label="Download .swift" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/set_clipboard_content_using_system_events" label="Download Binary" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/set_clipboard_content_using_system_events.app" label="Download .app" />
+
 ---
 
 ### Atomic Test #3 - Get clipboard content (using AppleScript defaults)
@@ -82,6 +96,13 @@ the clipboard
 ```bash tab="<Terminal /> Execution"
 osascript -e 'the clipboard'
 ```
+
+#### Download Files
+
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/get_clipboard_content_using_applescript_defaults.scpt" label="Download .scpt" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/get_clipboard_content_using_applescript_defaults.swift" label="Download .swift" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/get_clipboard_content_using_applescript_defaults" label="Download Binary" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/get_clipboard_content_using_applescript_defaults.app" label="Download .app" />
 
 ---
 
@@ -112,6 +133,13 @@ osascript t1115_4.scpt
 osascript t1115_4.scpt "Hello, world!"
 ```
 
+#### Download Files
+
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/set_clipboard_content_using_applescript_defaults.scpt" label="Download .scpt" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/set_clipboard_content_using_applescript_defaults.swift" label="Download .swift" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/set_clipboard_content_using_applescript_defaults" label="Download Binary" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/set_clipboard_content_using_applescript_defaults.app" label="Download .app" />
+
 ---
 
 ### Atomic Test #5 - Get clipboard content (using Cocoa)
@@ -133,6 +161,13 @@ clipboardContent
 ```bash tab="<Terminal /> Execution"
 osascript -e 'use framework "Foundation"' -e 'use framework "AppKit"' -e 'set pasteboard to current application'"'"'s NSPasteboard'"'"'s generalPasteboard()' -e 'set clipboardContent to pasteboard'"'"'s stringForType:"public.utf8-plain-text"' -e 'clipboardContent'
 ```
+
+#### Download Files
+
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/get_clipboard_content_using_cocoa.scpt" label="Download .scpt" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/get_clipboard_content_using_cocoa.swift" label="Download .swift" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/get_clipboard_content_using_cocoa" label="Download Binary" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/get_clipboard_content_using_cocoa.app" label="Download .app" />
 
 ---
 
@@ -167,6 +202,13 @@ osascript t1115_6.scpt
 # With custom arguments
 osascript t1115_6.scpt "Hello, world!"
 ```
+
+#### Download Files
+
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/set_clipboard_content_using_cocoa.scpt" label="Download .scpt" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/set_clipboard_content_using_cocoa.swift" label="Download .swift" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/set_clipboard_content_using_cocoa" label="Download Binary" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1115/set_clipboard_content_using_cocoa.app" label="Download .app" />
 
 ## References
 

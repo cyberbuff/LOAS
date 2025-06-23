@@ -35,6 +35,13 @@ tell application "System Events" to get name of every process
 osascript -e 'tell application "System Events" to get name of every process'
 ```
 
+#### Download Files
+
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1057/get_all_processes.scpt" label="Download .scpt" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1057/get_all_processes.swift" label="Download .swift" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1057/get_all_processes" label="Download Binary" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1057/get_all_processes.app" label="Download .app" />
+
 ---
 
 ### Atomic Test #2 - Get all application processes (User facing applications)
@@ -59,6 +66,13 @@ end tell
 ```bash tab="<Terminal /> Execution"
 osascript -e 'tell application "System Events"' -e 'set runningApps to name of every application process' -e 'repeat with appName in runningApps' -e 'log appName' -e 'end repeat' -e 'end tell'
 ```
+
+#### Download Files
+
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1057/get_all_application_processes_user_facing_applications.scpt" label="Download .scpt" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1057/get_all_application_processes_user_facing_applications.swift" label="Download .swift" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1057/get_all_application_processes_user_facing_applications" label="Download Binary" />
+<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/T1057/get_all_application_processes_user_facing_applications.app" label="Download .app" />
 
 ## References
 
