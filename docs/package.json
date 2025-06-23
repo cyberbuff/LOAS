@@ -3,7 +3,7 @@
 	"version": "0.1.5",
 	"private": true,
 	"scripts": {
-		"build": "next build",
+		"build": "node -e \"process.env.APP_VERSION=require('./package.json').version\" && next build",
 		"dev": "next dev --turbo",
 		"start": "next start",
 		"format": "biome check --write --no-errors-on-unmatched --unsafe",

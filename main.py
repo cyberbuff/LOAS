@@ -26,6 +26,29 @@ console = Console()
 _mitre_attack_data = None
 
 
+def get_version() -> str:
+    """Get version from environment variable or package.json"""
+    # First try to get from environment variable (set during build)
+    version = os.getenv("APP_VERSION")
+    if version:
+        return version
+
+    # Fallback to reading from package.json
+    try:
+        package_json_path = os.path.join("docs", "package.json")
+        if os.path.exists(package_json_path):
+            with open(package_json_path, "r") as f:
+                package_data = json.load(f)
+                return package_data.get("version", "0.1.4")
+    except Exception as e:
+        console.print(
+            f"[yellow]Warning: Failed to read version from package.json: {e}[/yellow]"
+        )
+
+    # Final fallback
+    return "0.1.4"
+
+
 def check_directory_exists(directory: str, name: str) -> bool:
     """Check if a directory exists and print error if not"""
     if not os.path.exists(directory):
@@ -1223,49 +1246,49 @@ def generate_technique_markdown(
         if test.language == "AppleScript":
             scpt_filename = f"{safe_name}.scpt"
             markdown_lines.append(
-                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{scpt_filename}" label="Download .scpt" />'
+                f'<DownloadButton filename="{scpt_filename}" directory="{directory_name}" type="scpt" label="Download .scpt" />'
             )
 
             # Swift file download (for AppleScript tests)
             swift_filename = f"{safe_name}.swift"
             markdown_lines.append(
-                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{swift_filename}" label="Download .swift" />'
+                f'<DownloadButton filename="{swift_filename}" directory="{directory_name}" type="swift" label="Download .swift" />'
             )
 
             # Binary download (Swift executable)
             binary_filename = safe_name
             markdown_lines.append(
-                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{binary_filename}" label="Download Binary" />'
+                f'<DownloadButton filename="{binary_filename}" directory="{directory_name}" type="binary" label="Download Binary" />'
             )
 
             # App bundle download
             app_filename = f"{safe_name}.app"
             markdown_lines.append(
-                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{app_filename}" label="Download .app" />'
+                f'<DownloadButton filename="{app_filename}" directory="{directory_name}" type="app" label="Download .app" />'
             )
 
         elif test.language == "JavaScript":
             js_filename = f"{safe_name}.js"
             markdown_lines.append(
-                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{js_filename}" label="Download .js" />'
+                f'<DownloadButton filename="{js_filename}" directory="{directory_name}" type="js" label="Download .js" />'
             )
 
             # Swift file download (for JavaScript tests)
             swift_filename = f"{safe_name}.swift"
             markdown_lines.append(
-                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{swift_filename}" label="Download .swift" />'
+                f'<DownloadButton filename="{swift_filename}" directory="{directory_name}" type="swift" label="Download .swift" />'
             )
 
             # Binary download (Swift executable)
             binary_filename = safe_name
             markdown_lines.append(
-                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{binary_filename}" label="Download Binary" />'
+                f'<DownloadButton filename="{binary_filename}" directory="{directory_name}" type="binary" label="Download Binary" />'
             )
 
             # App bundle download (JavaScript files are compiled to .app)
             app_filename = f"{safe_name}.app"
             markdown_lines.append(
-                f'<DownloadButton href="https://github.com/cyberbuff/loas/releases/latest/{directory_name}/{app_filename}" label="Download .app" />'
+                f'<DownloadButton filename="{app_filename}" directory="{directory_name}" type="app" label="Download .app" />'
             )
 
         markdown_lines.append("")
