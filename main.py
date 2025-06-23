@@ -575,7 +575,6 @@ class Script(BaseModel):
                 swift_lines.append(f"    {line.strip()}")
         swift_lines.append('    """')
         swift_lines.append("")
-        swift_lines.append('    print("JXA Output:")')
         swift_lines.append("    print(executeJXA(jxaScript))")
         swift_lines.append("}")
         swift_lines.append("")
@@ -1233,7 +1232,7 @@ def generate_technique_markdown(
         markdown_lines.append("")
 
         # Download buttons section
-        markdown_lines.append("#### Download Files")
+        markdown_lines.append("**Download Files**")
         markdown_lines.append("")
 
         # Generate safe filename for the test
