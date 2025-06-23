@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { useVersion } from "@/hooks/use-version";
+import getConfig from 'next/config';
 
 interface DownloadButtonProps {
   href?: string;
   label: string;
   filename?: string;
-  directory?: string;
   type?: 'scpt' | 'swift' | 'binary' | 'app' | 'js';
 }
 
@@ -13,10 +12,10 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
   href,
   label,
   filename,
-  directory,
   type
 }) => {
-  const version = useVersion();
+  const { publicRuntimeConfig } = getConfig();
+  const version = publicRuntimeConfig?.version || '1.0.0';
 
   // If href is provided, use it directly
   if (href) {
@@ -30,8 +29,8 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
   }
 
   // Otherwise, construct the URL using the version and other props
-  if (filename && directory && type) {
-    const baseUrl = `https://github.com/cyberbuff/loas/releases/download/${version}/${directory}/${filename}`;
+  if (filename && type) {
+    const baseUrl = `https://github.com/cyberbuff/loas/releases/download/${version}/${filename}`;
     const finalUrl = type === 'app' ? `${baseUrl}.zip` : baseUrl;
 
     return (

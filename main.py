@@ -1134,7 +1134,6 @@ def generate_technique_markdown(
     # Tests section
     markdown_lines.append("## Atomic Tests")
     markdown_lines.append("")
-    directory_name = f"{technique_id}"
 
     for i, test in enumerate(tests, 1):
         # Test header
@@ -1246,49 +1245,49 @@ def generate_technique_markdown(
         if test.language == "AppleScript":
             scpt_filename = f"{safe_name}.scpt"
             markdown_lines.append(
-                f'<DownloadButton filename="{scpt_filename}" directory="{directory_name}" type="scpt" label="Download .scpt" />'
+                f'<DownloadButton filename="{scpt_filename}" type="scpt" label="Download .scpt" />'
             )
 
             # Swift file download (for AppleScript tests)
             swift_filename = f"{safe_name}.swift"
             markdown_lines.append(
-                f'<DownloadButton filename="{swift_filename}" directory="{directory_name}" type="swift" label="Download .swift" />'
+                f'<DownloadButton filename="{swift_filename}" type="swift" label="Download .swift" />'
             )
 
             # Binary download (Swift executable)
             binary_filename = safe_name
             markdown_lines.append(
-                f'<DownloadButton filename="{binary_filename}" directory="{directory_name}" type="binary" label="Download Binary" />'
+                f'<DownloadButton filename="{binary_filename}" type="binary" label="Download Binary" />'
             )
 
             # App bundle download
             app_filename = f"{safe_name}.app"
             markdown_lines.append(
-                f'<DownloadButton filename="{app_filename}" directory="{directory_name}" type="app" label="Download .app" />'
+                f'<DownloadButton filename="{app_filename}" type="app" label="Download .app" />'
             )
 
         elif test.language == "JavaScript":
             js_filename = f"{safe_name}.js"
             markdown_lines.append(
-                f'<DownloadButton filename="{js_filename}" directory="{directory_name}" type="js" label="Download .js" />'
+                f'<DownloadButton filename="{js_filename}" type="js" label="Download .js" />'
             )
 
             # Swift file download (for JavaScript tests)
             swift_filename = f"{safe_name}.swift"
             markdown_lines.append(
-                f'<DownloadButton filename="{swift_filename}" directory="{directory_name}" type="swift" label="Download .swift" />'
+                f'<DownloadButton filename="{swift_filename}" type="swift" label="Download .swift" />'
             )
 
             # Binary download (Swift executable)
             binary_filename = safe_name
             markdown_lines.append(
-                f'<DownloadButton filename="{binary_filename}" directory="{directory_name}" type="binary" label="Download Binary" />'
+                f'<DownloadButton filename="{binary_filename}" type="binary" label="Download Binary" />'
             )
 
             # App bundle download (JavaScript files are compiled to .app)
             app_filename = f"{safe_name}.app"
             markdown_lines.append(
-                f'<DownloadButton filename="{app_filename}" directory="{directory_name}" type="app" label="Download .app" />'
+                f'<DownloadButton filename="{app_filename}" type="app" label="Download .app" />'
             )
 
         markdown_lines.append("")
