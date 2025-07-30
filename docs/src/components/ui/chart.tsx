@@ -80,7 +80,6 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 
 	return (
 		<style
-			// biome-ignore lint/security/noDangerouslySetInnerHtml: third party component
 			dangerouslySetInnerHTML={{
 				__html: Object.entries(THEMES)
 					.map(
