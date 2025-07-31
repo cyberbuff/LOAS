@@ -1,0 +1,45 @@
+---
+title: T1010
+description: "Application Window Discovery"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may attempt to get a listing of open application windows. Window listings could convey information about how the system is used.(Citation: Prevailion DarkWatchman 2021) For example, information about application windows could be used identify potential data to collect as well as identifying security tooling ([Security Software Discovery](https://attack.mitre.org/techniques/T1518/001)) to evade.(Citation: ESET Grandoreiro April 2020)
+
+Adversaries typically abuse system features for this type of enumeration. For example, they may gather information through native system features such as [Command and Scripting Interpreter](https://attack.mitre.org/techniques/T1059) commands and [Native API](https://attack.mitre.org/techniques/T1106) functions.
+
+
+## Atomic Tests
+
+### Atomic Test #1 - Find all running applications which currently have a window
+
+This test uses System Events to find all running applications that currently have a window.
+
+**Requirements:**
+
+- TCC Required: ✅
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events" to get name of every process whose background only is false
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "System Events" to get name of every process whose background only is false'
+```
+
+**Download Files**
+
+<DownloadButton filename="find_all_running_applications_which_currently_have_a_window.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="find_all_running_applications_which_currently_have_a_window.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="find_all_running_applications_which_currently_have_a_window" type="binary" label="Download Binary" />
+<DownloadButton filename="find_all_running_applications_which_currently_have_a_window.app" type="app" label="Download Applet" />
+
+## References
+
+- [MITRE ATT&CK T1010](https://attack.mitre.org/techniques/T1010/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)
