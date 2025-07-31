@@ -1,0 +1,8 @@
+name: "Account Discovery: Local Account"
+tests:
+  - name: Enumerate Local Accounts
+    description: Adversaries may attempt to get a listing of local system accounts.
+    tcc_required: true
+    language: AppleScript
+    command: |
+      tell application "System Events" to get name of every user

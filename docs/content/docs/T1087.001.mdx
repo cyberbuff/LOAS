@@ -1,0 +1,46 @@
+---
+title: T1087.001
+description: "Account Discovery  Local Account"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may attempt to get a listing of local system accounts. This information can help adversaries determine which local accounts exist on a system to aid in follow-on behavior.
+
+Commands such as <code>net user</code> and <code>net localgroup</code> of the [Net](https://attack.mitre.org/software/S0039) utility and <code>id</code> and <code>groups</code> on macOS and Linux can list local users and groups.(Citation: Mandiant APT1)(Citation: id man page)(Citation: groups man page) On Linux, local users can also be enumerated through the use of the <code>/etc/passwd</code> file. On macOS, the <code>dscl . list /Users</code> command can be used to enumerate local accounts. On ESXi servers, the `esxcli system account list` command can list local user accounts.(Citation: Crowdstrike Hypervisor Jackpotting Pt 2 2021)
+
+
+## Atomic Tests
+
+### Atomic Test #1 - Enumerate Local Accounts
+
+Adversaries may attempt to get a listing of local system accounts.
+
+**Requirements:**
+
+- TCC Required: ✅
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events" to get name of every user
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "System Events" to get name of every user'
+```
+
+**Download Files**
+
+<DownloadButton filename="enumerate_local_accounts.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="enumerate_local_accounts.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="enumerate_local_accounts" type="binary" label="Download Binary" />
+<DownloadButton filename="enumerate_local_accounts.app" type="app" label="Download Applet" />
+
+## References
+
+- [MITRE ATT&CK T1087.001](https://attack.mitre.org/techniques/T1087/001/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

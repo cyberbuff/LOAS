@@ -1,0 +1,74 @@
+---
+title: T1113
+description: "Input Capture"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may attempt to take screen captures of the desktop to gather information over the course of an operation. Screen capturing functionality may be included as a feature of a remote access tool used in post-compromise operations. Taking a screenshot is also typically possible through native utilities or API calls, such as <code>CopyFromScreen</code>, <code>xwd</code>, or <code>screencapture</code>.(Citation: CopyFromScreen .NET)(Citation: Antiquated Mac Malware)
+
+
+
+## Atomic Tests
+
+### Atomic Test #1 - Take screenshot
+
+Capture screenshot using System Events
+
+**Requirements:**
+
+- TCC Required: ✅
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events" to key code 20 using {command down, shift down}
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "System Events" to key code 20 using {command down, shift down}'
+```
+
+**Download Files**
+
+<DownloadButton filename="take_screenshot.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="take_screenshot.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="take_screenshot" type="binary" label="Download Binary" />
+<DownloadButton filename="take_screenshot.app" type="app" label="Download Applet" />
+
+---
+
+### Atomic Test #2 - Screen Recording
+
+Record screen using System Events
+
+**Requirements:**
+
+- TCC Required: ✅
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events"
+  key code 51 using {shift down, command down} -- Cmd+Shift+3 for full screen
+  delay 0.5
+end tell
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "System Events"' -e 'key code 51 using {shift down, command down} -- Cmd+Shift+3 for full screen' -e 'delay 0.5' -e 'end tell'
+```
+
+**Download Files**
+
+<DownloadButton filename="screen_recording.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="screen_recording.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="screen_recording" type="binary" label="Download Binary" />
+<DownloadButton filename="screen_recording.app" type="app" label="Download Applet" />
+
+## References
+
+- [MITRE ATT&CK T1113](https://attack.mitre.org/techniques/T1113/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)
