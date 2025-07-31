@@ -4,5 +4,5 @@ tests:
     description: An adversary may gather the system time and/or time zone settings from a local or remote system.
     tcc_required: true
     language: AppleScript
-    command: |
+    command: |-
       current date

@@ -1,10 +1,10 @@
 name: Service Stop
 tests:
   - name: Stop Application
-    description: Adversaries may stop or disable services on a system to render those services unavailable to legitimate users
+    description: Adversaries may stop or disable services on a system to render those services unavailable to legitimate users.
     tcc_required: true
     language: AppleScript
     args:
       applicationName: "Mail"
-    command: |
+    command: |-
       tell application "#{applicationName}" to quit

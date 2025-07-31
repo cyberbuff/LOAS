@@ -1,5 +1,60 @@
 [
   {
+    "name": "Get System Locale",
+    "command": "get user locale of (system info)",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "An adversary may gather the system locale settings in order to infer the geographical location of that host.",
+    "technique_id": "T1614.001",
+    "technique_name": "System Location Discovery: System Language Discovery",
+    "test_number": 1
+  },
+  {
+    "name": "Get System Language using env variable",
+    "command": "system attribute \"LANG\"",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "An adversary may gather the system language settings from the LANG environment variable.",
+    "technique_id": "T1614.001",
+    "technique_name": "System Location Discovery: System Language Discovery",
+    "test_number": 2
+  },
+  {
+    "name": "Find removable storage devices using System Events",
+    "command": "tell application \"System Events\" to get name of every disk whose ejectable is true\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "This test uses System Events to find all connected removable storage devices.",
+    "technique_id": "T1120",
+    "technique_name": "Peripheral Device Discovery",
+    "test_number": 1
+  },
+  {
+    "name": "Find removable storage devices using Finder",
+    "command": "tell application \"Finder\" to get name of every disk whose ejectable is true\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "This test uses Finder to find all connected removable storage devices.",
+    "technique_id": "T1120",
+    "technique_name": "Peripheral Device Discovery",
+    "test_number": 2
+  },
+  {
+    "name": "Find all devices using System Information",
+    "command": "tell application \"System Information\" to get properties",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "This test uses System Information to find all connected devices (bluetooth, wifi, disks, application versions, etc.).",
+    "technique_id": "T1120",
+    "technique_name": "Peripheral Device Discovery",
+    "test_number": 3
+  },
+  {
     "name": "Shutdown system (using System Events)",
     "command": "tell application \"System Events\" to shutdown",
     "language": "AppleScript",
@@ -100,7 +155,7 @@
   },
   {
     "name": "Enumerate Local Accounts",
-    "command": "tell application \"System Events\" to get name of every user\n",
+    "command": "tell application \"System Events\" to get name of every user",
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": true,
@@ -188,7 +243,7 @@
   },
   {
     "name": "Get System Time",
-    "command": "current date\n",
+    "command": "current date",
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": true,
@@ -320,13 +375,24 @@
   },
   {
     "name": "Stop Application",
-    "command": "tell application \"#{applicationName}\" to quit\n",
+    "command": "tell application \"#{applicationName}\" to quit",
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": true,
-    "description": "Adversaries may stop or disable services on a system to render those services unavailable to legitimate users",
+    "description": "Adversaries may stop or disable services on a system to render those services unavailable to legitimate users.",
     "technique_id": "T1489",
     "technique_name": "Service Stop",
+    "test_number": 1
+  },
+  {
+    "name": "Find all running applications which currently have a window",
+    "command": "tell application \"System Events\" to get name of every process whose background only is false",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "This test uses System Events to find all running applications that currently have a window.",
+    "technique_id": "T1010",
+    "technique_name": "Application Window Discovery",
     "test_number": 1
   }
 ]

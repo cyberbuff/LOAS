@@ -1,23 +1,23 @@
 name: "System Owner/User Discovery"
 tests:
   - name: Get user (using System Info)
-    language: AppleScript
     description: Retrieves the current user's short and long names using the system info command.
+    language: AppleScript
     command: |
       short user name of (system info)
       long user name of (system info)
 
   - name: Get user (using environment variable)
-    language: AppleScript
     description: Retrieves the current user's username using the USER environment variable.
+    language: AppleScript
     command: |
       return (system attribute "USER")
 
   - name: Get user (using list folder)
-    language: AppleScript
     description: |
       By default, the user's home directory is /Users/username.
       Listing the /Users folder will return the list of users on the system.
+    language: AppleScript
     command: |-
       return (list folder "/Users")
 
