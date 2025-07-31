@@ -1,0 +1,99 @@
+---
+title: T1120
+description: "Peripheral Device Discovery"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may attempt to gather information about attached peripheral devices and components connected to a computer system.(Citation: Peripheral Discovery Linux)(Citation: Peripheral Discovery macOS) Peripheral devices could include auxiliary resources that support a variety of functionalities such as keyboards, printers, cameras, smart card readers, or removable storage. The information may be used to enhance their awareness of the system and network environment or may be used for further actions.
+
+
+## Atomic Tests
+
+### Atomic Test #1 - Find removable storage devices using System Events
+
+This test uses System Events to find all connected removable storage devices.
+
+**Requirements:**
+
+- TCC Required: ✅
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events" to get name of every disk whose ejectable is true
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "System Events" to get name of every disk whose ejectable is true'
+```
+
+**Download Files**
+
+<DownloadButton filename="find_removable_storage_devices_using_system_events.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="find_removable_storage_devices_using_system_events.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="find_removable_storage_devices_using_system_events" type="binary" label="Download Binary" />
+<DownloadButton filename="find_removable_storage_devices_using_system_events.app" type="app" label="Download Applet" />
+
+---
+
+### Atomic Test #2 - Find removable storage devices using Finder
+
+This test uses Finder to find all connected removable storage devices.
+
+**Requirements:**
+
+- TCC Required: ✅
+
+
+```applescript tab="<Code /> Script"
+tell application "Finder" to get name of every disk whose ejectable is true
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "Finder" to get name of every disk whose ejectable is true'
+```
+
+**Download Files**
+
+<DownloadButton filename="find_removable_storage_devices_using_finder.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="find_removable_storage_devices_using_finder.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="find_removable_storage_devices_using_finder" type="binary" label="Download Binary" />
+<DownloadButton filename="find_removable_storage_devices_using_finder.app" type="app" label="Download Applet" />
+
+---
+
+### Atomic Test #3 - Find all devices using System Information
+
+This test uses System Information to find all connected devices (bluetooth, wifi, disks, application versions, etc.).
+
+**Requirements:**
+
+- TCC Required: ✅
+
+
+```applescript tab="<Code /> Script"
+tell application "System Information" to get properties
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "System Information" to get properties'
+```
+
+**Download Files**
+
+<DownloadButton filename="find_all_devices_using_system_information.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="find_all_devices_using_system_information.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="find_all_devices_using_system_information" type="binary" label="Download Binary" />
+<DownloadButton filename="find_all_devices_using_system_information.app" type="app" label="Download Applet" />
+
+## References
+
+- [MITRE ATT&CK T1120](https://attack.mitre.org/techniques/T1120/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)
