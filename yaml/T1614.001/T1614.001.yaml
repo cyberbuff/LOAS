@@ -1,0 +1,13 @@
+name: "System Location Discovery: System Language Discovery"
+tests:
+  - name: Get System Locale
+    description: An adversary may gather the system locale settings in order to infer the geographical location of that host.
+    language: AppleScript
+    command: |-
+      get user locale of (system info)
+
+  - name: Get System Language using env variable
+    description: An adversary may gather the system language settings from the LANG environment variable.
+    language: AppleScript
+    command: |-
+      system attribute "LANG"

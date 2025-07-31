@@ -1,0 +1,8 @@
+name: Application Window Discovery
+tests:
+  - name: Find all running applications which currently have a window
+    description: This test uses System Events to find all running applications that currently have a window.
+    language: AppleScript
+    tcc_required: true
+    command: |-
+      tell application "System Events" to get name of every process whose background only is false
