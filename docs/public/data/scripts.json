@@ -33,6 +33,17 @@
     "test_number": 1
   },
   {
+    "name": "List files and directories",
+    "command": "tell application \"Finder\" to get name of every file in \"#{folderName}\"\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "List files and directories using System Events",
+    "technique_id": "T1083",
+    "technique_name": "File and Directory Discovery",
+    "test_number": 1
+  },
+  {
     "name": "Get system information",
     "command": "return (system info)\n",
     "language": "AppleScript",
@@ -86,6 +97,17 @@
     "technique_id": "T1057",
     "technique_name": "Process Discovery",
     "test_number": 3
+  },
+  {
+    "name": "Enumerate Local Accounts",
+    "command": "tell application \"System Events\" to get name of every user\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Adversaries may attempt to get a listing of local system accounts.",
+    "technique_id": "T1087.001",
+    "technique_name": "Account Discovery: Local Account",
+    "test_number": 1
   },
   {
     "name": "Create a login item",
@@ -165,6 +187,17 @@
     "test_number": 1
   },
   {
+    "name": "Get System Time",
+    "command": "current date\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "An adversary may gather the system time and/or time zone settings from a local or remote system.",
+    "technique_id": "T1124",
+    "technique_name": "System Time Discovery",
+    "test_number": 1
+  },
+  {
     "name": "Get clipboard content (using System Events)",
     "command": "tell application \"System Events\" to get the clipboard",
     "language": "AppleScript",
@@ -231,6 +264,17 @@
     "test_number": 6
   },
   {
+    "name": "Take screenshot",
+    "command": "tell application \"System Events\" to key code 20 using {command down, shift down}",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Capture screenshot using System Events",
+    "technique_id": "T1113",
+    "technique_name": "Input Capture",
+    "test_number": 1
+  },
+  {
     "name": "Display dialog box to capture user password",
     "command": "display dialog \"#{description}\" with title \"#{title}\" default answer \"\" with icon caution buttons {\"Continue\"} default button \"Continue\" with hidden answer\n",
     "language": "AppleScript",
@@ -273,5 +317,16 @@
     "technique_id": "T1059.002",
     "technique_name": "Command and Scripting Interpreter: AppleScript",
     "test_number": 4
+  },
+  {
+    "name": "Stop Application",
+    "command": "tell application \"#{applicationName}\" to quit\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Adversaries may stop or disable services on a system to render those services unavailable to legitimate users",
+    "technique_id": "T1489",
+    "technique_name": "Service Stop",
+    "test_number": 1
   }
 ]
