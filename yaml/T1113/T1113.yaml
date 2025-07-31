@@ -1,0 +1,8 @@
+name: Input Capture
+tests:
+  - name: Take screenshot
+    description: Capture screenshot using System Events
+    tcc_required: true
+    language: AppleScript
+    command: |-
+      tell application "System Events" to key code 20 using {command down, shift down}

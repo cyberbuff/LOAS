@@ -1,0 +1,59 @@
+---
+title: T1489
+description: "Service Stop"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may stop or disable services on a system to render those services unavailable to legitimate users. Stopping critical services or processes can inhibit or stop response to an incident or aid in the adversary's overall objectives to cause damage to the environment.(Citation: Talos Olympic Destroyer 2018)(Citation: Novetta Blockbuster) 
+
+Adversaries may accomplish this by disabling individual services of high importance to an organization, such as <code>MSExchangeIS</code>, which will make Exchange content inaccessible.(Citation: Novetta Blockbuster) In some cases, adversaries may stop or disable many or all services to render systems unusable.(Citation: Talos Olympic Destroyer 2018) Services or processes may not allow for modification of their data stores while running. Adversaries may stop services or processes in order to conduct [Data Destruction](https://attack.mitre.org/techniques/T1485) or [Data Encrypted for Impact](https://attack.mitre.org/techniques/T1486) on the data stores of services like Exchange and SQL Server, or on virtual machines hosted on ESXi infrastructure.(Citation: SecureWorks WannaCry Analysis)(Citation: Crowdstrike Hypervisor Jackpotting Pt 2 2021)
+
+
+## Atomic Tests
+
+### Atomic Test #1 - Stop Application
+
+Adversaries may stop or disable services on a system to render those services unavailable to legitimate users
+
+**Requirements:**
+
+- TCC Required: ✅
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| applicationName | str | `Mail` |
+
+
+```applescript tab="<Code /> Script"
+tell application "Mail" to quit
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "Mail" to quit'
+
+# Or save to file and execute
+osascript t1489_1.scpt
+
+# With custom arguments
+osascript t1489_1.scpt "Mail"
+```
+
+**Download Files**
+
+<DownloadButton filename="stop_application.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="stop_application.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="stop_application" type="binary" label="Download Binary" />
+<DownloadButton filename="stop_application.app" type="app" label="Download Applet" />
+
+## References
+
+- [MITRE ATT&CK T1489](https://attack.mitre.org/techniques/T1489/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

@@ -1,0 +1,10 @@
+name: File and Directory Discovery
+tests:
+  - name: List files and directories
+    description: List files and directories using System Events
+    language: AppleScript
+    tcc_required: true
+    command: |
+      tell application "Finder" to get name of every file in "#{folderName}"
+    args:
+      folderName: "Desktop"
