@@ -5,6 +5,6 @@ tests:
     language: AppleScript
     tcc_required: true
     command: |
-      tell application "Finder" to get name of every file in "#{folderName}"
+      tell application "Finder" to get name of every item of folder POSIX file "#{folderName}"
     args:
-      folderName: "Desktop"
+      folderName: "$HOME/Desktop"

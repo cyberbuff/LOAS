@@ -1,6 +1,6 @@
 ---
 title: Executing Apple Script
-description: "Executing Apple Script"
+description: "Learn how to execute Apple Script using various methods"
 icon: Terminal
 ---
 
@@ -27,11 +27,8 @@ uv run main.py build
 ```
 
 Each of these methods generate different set of logs based on the execution tool.
-From what I could find in Sigma rules, Elastic Detection Rules, and Splunk Detection rules, they mostly check only for osascript CLI.
 
-TODO: Add some stats here on how many detections are there for each of the methods.
-
-I used [Red Canary Mac Monitor](https://github.com/redcanaryco/mac-monitor/) to gather the Endpoint Security logs for each of the methods for getting the clipboard content.
+The below sample Endpoint Security logs are gathered using [Red Canary Mac Monitor](https://github.com/redcanaryco/mac-monitor/) for each of the execution methods for getting the clipboard content.
 
 ## osascript CLI
 
