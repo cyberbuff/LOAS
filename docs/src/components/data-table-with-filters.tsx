@@ -335,7 +335,7 @@ export function DataTableWithFilters<TData, TValue>({
               <SelectValue className="ml-2 font-medium" />
             </SelectTrigger>
             <SelectContent side="top">
-              {[10, 20, 30, 40, 50].map((size) => (
+              {[10, 25, 50].map((size) => (
                 <SelectItem key={size} value={`${size}`}>
                   {size}
                 </SelectItem>
