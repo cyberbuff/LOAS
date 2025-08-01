@@ -3,5 +3,5 @@ tests:
   - name: Read local hosts file
     description: Adversaries may analyze data from local host file (/etc/hosts)
     language: AppleScript
-    command: |
+    command: |-
       read POSIX file "/etc/hosts"

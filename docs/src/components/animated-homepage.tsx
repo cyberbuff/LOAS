@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { DataTableWithFilters } from "@/components/data-table-with-filters";
 import { columns, type Script } from "@/components/scripts-columns";
 import Link from "next/link";
