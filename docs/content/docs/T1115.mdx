@@ -14,15 +14,13 @@ For example, on Windows adversaries can access clipboard data by using <code>cli
 macOS and Linux also have commands, such as <code>pbpaste</code>, to grab clipboard contents.(Citation: Operating with EmPyre)
 
 
-## Atomic Tests
+## Tests
 
-### Atomic Test #1 - Get clipboard content (using System Events)
+### Test #1 - Get clipboard content (using System Events)
 
 Retrieves the current clipboard content using System Events.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 
 ```applescript tab="<Code /> Script"
@@ -43,13 +41,11 @@ osascript -e 'tell application "System Events" to get the clipboard'
 
 ---
 
-### Atomic Test #2 - Set clipboard content (using System Events)
+### Test #2 - Set clipboard content (using System Events)
 
 Sets the clipboard content to a specified value using System Events.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 **Input Arguments:**
 
@@ -83,7 +79,7 @@ osascript set_clipboard_content_using_system_events.scpt "Hello, world!"
 
 ---
 
-### Atomic Test #3 - Get clipboard content (using AppleScript defaults)
+### Test #3 - Get clipboard content (using AppleScript defaults)
 
 Retrieves the current clipboard content using AppleScript's built-in clipboard command.
 
@@ -106,7 +102,7 @@ osascript -e 'the clipboard'
 
 ---
 
-### Atomic Test #4 - Set clipboard content (using AppleScript defaults)
+### Test #4 - Set clipboard content (using AppleScript defaults)
 
 Sets the clipboard content to a specified value using AppleScript's built-in clipboard command.
 
@@ -142,7 +138,7 @@ osascript set_clipboard_content_using_applescript_defaults.scpt "Hello, world!"
 
 ---
 
-### Atomic Test #5 - Get clipboard content (using Cocoa)
+### Test #5 - Get clipboard content (using Cocoa)
 
 Retrieves clipboard content using Cocoa frameworks (Foundation and AppKit).
 
@@ -171,7 +167,7 @@ osascript -e 'use framework "Foundation"' -e 'use framework "AppKit"' -e 'set pa
 
 ---
 
-### Atomic Test #6 - Set clipboard content (using Cocoa)
+### Test #6 - Set clipboard content (using Cocoa)
 
 Sets clipboard content using Cocoa frameworks (Foundation and AppKit).
 

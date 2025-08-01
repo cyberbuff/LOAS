@@ -10,15 +10,13 @@ description: "Peripheral Device Discovery"
 Adversaries may attempt to gather information about attached peripheral devices and components connected to a computer system.(Citation: Peripheral Discovery Linux)(Citation: Peripheral Discovery macOS) Peripheral devices could include auxiliary resources that support a variety of functionalities such as keyboards, printers, cameras, smart card readers, or removable storage. The information may be used to enhance their awareness of the system and network environment or may be used for further actions.
 
 
-## Atomic Tests
+## Tests
 
-### Atomic Test #1 - Find removable storage devices using System Events
+### Test #1 - Find removable storage devices using System Events
 
 This test uses System Events to find all connected removable storage devices.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 
 ```applescript tab="<Code /> Script"
@@ -40,13 +38,11 @@ osascript -e 'tell application "System Events" to get name of every disk whose e
 
 ---
 
-### Atomic Test #2 - Find removable storage devices using Finder
+### Test #2 - Find removable storage devices using Finder
 
 This test uses Finder to find all connected removable storage devices.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 
 ```applescript tab="<Code /> Script"
@@ -68,13 +64,11 @@ osascript -e 'tell application "Finder" to get name of every disk whose ejectabl
 
 ---
 
-### Atomic Test #3 - Find all devices using System Information
+### Test #3 - Find all devices using System Information
 
 This test uses System Information to find all connected devices (bluetooth, wifi, disks, application versions, etc.).
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 
 ```applescript tab="<Code /> Script"

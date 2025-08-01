@@ -16,9 +16,9 @@ For example, on a Windows system adversaries may attempt to infer the language o
 On a macOS or Linux system, adversaries may query <code>locale</code> to retrieve the value of the <code>$LANG</code> environment variable.
 
 
-## Atomic Tests
+## Tests
 
-### Atomic Test #1 - Get System Locale
+### Test #1 - Get System Locale
 
 An adversary may gather the system locale settings in order to infer the geographical location of that host.
 
@@ -41,7 +41,7 @@ osascript -e 'get user locale of (system info)'
 
 ---
 
-### Atomic Test #2 - Get System Language using env variable
+### Test #2 - Get System Language using env variable
 
 An adversary may gather the system language settings from the LANG environment variable.
 
