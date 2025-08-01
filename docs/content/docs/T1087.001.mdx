@@ -12,15 +12,13 @@ Adversaries may attempt to get a listing of local system accounts. This informat
 Commands such as <code>net user</code> and <code>net localgroup</code> of the [Net](https://attack.mitre.org/software/S0039) utility and <code>id</code> and <code>groups</code> on macOS and Linux can list local users and groups.(Citation: Mandiant APT1)(Citation: id man page)(Citation: groups man page) On Linux, local users can also be enumerated through the use of the <code>/etc/passwd</code> file. On macOS, the <code>dscl . list /Users</code> command can be used to enumerate local accounts. On ESXi servers, the `esxcli system account list` command can list local user accounts.(Citation: Crowdstrike Hypervisor Jackpotting Pt 2 2021)
 
 
-## Atomic Tests
+## Tests
 
-### Atomic Test #1 - Enumerate Local Accounts
+### Test #1 - Enumerate Local Accounts
 
 Adversaries may attempt to get a listing of local system accounts.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 
 ```applescript tab="<Code /> Script"

@@ -14,9 +14,9 @@ Various utilities and commands may acquire this information, including <code>who
 On network devices, [Network Device CLI](https://attack.mitre.org/techniques/T1059/008) commands such as `show users` and `show ssh` can be used to display users currently logged into the device.(Citation: show_ssh_users_cmd_cisco)(Citation: US-CERT TA18-106A Network Infrastructure Devices 2018)
 
 
-## Atomic Tests
+## Tests
 
-### Atomic Test #1 - Get user (using System Info)
+### Test #1 - Get user (using System Info)
 
 Retrieves the current user's short and long names using the system info command.
 
@@ -41,7 +41,7 @@ osascript -e 'short user name of (system info)' -e 'long user name of (system in
 
 ---
 
-### Atomic Test #2 - Get user (using environment variable)
+### Test #2 - Get user (using environment variable)
 
 Retrieves the current user's username using the USER environment variable.
 
@@ -65,7 +65,7 @@ osascript -e 'return (system attribute "USER")'
 
 ---
 
-### Atomic Test #3 - Get user (using list folder)
+### Test #3 - Get user (using list folder)
 
 By default, the user's home directory is /Users/username.
 Listing the /Users folder will return the list of users on the system.
@@ -90,13 +90,11 @@ osascript -e 'return (list folder "/Users")'
 
 ---
 
-### Atomic Test #4 - Get user information (using System Events JXA)
+### Test #4 - Get user information (using System Events JXA)
 
 Retrieves the current user's username using the System Events JXA command.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 
 ```javascript tab="<Code /> Script"

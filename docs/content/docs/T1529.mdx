@@ -14,15 +14,13 @@ Shutting down or rebooting systems may disrupt access to computer resources for 
 Adversaries may attempt to shutdown/reboot a system after impacting it in other ways, such as [Disk Structure Wipe](https://attack.mitre.org/techniques/T1561/002) or [Inhibit System Recovery](https://attack.mitre.org/techniques/T1490), to hasten the intended effects on system availability.(Citation: Talos Nyetya June 2017)(Citation: Talos Olympic Destroyer 2018)
 
 
-## Atomic Tests
+## Tests
 
-### Atomic Test #1 - Shutdown system (using System Events)
+### Test #1 - Shutdown system (using System Events)
 
 Shuts down the system using the shutdown command from System Events.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 
 ```applescript tab="<Code /> Script"
@@ -43,13 +41,11 @@ osascript -e 'tell application "System Events" to shutdown'
 
 ---
 
-### Atomic Test #2 - Reboot system (using System Events)
+### Test #2 - Reboot system (using System Events)
 
 Reboots the system using the reboot command from System Events.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 
 ```applescript tab="<Code /> Script"

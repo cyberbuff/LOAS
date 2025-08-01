@@ -14,15 +14,13 @@ In Windows environments, adversaries could obtain details on running processes u
 On network devices, [Network Device CLI](https://attack.mitre.org/techniques/T1059/008) commands such as `show processes` can be used to display current running processes.(Citation: US-CERT-TA18-106A)(Citation: show_processes_cisco_cmd)
 
 
-## Atomic Tests
+## Tests
 
-### Atomic Test #1 - Get all processes
+### Test #1 - Get all processes
 
 Retrieves a list of all running processes on the system using System Events. This provides comprehensive process enumeration capabilities and may require TCC approval for System Events access.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 
 ```applescript tab="<Code /> Script"
@@ -44,13 +42,11 @@ osascript -e 'tell application "System Events" to get name of every process'
 
 ---
 
-### Atomic Test #2 - Get all application processes (User facing applications)
+### Test #2 - Get all application processes (User facing applications)
 
 Retrieves only user-facing application processes (excluding system processes and daemons). This focuses on applications that users typically interact with and may require TCC approval for System Events access.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 
 ```applescript tab="<Code /> Script"
@@ -76,13 +72,11 @@ osascript -e 'tell application "System Events"' -e 'set runningApps to name of e
 
 ---
 
-### Atomic Test #3 - Get list of running processes using AppKit
+### Test #3 - Get list of running processes using AppKit
 
 Retrieves running applications using AppKit framework.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 
 ```applescript tab="<Code /> Script"

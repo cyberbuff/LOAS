@@ -1132,12 +1132,12 @@ def generate_technique_markdown(
     markdown_lines.append(f"\n\n{mitre_description}\n\n")
 
     # Tests section
-    markdown_lines.append("## Atomic Tests")
+    markdown_lines.append("## Tests")
     markdown_lines.append("")
 
     for i, test in enumerate(tests, 1):
         # Test header
-        markdown_lines.append(f"### Atomic Test #{i} - {test.name}")
+        markdown_lines.append(f"### Test #{i} - {test.name}")
         markdown_lines.append("")
 
         # Test description
@@ -1146,12 +1146,14 @@ def generate_technique_markdown(
 
         # Requirements
         if test.elevation_required or test.tcc_required:
-            markdown_lines.append("**Requirements:**")
-            markdown_lines.append("")
+
+            def create_warning_badge(y):
+                return f'<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">{y}</span>'
+
             if test.elevation_required:
-                markdown_lines.append("- Elevation Required: ✅")
+                markdown_lines.append(create_warning_badge("⚠️ Elevation Required"))
             if test.tcc_required:
-                markdown_lines.append("- TCC Required: ✅")
+                markdown_lines.append(create_warning_badge("⚠️ TCC Required"))
             markdown_lines.append("")
 
         # Input arguments

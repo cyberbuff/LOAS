@@ -16,15 +16,13 @@ AppleScripts do not need to call <code>osascript</code> to execute. However, the
 Adversaries may abuse AppleScript to execute various behaviors, such as interacting with an open SSH connection, moving to remote machines, and even presenting users with fake dialog boxes. These events cannot start applications remotely (they can start them locally), but they can interact with applications if they're already running remotely. On macOS 10.10 Yosemite and higher, AppleScript has the ability to execute [Native API](https://attack.mitre.org/techniques/T1106)s, which otherwise would require compilation and execution in a mach-O binary file format.(Citation: SentinelOne macOS Red Team) Since this is a scripting language, it can be used to launch more common techniques as well such as a reverse shell via [Python](https://attack.mitre.org/techniques/T1059/006).(Citation: Macro Malware Targets Macs)
 
 
-## Atomic Tests
+## Tests
 
-### Atomic Test #1 - Display dialog box to capture user password
+### Test #1 - Display dialog box to capture user password
 
 Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 **Input Arguments:**
 
@@ -60,13 +58,11 @@ osascript display_dialog_box_to_capture_user_password.scpt "Auto-Updates System"
 
 ---
 
-### Atomic Test #2 - Open application
+### Test #2 - Open application
 
 Opens an application on the system. The application will be in focus after running the command.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 **Input Arguments:**
 
@@ -101,13 +97,11 @@ osascript open_application.scpt "Finder"
 
 ---
 
-### Atomic Test #3 - Launch application
+### Test #3 - Launch application
 
 Lauches an application on the system. The application will be in the background after running the command.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 **Input Arguments:**
 
@@ -142,13 +136,11 @@ osascript launch_application.scpt "Finder"
 
 ---
 
-### Atomic Test #4 - Close application
+### Test #4 - Close application
 
 Closes an application on the system.
 
-**Requirements:**
-
-- TCC Required: ✅
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 **Input Arguments:**
 

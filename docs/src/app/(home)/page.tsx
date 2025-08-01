@@ -1,5 +1,5 @@
 import { AnimatedHomepage } from "@/components/animated-homepage";
-import { type Script } from "@/components/scripts-columns";
+import type { Script } from "@/components/scripts-columns";
 
 async function getScripts(): Promise<Script[]> {
   try {

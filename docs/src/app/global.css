@@ -134,12 +134,20 @@
 
 /* Navbar gradient styling */
 [data-navbar] {
-  background: linear-gradient(135deg, hsl(0, 0%, 100%) 0%, hsl(210, 40%, 98%) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    hsl(0, 0%, 100%) 0%,
+    hsl(210, 40%, 98%) 100%
+  ) !important;
   border-bottom: 1px solid hsl(214, 32%, 91%);
 }
 
 .dark [data-navbar] {
-  background: linear-gradient(135deg, hsl(224, 71%, 4%) 0%, hsl(223, 47%, 6%) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    hsl(224, 71%, 4%) 0%,
+    hsl(223, 47%, 6%) 100%
+  ) !important;
   border-bottom: 1px solid hsl(216, 34%, 17%);
 }
 

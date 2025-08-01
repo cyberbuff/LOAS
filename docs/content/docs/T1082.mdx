@@ -16,9 +16,9 @@ Infrastructure as a Service (IaaS) cloud providers such as AWS, GCP, and Azure a
 [System Information Discovery](https://attack.mitre.org/techniques/T1082) combined with information gathered from other forms of discovery and reconnaissance can drive payload development and concealment.(Citation: OSX.FairyTale)(Citation: 20 macOS Common Tools and Techniques)
 
 
-## Atomic Tests
+## Tests
 
-### Atomic Test #1 - Get system information
+### Test #1 - Get system information
 
 Retrieves comprehensive system information including OS version, hardware details, and system configuration using the system info command. This provides detailed system reconnaissance capabilities without requiring elevated privileges.
 
@@ -42,7 +42,7 @@ osascript -e 'return (system info)'
 
 ---
 
-### Atomic Test #2 - Get disks
+### Test #2 - Get disks
 
 Lists all connected disks on the system using the list disks command.
 
