@@ -328,7 +328,7 @@ export function DataTableWithFilters<TData, TValue>({
               table.setPageSize(Number(value));
             }}
           >
-            <SelectTrigger className="h-8 w-auto min-w-[140px] border-none  px-0 font-normal shadow-none focus:ring-0">
+            <SelectTrigger className="h-8 w-auto min-w-[140px] border-none px-2 font-normal shadow-none focus:ring-0">
               <span className="text-sm text-muted-foreground">
                 Rows per page:
               </span>
