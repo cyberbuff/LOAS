@@ -3,7 +3,8 @@ title: Executing Apple Script
 description: "Executing Apple Script"
 icon: Terminal
 ---
-import { File, Folder, Files } from 'fumadocs-ui/components/files';
+
+import { File, Folder, Files } from "fumadocs-ui/components/files";
 
 This project provides multiple ways to execute Apple Script. You can execute it via CLI, osascript, Swift, Applet, or run the binary directly.
 
@@ -16,8 +17,7 @@ The [GitHub releases page](https://github.com/cyberbuff/loas/releases/latest) pr
   <File name="get_user_using_system_info" />
 </Folder>
 
-
-If you would like to compile the files yourself, you can use the following command:
+If you would like to compile the files yourself, install [uv](https://docs.astral.sh/uv/getting-started/installation/) and then use the following commands:
 
 ```bash
 git clone https://github.com/cyberbuff/loas.git
@@ -33,19 +33,17 @@ TODO: Add some stats here on how many detections are there for each of the metho
 
 I used [Red Canary Mac Monitor](https://github.com/redcanaryco/mac-monitor/) to gather the Endpoint Security logs for each of the methods for getting the clipboard content.
 
-
-## CLI
+## osascript CLI
 
 This is the simplest way to execute commands from this repository.
 
 ```bash
 osascript -e "return (the clipboard)"
 ```
+
 <img alt="CLI" src="/images/osascript-cli.png" />
 
-
-
-## osascript
+## Script
 
 Download the script from the [releases page](https://github.com/loas-project/loas/releases) and execute it with osascript.
 
@@ -63,6 +61,7 @@ Note: You might need to install XCode Developer Tools to run Swift files.
 ```bash
 swift get_clipboard_content_using_applescript_defaults.swift
 ```
+
 <img alt="Swift" src="/images/swift.png" />
 ## Applet
 

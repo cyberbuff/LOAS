@@ -39,7 +39,7 @@ osascript -e 'tell application "System Events" to get the clipboard'
 <DownloadButton filename="get_clipboard_content_using_system_events.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="get_clipboard_content_using_system_events.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="get_clipboard_content_using_system_events" type="binary" label="Download Binary" />
-<DownloadButton filename="get_clipboard_content_using_system_events.app" type="app" label="Download Applet" />
+<DownloadButton filename="get_clipboard_content_using_system_events.app" type="app" label="Download Application Bundle" />
 
 ---
 
@@ -68,10 +68,10 @@ tell application "System Events" to set the clipboard to "Hello, world!"
 osascript -e 'tell application "System Events" to set the clipboard to "Hello, world!"'
 
 # Or save to file and execute
-osascript t1115_2.scpt
+osascript set_clipboard_content_using_system_events.scpt
 
 # With custom arguments
-osascript t1115_2.scpt "Hello, world!"
+osascript set_clipboard_content_using_system_events.scpt "Hello, world!"
 ```
 
 **Download Files**
@@ -79,7 +79,7 @@ osascript t1115_2.scpt "Hello, world!"
 <DownloadButton filename="set_clipboard_content_using_system_events.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="set_clipboard_content_using_system_events.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="set_clipboard_content_using_system_events" type="binary" label="Download Binary" />
-<DownloadButton filename="set_clipboard_content_using_system_events.app" type="app" label="Download Applet" />
+<DownloadButton filename="set_clipboard_content_using_system_events.app" type="app" label="Download Application Bundle" />
 
 ---
 
@@ -102,7 +102,7 @@ osascript -e 'the clipboard'
 <DownloadButton filename="get_clipboard_content_using_applescript_defaults.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="get_clipboard_content_using_applescript_defaults.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="get_clipboard_content_using_applescript_defaults" type="binary" label="Download Binary" />
-<DownloadButton filename="get_clipboard_content_using_applescript_defaults.app" type="app" label="Download Applet" />
+<DownloadButton filename="get_clipboard_content_using_applescript_defaults.app" type="app" label="Download Application Bundle" />
 
 ---
 
@@ -127,10 +127,10 @@ set the clipboard to "Hello, world!"
 osascript -e 'set the clipboard to "Hello, world!"'
 
 # Or save to file and execute
-osascript t1115_4.scpt
+osascript set_clipboard_content_using_applescript_defaults.scpt
 
 # With custom arguments
-osascript t1115_4.scpt "Hello, world!"
+osascript set_clipboard_content_using_applescript_defaults.scpt "Hello, world!"
 ```
 
 **Download Files**
@@ -138,7 +138,7 @@ osascript t1115_4.scpt "Hello, world!"
 <DownloadButton filename="set_clipboard_content_using_applescript_defaults.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="set_clipboard_content_using_applescript_defaults.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="set_clipboard_content_using_applescript_defaults" type="binary" label="Download Binary" />
-<DownloadButton filename="set_clipboard_content_using_applescript_defaults.app" type="app" label="Download Applet" />
+<DownloadButton filename="set_clipboard_content_using_applescript_defaults.app" type="app" label="Download Application Bundle" />
 
 ---
 
@@ -167,7 +167,7 @@ osascript -e 'use framework "Foundation"' -e 'use framework "AppKit"' -e 'set pa
 <DownloadButton filename="get_clipboard_content_using_cocoa.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="get_clipboard_content_using_cocoa.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="get_clipboard_content_using_cocoa" type="binary" label="Download Binary" />
-<DownloadButton filename="get_clipboard_content_using_cocoa.app" type="app" label="Download Applet" />
+<DownloadButton filename="get_clipboard_content_using_cocoa.app" type="app" label="Download Application Bundle" />
 
 ---
 
@@ -197,10 +197,10 @@ pasteboard's setString:"Hello, world!" forType:"public.utf8-plain-text"
 osascript -e 'use framework "Foundation"' -e 'use framework "AppKit"' -e 'set pasteboard to current application'"'"'s NSPasteboard'"'"'s generalPasteboard()' -e 'pasteboard'"'"'s setString:"Hello, world!" forType:"public.utf8-plain-text"'
 
 # Or save to file and execute
-osascript t1115_6.scpt
+osascript set_clipboard_content_using_cocoa.scpt
 
 # With custom arguments
-osascript t1115_6.scpt "Hello, world!"
+osascript set_clipboard_content_using_cocoa.scpt "Hello, world!"
 ```
 
 **Download Files**
@@ -208,7 +208,7 @@ osascript t1115_6.scpt "Hello, world!"
 <DownloadButton filename="set_clipboard_content_using_cocoa.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="set_clipboard_content_using_cocoa.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="set_clipboard_content_using_cocoa" type="binary" label="Download Binary" />
-<DownloadButton filename="set_clipboard_content_using_cocoa.app" type="app" label="Download Applet" />
+<DownloadButton filename="set_clipboard_content_using_cocoa.app" type="app" label="Download Application Bundle" />
 
 ## References
 

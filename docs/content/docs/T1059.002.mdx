@@ -45,10 +45,10 @@ display dialog "The launcher needs permissions to enable background auto-updates
 osascript -e 'display dialog "The launcher needs permissions to enable background auto-updates.Please enter your password." with title "Auto-Updates System" default answer "" with icon caution buttons {"Continue"} default button "Continue" with hidden answer'
 
 # Or save to file and execute
-osascript t1059.002_1.scpt
+osascript display_dialog_box_to_capture_user_password.scpt
 
 # With custom arguments
-osascript t1059.002_1.scpt "Auto-Updates System" "The launcher needs permissions to enable background auto-updates.Please enter your password."
+osascript display_dialog_box_to_capture_user_password.scpt "Auto-Updates System" "The launcher needs permissions to enable background auto-updates.Please enter your password."
 ```
 
 **Download Files**
@@ -56,7 +56,7 @@ osascript t1059.002_1.scpt "Auto-Updates System" "The launcher needs permissions
 <DownloadButton filename="display_dialog_box_to_capture_user_password.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="display_dialog_box_to_capture_user_password.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="display_dialog_box_to_capture_user_password" type="binary" label="Download Binary" />
-<DownloadButton filename="display_dialog_box_to_capture_user_password.app" type="app" label="Download Applet" />
+<DownloadButton filename="display_dialog_box_to_capture_user_password.app" type="app" label="Download Application Bundle" />
 
 ---
 
@@ -86,10 +86,10 @@ tell application "Finder" to activate
 osascript -e 'tell application "Finder" to activate'
 
 # Or save to file and execute
-osascript t1059.002_2.scpt
+osascript open_application.scpt
 
 # With custom arguments
-osascript t1059.002_2.scpt "Finder"
+osascript open_application.scpt "Finder"
 ```
 
 **Download Files**
@@ -97,7 +97,7 @@ osascript t1059.002_2.scpt "Finder"
 <DownloadButton filename="open_application.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="open_application.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="open_application" type="binary" label="Download Binary" />
-<DownloadButton filename="open_application.app" type="app" label="Download Applet" />
+<DownloadButton filename="open_application.app" type="app" label="Download Application Bundle" />
 
 ---
 
@@ -127,10 +127,10 @@ tell application "Finder" to launch
 osascript -e 'tell application "Finder" to launch'
 
 # Or save to file and execute
-osascript t1059.002_3.scpt
+osascript launch_application.scpt
 
 # With custom arguments
-osascript t1059.002_3.scpt "Finder"
+osascript launch_application.scpt "Finder"
 ```
 
 **Download Files**
@@ -138,7 +138,7 @@ osascript t1059.002_3.scpt "Finder"
 <DownloadButton filename="launch_application.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="launch_application.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="launch_application" type="binary" label="Download Binary" />
-<DownloadButton filename="launch_application.app" type="app" label="Download Applet" />
+<DownloadButton filename="launch_application.app" type="app" label="Download Application Bundle" />
 
 ---
 
@@ -168,10 +168,10 @@ tell application "Finder" to close windows
 osascript -e 'tell application "Finder" to close windows'
 
 # Or save to file and execute
-osascript t1059.002_4.scpt
+osascript close_application.scpt
 
 # With custom arguments
-osascript t1059.002_4.scpt "Finder"
+osascript close_application.scpt "Finder"
 ```
 
 **Download Files**
@@ -179,7 +179,7 @@ osascript t1059.002_4.scpt "Finder"
 <DownloadButton filename="close_application.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="close_application.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="close_application" type="binary" label="Download Binary" />
-<DownloadButton filename="close_application.app" type="app" label="Download Applet" />
+<DownloadButton filename="close_application.app" type="app" label="Download Application Bundle" />
 
 ## References
 

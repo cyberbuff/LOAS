@@ -43,10 +43,10 @@ tell application "System Events" to make login item at end with properties {path
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/System/Applications/Calculator.app", hidden:"False"}'
 
 # Or save to file and execute
-osascript t1547.015_1.scpt
+osascript create_a_login_item.scpt
 
 # With custom arguments
-osascript t1547.015_1.scpt "/System/Applications/Calculator.app" False
+osascript create_a_login_item.scpt "/System/Applications/Calculator.app" False
 ```
 
 **Download Files**
@@ -54,7 +54,7 @@ osascript t1547.015_1.scpt "/System/Applications/Calculator.app" False
 <DownloadButton filename="create_a_login_item.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="create_a_login_item.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="create_a_login_item" type="binary" label="Download Binary" />
-<DownloadButton filename="create_a_login_item.app" type="app" label="Download Applet" />
+<DownloadButton filename="create_a_login_item.app" type="app" label="Download Application Bundle" />
 
 ---
 
@@ -83,7 +83,7 @@ osascript -e 'tell application "System Events" to get name of every login item' 
 <DownloadButton filename="discover_login_items.scpt" type="scpt" label="Download .scpt" />
 <DownloadButton filename="discover_login_items.swift" type="swift" label="Download .swift" />
 <DownloadButton filename="discover_login_items" type="binary" label="Download Binary" />
-<DownloadButton filename="discover_login_items.app" type="app" label="Download Applet" />
+<DownloadButton filename="discover_login_items.app" type="app" label="Download Application Bundle" />
 
 ## References
 

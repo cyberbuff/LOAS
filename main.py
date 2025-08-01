@@ -1210,11 +1210,11 @@ def generate_technique_markdown(
                 )
                 markdown_lines.append("")
                 markdown_lines.append("# Or save to file and execute")
-                markdown_lines.append(f"osascript {technique_id.lower()}_{i}.scpt")
+                markdown_lines.append(f"osascript {test.get_filename()}")
                 markdown_lines.append("")
                 markdown_lines.append("# With custom arguments")
                 markdown_lines.append(
-                    f"osascript {technique_id.lower()}_{i}.scpt {' '.join(example_args)}"
+                    f"osascript {test.get_filename()} {' '.join(example_args)}"
                 )
                 markdown_lines.append("```")
             else:
@@ -1263,7 +1263,7 @@ def generate_technique_markdown(
             # App bundle download
             app_filename = f"{safe_name}.app"
             markdown_lines.append(
-                f'<DownloadButton filename="{app_filename}" type="app" label="Download Applet" />'
+                f'<DownloadButton filename="{app_filename}" type="app" label="Download Application Bundle" />'
             )
 
         elif test.language == "JavaScript":
@@ -1287,7 +1287,7 @@ def generate_technique_markdown(
             # App bundle download (JavaScript files are compiled to .app)
             app_filename = f"{safe_name}.app"
             markdown_lines.append(
-                f'<DownloadButton filename="{app_filename}" type="app" label="Download Applet" />'
+                f'<DownloadButton filename="{app_filename}" type="app" label="Download Application Bundle" />'
             )
 
         markdown_lines.append("")
