@@ -89,7 +89,7 @@
   },
   {
     "name": "List files and directories",
-    "command": "tell application \"Finder\" to get name of every file in \"#{folderName}\"\n",
+    "command": "tell application \"Finder\" to get name of every item of folder POSIX file \"#{folderName}\"\n",
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": true,
@@ -229,6 +229,17 @@
     "technique_id": "T1033",
     "technique_name": "System Owner/User Discovery",
     "test_number": 4
+  },
+  {
+    "name": "Check XProtect version",
+    "command": "use framework \"Foundation\"\nset plistPath to \"/Library/Apple/System/Library/CoreServices/XProtect.bundle/Contents/Info.plist\"\nset plistURL to current application's NSURL's fileURLWithPath:plistPath\nset plistDict to current application's NSDictionary's dictionaryWithContentsOfURL:plistURL\nset bundleVersion to plistDict's objectForKey:\"CFBundleShortVersionString\"\nreturn bundleVersion as string",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "This test checks the version of XProtect, the built-in antivirus in macOS. XCSSET checks whether the version of XProtect is less than 5287.",
+    "technique_id": "T1518.001",
+    "technique_name": "Security Software Discovery",
+    "test_number": 1
   },
   {
     "name": "Hide Application Window",
@@ -372,6 +383,17 @@
     "technique_id": "T1059.002",
     "technique_name": "Command and Scripting Interpreter: AppleScript",
     "test_number": 4
+  },
+  {
+    "name": "Read local hosts file",
+    "command": "read POSIX file \"/etc/hosts\"\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Adversaries may analyze data from local host file (/etc/hosts)",
+    "technique_id": "T1018",
+    "technique_name": "Remote System Discovery",
+    "test_number": 1
   },
   {
     "name": "Stop Application",

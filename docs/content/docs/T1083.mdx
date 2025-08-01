@@ -28,24 +28,24 @@ List files and directories using System Events
 
 | Argument | Type | Default Value |
 |----------|------|---------------|
-| folderName | str | `Desktop` |
+| folderName | str | `$HOME/Desktop` |
 
 
 ```applescript tab="<Code /> Script"
-tell application "Finder" to get name of every file in "Desktop"
+tell application "Finder" to get name of every item of folder POSIX file "$HOME/Desktop"
 
 ```
 
 
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
-osascript -e 'tell application "Finder" to get name of every file in "Desktop"'
+osascript -e 'tell application "Finder" to get name of every item of folder POSIX file "$HOME/Desktop"'
 
 # Or save to file and execute
 osascript list_files_and_directories.scpt
 
 # With custom arguments
-osascript list_files_and_directories.scpt "Desktop"
+osascript list_files_and_directories.scpt "$HOME/Desktop"
 ```
 
 **Download Files**

@@ -1,0 +1,13 @@
+name: Security Software Discovery
+tests:
+  - name: Check XProtect version
+    reference: https://www.microsoft.com/en-us/security/blog/2025/03/11/new-xcsset-malware-adds-new-obfuscation-persistence-techniques-to-infect-xcode-projects/
+    description: This test checks the version of XProtect, the built-in antivirus in macOS. XCSSET checks whether the version of XProtect is less than 5287.
+    language: AppleScript
+    command: |-
+      use framework "Foundation"
+      set plistPath to "/Library/Apple/System/Library/CoreServices/XProtect.bundle/Contents/Info.plist"
+      set plistURL to current application's NSURL's fileURLWithPath:plistPath
+      set plistDict to current application's NSDictionary's dictionaryWithContentsOfURL:plistURL
+      set bundleVersion to plistDict's objectForKey:"CFBundleShortVersionString"
+      return bundleVersion as string

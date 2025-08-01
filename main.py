@@ -140,11 +140,12 @@ class Script(BaseModel):
         """Convert the script to OSAScript/JavaScript format with help function and parameter handling"""
         script_lines = ["#!/usr/bin/osascript\n"]
 
+        command = self.command
         # Check if command uses frameworks and add them at the top level
-        if "use framework" in self.command:
+        if "use framework" in command:
             framework_lines = []
             command_lines = []
-            for line in self.command.strip().split("\n"):
+            for line in command.strip().split("\n"):
                 if line.strip().startswith("use framework"):
                     framework_lines.append(line.strip())
                 else:
@@ -156,7 +157,7 @@ class Script(BaseModel):
             script_lines.append("")
 
             # Update command to exclude framework declarations
-            self.command = "\n".join(command_lines)
+            command = "\n".join(command_lines)
 
         # Add help function
         script_lines.append("on show_help()")
@@ -202,7 +203,6 @@ class Script(BaseModel):
             script_lines.append(f"on main({', '.join(param_list)})")
 
             # Replace template variables in command
-            command = self.command
             for arg_name, default_value in self.args.items():
                 # Replace "#{arg_name}" (with quotes) with just the parameter name
                 command = command.replace(f'"#{{{arg_name}}}"', arg_name)
@@ -268,7 +268,7 @@ class Script(BaseModel):
         else:
             # Simple script without parameters
             script_lines.append("on main()")
-            for line in self.command.strip().split("\n"):
+            for line in command.strip().split("\n"):
                 if line.strip():  # Only add non-empty lines
                     script_lines.append(f"    {line.strip()}")
             script_lines.append("end main")
@@ -970,7 +970,7 @@ def convert_yaml_to_script(
 
 
 def dump_scripts_json(
-    yaml_dir: str = "yaml", output_file: str = "docs/public/data/scripts.json"
+    yaml_dir: str = "yaml", output_file: str = "docs/public/api/scripts.json"
 ) -> bool:
     """Dump all scripts as JSON array with specified fields"""
 
@@ -1564,7 +1564,7 @@ def clean(
     scripts_json: Annotated[
         str,
         typer.Option("--scripts-json", "-j", help="Output JSON file path"),
-    ] = "docs/public/data/scripts.json",
+    ] = "docs/public/api/scripts.json",
     confirm: Annotated[
         bool, typer.Option("--yes", "-y", help="Skip confirmation prompt")
     ] = False,
@@ -1642,7 +1642,7 @@ def dump_json(
     ] = "yaml",
     output_file: Annotated[
         str, typer.Option("--output-file", "-o", help="Output JSON file path")
-    ] = "docs/public/data/scripts.json",
+    ] = "docs/public/api/scripts.json",
 ):
     """Dump all scripts as JSON array for web consumption"""
     console.print("[bold blue]📄 Dumping scripts to JSON...[/bold blue]")
@@ -1674,6 +1674,13 @@ def generate_docs(
     success = generate_markdown_docs(yaml_dir, output_dir)
     if not success:
         raise typer.Exit(1)
+
+
+@app.command()
+def deploy():
+    """Generate markdown documentation and JSON"""
+    generate_docs()
+    dump_json()
 
 
 if __name__ == "__main__":
