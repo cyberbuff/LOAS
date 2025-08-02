@@ -16,7 +16,61 @@ Some files and directories may require elevated or specific user permissions to 
 
 ## Tests
 
-### Test #1 - List files and directories in Macintosh HD
+### Test #1 - Copy files from desktop
+
+FileGrabber grabs files from desktop and copies them to a temporary folder
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| destinationPath | str | `/tmp/FileGrabber` |
+
+
+```applescript tab="<Code /> Script"
+set fileGrabberFolderPath to "/tmp/FileGrabber"
+set extensionsList to {"txt", "docx", "rtf", "doc", "wallet", "keys", "key", "env", "md", "kdbx"}
+
+try
+ 	set desktopFiles to every file of desktop
+ 	repeat with aFile in desktopFiles
+  		try
+ 			  set fileExtension to name extension of aFile
+   			if fileExtension is in extensionsList then
+  				set fileSize to size of aFile
+  				if fileSize < 51200 then
+   					set destinationFolder to (POSIX file fileGrabberFolderPath) as alias
+   					duplicate aFile to destinationFolder with replacing
+  				end if
+   			end if
+  		end try
+ 	end repeat
+end try
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'set fileGrabberFolderPath to "/tmp/FileGrabber"' -e 'set extensionsList to {"txt", "docx", "rtf", "doc", "wallet", "keys", "key", "env", "md", "kdbx"}' -e 'try' -e 'set desktopFiles to every file of desktop' -e 'repeat with aFile in desktopFiles' -e 'try' -e 'set fileExtension to name extension of aFile' -e 'if fileExtension is in extensionsList then' -e 'set fileSize to size of aFile' -e 'if fileSize < 51200 then' -e 'set destinationFolder to (POSIX file fileGrabberFolderPath) as alias' -e 'duplicate aFile to destinationFolder with replacing' -e 'end if' -e 'end if' -e 'end try' -e 'end repeat' -e 'end try'
+
+# Or save to file and execute
+osascript copy_files_from_desktop.scpt
+
+# With custom arguments
+osascript copy_files_from_desktop.scpt "/tmp/FileGrabber"
+```
+
+**Download Files**
+
+<DownloadButton filename="copy_files_from_desktop.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="copy_files_from_desktop.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="copy_files_from_desktop" type="binary" label="Download Binary" />
+<DownloadButton filename="copy_files_from_desktop.app" type="app" label="Download Application Bundle" />
+
+---
+
+### Test #2 - List files and directories in Macintosh HD
 
 Enumerate files and directories in the root filesystem using Finder application via AppleScript
 
@@ -55,7 +109,7 @@ osascript list_files_and_directories_in_macintosh_hd.scpt "/"
 
 ---
 
-### Test #2 - List files and directories in root directory
+### Test #3 - List files and directories in root directory
 
 Perform directory listing of root filesystem using AppleScript list folder command
 

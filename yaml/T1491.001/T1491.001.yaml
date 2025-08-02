@@ -1,0 +1,10 @@
+name: "Defacement: Internal Defacement"
+tests:
+  - name: Change Wallpaper
+    description: Adveraries use osascript to change the device wallpaper.
+    reference: https://www.trendmicro.com/en_us/research/24/j/fake-lockbit-real-damage-ransomware-samples-abuse-aws-s3-to-stea.html
+    language: AppleScript
+    command: |
+      tell application "System Events" to tell every desktop to set picture to "#{filePath}"
+    args:
+      filePath: "/System/Library/Desktop Pictures/Solid Colors/Black.png"

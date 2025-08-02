@@ -133,6 +133,29 @@ osascript close_application.scpt "Finder"
 <DownloadButton filename="close_application" type="binary" label="Download Binary" />
 <DownloadButton filename="close_application.app" type="app" label="Download Application Bundle" />
 
+---
+
+### Test #4 - Mute Volume
+
+Mutes the volume on the system.
+
+
+```applescript tab="<Code /> Script"
+set volume with output muted
+```
+
+
+```bash tab="<Terminal /> Execution"
+osascript -e 'set volume with output muted'
+```
+
+**Download Files**
+
+<DownloadButton filename="mute_volume.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="mute_volume.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="mute_volume" type="binary" label="Download Binary" />
+<DownloadButton filename="mute_volume.app" type="app" label="Download Application Bundle" />
+
 ## References
 
 - [MITRE ATT&CK T1059.002](https://attack.mitre.org/techniques/T1059/002/)

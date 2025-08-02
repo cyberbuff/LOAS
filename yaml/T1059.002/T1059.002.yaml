@@ -28,3 +28,10 @@ tests:
       tell application "#{applicationName}" to close windows
     args:
       applicationName: "Finder"
+
+  - name: Mute Volume
+    language: AppleScript
+    reference: https://research.checkpoint.com/2025/banshee-macos-stealer-that-stole-code-from-macos-xprotect/
+    description: Mutes the volume on the system.
+    command: |-
+      set volume with output muted
