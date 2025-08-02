@@ -1,0 +1,60 @@
+---
+title: T1056.002
+description: "Input Capture  GUI Input Capture"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may mimic common operating system GUI components to prompt users for credentials with a seemingly legitimate prompt. When programs are executed that need additional privileges than are present in the current user context, it is common for the operating system to prompt the user for proper credentials to authorize the elevated privileges for the task (ex: [Bypass User Account Control](https://attack.mitre.org/techniques/T1548/002)).
+
+Adversaries may mimic this functionality to prompt users for credentials with a seemingly legitimate prompt for a number of reasons that mimic normal usage, such as a fake installer requiring additional access or a fake malware removal suite.(Citation: OSX Malware Exploits MacKeeper) This type of prompt can be used to collect credentials via various languages such as [AppleScript](https://attack.mitre.org/techniques/T1059/002)(Citation: LogRhythm Do You Trust Oct 2014)(Citation: OSX Keydnap malware)(Citation: Spoofing credential dialogs) and [PowerShell](https://attack.mitre.org/techniques/T1059/001).(Citation: LogRhythm Do You Trust Oct 2014)(Citation: Enigma Phishing for Credentials Jan 2015)(Citation: Spoofing credential dialogs) On Linux systems adversaries may launch dialog boxes prompting users for credentials from malicious shell scripts or the command line (i.e. [Unix Shell](https://attack.mitre.org/techniques/T1059/004)).(Citation: Spoofing credential dialogs)
+
+Adversaries may also mimic common software authentication requests, such as those from browsers or email clients. This may also be paired with user activity monitoring (i.e., [Browser Information Discovery](https://attack.mitre.org/techniques/T1217) and/or [Application Window Discovery](https://attack.mitre.org/techniques/T1010)) to spoof prompts when users are naturally accessing sensitive sites/data.
+
+
+## Tests
+
+### Test #1 - Display dialog box to capture user password
+
+Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.
+
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| title | str | `Auto-Updates System` |
+| description | str | `The launcher needs permissions to enable background auto-updates.Please enter your password.` |
+
+
+```applescript tab="<Code /> Script"
+display dialog "The launcher needs permissions to enable background auto-updates.Please enter your password." with title "Auto-Updates System" default answer "" with icon caution buttons {"Continue"} default button "Continue" with hidden answer
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'display dialog "The launcher needs permissions to enable background auto-updates.Please enter your password." with title "Auto-Updates System" default answer "" with icon caution buttons {"Continue"} default button "Continue" with hidden answer'
+
+# Or save to file and execute
+osascript display_dialog_box_to_capture_user_password.scpt
+
+# With custom arguments
+osascript display_dialog_box_to_capture_user_password.scpt "Auto-Updates System" "The launcher needs permissions to enable background auto-updates.Please enter your password."
+```
+
+**Download Files**
+
+<DownloadButton filename="display_dialog_box_to_capture_user_password.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="display_dialog_box_to_capture_user_password.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="display_dialog_box_to_capture_user_password" type="binary" label="Download Binary" />
+<DownloadButton filename="display_dialog_box_to_capture_user_password.app" type="app" label="Download Application Bundle" />
+
+## References
+
+- [MITRE ATT&CK T1056.002](https://attack.mitre.org/techniques/T1056/002/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

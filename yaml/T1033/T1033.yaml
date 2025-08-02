@@ -11,7 +11,7 @@ tests:
     description: Retrieves the current user's username using the USER environment variable.
     language: AppleScript
     command: |
-      return (system attribute "USER")
+      system attribute "USER"
 
   - name: Get user (using list folder)
     description: |
@@ -19,7 +19,7 @@ tests:
       Listing the /Users folder will return the list of users on the system.
     language: AppleScript
     command: |-
-      return (list folder "/Users")
+      list folder "/Users"
 
   - name: Get user information (using System Events JXA)
     description: Retrieves the current user's username using the System Events JXA command.

@@ -16,9 +16,9 @@ Some files and directories may require elevated or specific user permissions to 
 
 ## Tests
 
-### Test #1 - List files and directories
+### Test #1 - List files and directories in Macintosh HD
 
-List files and directories using System Events
+Enumerate files and directories in the root filesystem using Finder application via AppleScript
 
 <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
@@ -26,32 +26,69 @@ List files and directories using System Events
 
 | Argument | Type | Default Value |
 |----------|------|---------------|
-| folderName | str | `$HOME/Desktop` |
+| folderName | str | `/` |
 
 
 ```applescript tab="<Code /> Script"
-tell application "Finder" to get name of every item of folder POSIX file "$HOME/Desktop"
+tell application "Finder" to get name of every item of folder POSIX file "/"
 
 ```
 
 
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
-osascript -e 'tell application "Finder" to get name of every item of folder POSIX file "$HOME/Desktop"'
+osascript -e 'tell application "Finder" to get name of every item of folder POSIX file "/"'
 
 # Or save to file and execute
-osascript list_files_and_directories.scpt
+osascript list_files_and_directories_in_macintosh_hd.scpt
 
 # With custom arguments
-osascript list_files_and_directories.scpt "$HOME/Desktop"
+osascript list_files_and_directories_in_macintosh_hd.scpt "/"
 ```
 
 **Download Files**
 
-<DownloadButton filename="list_files_and_directories.scpt" type="scpt" label="Download .scpt" />
-<DownloadButton filename="list_files_and_directories.swift" type="swift" label="Download .swift" />
-<DownloadButton filename="list_files_and_directories" type="binary" label="Download Binary" />
-<DownloadButton filename="list_files_and_directories.app" type="app" label="Download Application Bundle" />
+<DownloadButton filename="list_files_and_directories_in_macintosh_hd.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="list_files_and_directories_in_macintosh_hd.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="list_files_and_directories_in_macintosh_hd" type="binary" label="Download Binary" />
+<DownloadButton filename="list_files_and_directories_in_macintosh_hd.app" type="app" label="Download Application Bundle" />
+
+---
+
+### Test #2 - List files and directories in root directory
+
+Perform directory listing of root filesystem using AppleScript list folder command
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| folderName | str | `/` |
+
+
+```applescript tab="<Code /> Script"
+list folder "/"
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'list folder "/"'
+
+# Or save to file and execute
+osascript list_files_and_directories_in_root_directory.scpt
+
+# With custom arguments
+osascript list_files_and_directories_in_root_directory.scpt "/"
+```
+
+**Download Files**
+
+<DownloadButton filename="list_files_and_directories_in_root_directory.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="list_files_and_directories_in_root_directory.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="list_files_and_directories_in_root_directory" type="binary" label="Download Binary" />
+<DownloadButton filename="list_files_and_directories_in_root_directory.app" type="app" label="Download Application Bundle" />
 
 ## References
 

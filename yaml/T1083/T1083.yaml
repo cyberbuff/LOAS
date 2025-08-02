@@ -1,10 +1,18 @@
 name: File and Directory Discovery
 tests:
-  - name: List files and directories
-    description: List files and directories using System Events
+  - name: List files and directories in Macintosh HD
+    description: Enumerate files and directories in the root filesystem using Finder application via AppleScript
     language: AppleScript
     tcc_required: true
     command: |
       tell application "Finder" to get name of every item of folder POSIX file "#{folderName}"
     args:
-      folderName: "$HOME/Desktop"
+      folderName: "/"
+
+  - name: List files and directories in root directory
+    description: Perform directory listing of root filesystem using AppleScript list folder command
+    language: AppleScript
+    command: |
+      list folder "#{folderName}"
+    args:
+      folderName: "/"
