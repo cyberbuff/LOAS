@@ -440,7 +440,7 @@
     "test_number": 1
   },
   {
-    "name": "Execute a simple command",
+    "name": "Execute shell script",
     "command": "do shell script \"#{bashCommand}\"",
     "language": "AppleScript",
     "elevation_required": false,
@@ -449,6 +449,28 @@
     "technique_id": "T1059.004",
     "technique_name": "Command and Scripting Interpreter: Unix Shell",
     "test_number": 1
+  },
+  {
+    "name": "Execute shell script using administrator privileges",
+    "command": "do shell script \"#{bashCommand}\" with administrator privileges",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Adversaries use the Unix shell to execute commands and scripts.",
+    "technique_id": "T1059.004",
+    "technique_name": "Command and Scripting Interpreter: Unix Shell",
+    "test_number": 2
+  },
+  {
+    "name": "Execute shell commands in Terminal",
+    "command": "tell application \"Terminal\"\n  do script \"#{bashCommand}\"\n  delay 3\n  try\n    quit\n  end try\nend tell",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Adversaries use the Unix shell to execute commands and scripts.",
+    "technique_id": "T1059.004",
+    "technique_name": "Command and Scripting Interpreter: Unix Shell",
+    "test_number": 3
   },
   {
     "name": "Copy Safari BinaryCookies",

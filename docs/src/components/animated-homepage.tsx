@@ -4,10 +4,38 @@ import { motion } from "motion/react";
 import { DataTableWithFilters } from "@/components/data-table-with-filters";
 import { columns, type Script } from "@/components/scripts-columns";
 import Link from "next/link";
+import type { ReactNode } from "react";
+import { CircleQuestionMark } from "lucide-react";
 
 interface AnimatedHomepageProps {
   scripts: Script[];
   uniqueTechniques: number;
+}
+
+function Badge({
+  href,
+  text,
+  icon,
+}: {
+  href: string;
+  text: string;
+  icon: ReactNode;
+}) {
+  return (
+    <Link href={href}>
+      <motion.div
+        className="inline-flex items-center px-4 py-2 rounded-full bg-muted border border-border mb-8"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+      >
+        <span className="text-lg mr-2">{icon}</span>
+        <span className="text-muted-foreground font-medium text-sm">
+          {text}
+        </span>
+      </motion.div>
+    </Link>
+  );
 }
 
 export function AnimatedHomepage({
@@ -24,20 +52,11 @@ export function AnimatedHomepage({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          {/* Badge */}
-          <motion.div
-            className="inline-flex items-center px-4 py-2 rounded-full bg-muted border border-border"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            <span className="text-lg mr-2">🍎</span>
-            <Link href="/docs">
-              <span className="text-muted-foreground font-medium text-sm">
-                {`AppleScript Collection ->`}
-              </span>
-            </Link>
-          </motion.div>
+          <Badge
+            href="/docs/T1005"
+            text="AppleScript Collection ->"
+            icon="🍎"
+          />
 
           {/* Title */}
           <div className="relative">
@@ -98,7 +117,7 @@ export function AnimatedHomepage({
 
           {/* Stats Cards */}
           <motion.div
-            className="grid grid-cols-3 gap-6 mt-12 max-w-2xl mx-auto"
+            className="grid grid-cols-3 gap-6 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8 }}
@@ -171,8 +190,7 @@ export function AnimatedHomepage({
               </h2>
             </div>
             <p className="text-muted-foreground">
-              Explore our curated collection of {scripts.length} scripts with
-              detailed analysis and MITRE ATT&CK mappings.
+              Explore our curated collection of {scripts.length} scripts
             </p>
           </div>
           <div className="p-8">
