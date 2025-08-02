@@ -1,0 +1,11 @@
+name: Browser Information Discovery
+tests:
+  - name: Capture currently opened Safari URL
+    description: Adversaries use osascript to gather information about the victim's browsing habits and preferences.
+    reference: https://www.crowdstrike.com/en-us/blog/how-crowdstrike-uncovered-a-new-macos-browser-hijacking-campaign/
+    language: AppleScript
+    command: |-
+      tell application "safari"
+        set curURL to URL in front document
+        return curURL
+      end tell

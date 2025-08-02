@@ -1,0 +1,53 @@
+---
+title: T1491.001
+description: "Defacement  Internal Defacement"
+---
+
+## Description from ATT&CK
+
+
+
+An adversary may deface systems internal to an organization in an attempt to intimidate or mislead users, thus discrediting the integrity of the systems. This may take the form of modifications to internal websites or server login messages, or directly to user systems with the replacement of the desktop wallpaper.(Citation: Novetta Blockbuster)(Citation: Varonis) Disturbing or offensive images may be used as a part of [Internal Defacement](https://attack.mitre.org/techniques/T1491/001) in order to cause user discomfort, or to pressure compliance with accompanying messages. Since internally defacing systems exposes an adversary's presence, it often takes place after other intrusion goals have been accomplished.(Citation: Novetta Blockbuster Destructive Malware)
+
+
+## Tests
+
+### Test #1 - Change Wallpaper
+
+Adveraries use osascript to change the device wallpaper.
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| filePath | str | `/System/Library/Desktop Pictures/Solid Colors/Black.png` |
+
+
+```applescript tab="<Code /> Script"
+tell application "System Events" to tell every desktop to set picture to "/System/Library/Desktop Pictures/Solid Colors/Black.png"
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "System Events" to tell every desktop to set picture to "/System/Library/Desktop Pictures/Solid Colors/Black.png"'
+
+# Or save to file and execute
+osascript change_wallpaper.scpt
+
+# With custom arguments
+osascript change_wallpaper.scpt "/System/Library/Desktop Pictures/Solid Colors/Black.png"
+```
+
+**Download Files**
+
+<DownloadButton filename="change_wallpaper.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="change_wallpaper.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="change_wallpaper" type="binary" label="Download Binary" />
+<DownloadButton filename="change_wallpaper.app" type="app" label="Download Application Bundle" />
+
+## References
+
+- [MITRE ATT&CK T1491.001](https://attack.mitre.org/techniques/T1491/001/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)
