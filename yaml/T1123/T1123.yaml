@@ -1,0 +1,22 @@
+name: Audio Capture
+tests:
+  - name: Capture Audio
+    description: Capture audio using QuickTime Player
+    language: AppleScript
+    tcc_required: true
+    command: |-
+      tell application "QuickTime Player"
+       	activate
+       	new audio recording
+       	delay 2
+       	tell front document
+      		start
+      		delay "#{recordingTime}"
+      		stop
+       	end tell
+       	export front document in (POSIX file "#{filePath}") using settings preset "Audio Only"
+       	quit saving no
+      end tell
+    args:
+      recordingTime: 3
+      filePath: "/tmp/recording.m4a"
