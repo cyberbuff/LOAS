@@ -1,0 +1,68 @@
+---
+title: T1123
+description: "Audio Capture"
+---
+
+## Description from ATT&CK
+
+
+
+An adversary can leverage a computer's peripheral devices (e.g., microphones and webcams) or applications (e.g., voice and video call services) to capture audio recordings for the purpose of listening into sensitive conversations to gather information.(Citation: ESET Attor Oct 2019)
+
+Malware or scripts may be used to interact with the devices through an available API provided by the operating system or an application to capture audio. Audio files may be written to disk and exfiltrated later.
+
+
+## Tests
+
+### Test #1 - Capture Audio
+
+Capture audio using QuickTime Player
+
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| recordingTime | int | `3` |
+| filePath | str | `/tmp/recording.m4a` |
+
+
+```applescript tab="<Code /> Script"
+tell application "QuickTime Player"
+ 	activate
+ 	new audio recording
+ 	delay 2
+ 	tell front document
+		start
+		delay "3"
+		stop
+ 	end tell
+ 	export front document in (POSIX file "/tmp/recording.m4a") using settings preset "Audio Only"
+ 	quit saving no
+end tell
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "QuickTime Player"' -e 'activate' -e 'new audio recording' -e 'delay 2' -e 'tell front document' -e 'start' -e 'delay "3"' -e 'stop' -e 'end tell' -e 'export front document in (POSIX file "/tmp/recording.m4a") using settings preset "Audio Only"' -e 'quit saving no' -e 'end tell'
+
+# Or save to file and execute
+osascript capture_audio.scpt
+
+# With custom arguments
+osascript capture_audio.scpt 3 "/tmp/recording.m4a"
+```
+
+**Download Files**
+
+<DownloadButton filename="capture_audio.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="capture_audio.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="capture_audio" type="binary" label="Download Binary" />
+<DownloadButton filename="capture_audio.app" type="app" label="Download Application Bundle" />
+
+## References
+
+- [MITRE ATT&CK T1123](https://attack.mitre.org/techniques/T1123/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

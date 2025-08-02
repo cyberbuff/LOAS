@@ -308,6 +308,17 @@
     "test_number": 1
   },
   {
+    "name": "Capture Audio",
+    "command": "tell application \"QuickTime Player\"\n \tactivate\n \tnew audio recording\n \tdelay 2\n \ttell front document\n\t\tstart\n\t\tdelay \"#{recordingTime}\"\n\t\tstop\n \tend tell\n \texport front document in (POSIX file \"#{filePath}\") using settings preset \"Audio Only\"\n \tquit saving no\nend tell",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Capture audio using QuickTime Player",
+    "technique_id": "T1123",
+    "technique_name": "Audio Capture",
+    "test_number": 1
+  },
+  {
     "name": "Get clipboard content (using System Events)",
     "command": "tell application \"System Events\" to get the clipboard",
     "language": "AppleScript",
