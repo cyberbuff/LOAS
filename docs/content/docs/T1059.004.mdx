@@ -1,0 +1,58 @@
+---
+title: T1059.004
+description: "Command and Scripting Interpreter  Unix Shell"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may abuse Unix shell commands and scripts for execution. Unix shells are the primary command prompt on Linux, macOS, and ESXi systems, though many variations of the Unix shell exist (e.g. sh, ash, bash, zsh, etc.) depending on the specific OS or distribution.(Citation: DieNet Bash)(Citation: Apple ZShell) Unix shells can control every aspect of a system, with certain commands requiring elevated privileges.
+
+Unix shells also support scripts that enable sequential execution of commands as well as other typical programming operations such as conditionals and loops. Common uses of shell scripts include long or repetitive tasks, or the need to run the same set of commands on multiple systems.
+
+Adversaries may abuse Unix shells to execute various commands or payloads. Interactive shells may be accessed through command and control channels or during lateral movement such as with [SSH](https://attack.mitre.org/techniques/T1021/004). Adversaries may also leverage shell scripts to deliver and execute multiple commands on victims or as part of payloads used for persistence.
+
+Some systems, such as embedded devices, lightweight Linux distributions, and ESXi servers, may leverage stripped-down Unix shells via Busybox, a small executable that contains a variety of tools, including a simple shell.
+
+
+## Tests
+
+### Test #1 - Execute a simple command
+
+Adversaries use the Unix shell to execute commands and scripts.
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| bashCommand | str | `sw_vers -productVersion` |
+
+
+```applescript tab="<Code /> Script"
+do shell script "sw_vers -productVersion"
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'do shell script "sw_vers -productVersion"'
+
+# Or save to file and execute
+osascript execute_a_simple_command.scpt
+
+# With custom arguments
+osascript execute_a_simple_command.scpt "sw_vers -productVersion"
+```
+
+**Download Files**
+
+<DownloadButton filename="execute_a_simple_command.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="execute_a_simple_command.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="execute_a_simple_command" type="binary" label="Download Binary" />
+<DownloadButton filename="execute_a_simple_command.app" type="app" label="Download Application Bundle" />
+
+## References
+
+- [MITRE ATT&CK T1059.004](https://attack.mitre.org/techniques/T1059/004/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

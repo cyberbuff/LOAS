@@ -1,0 +1,9 @@
+name: "Command and Scripting Interpreter: Unix Shell"
+tests:
+  - name: Execute a simple command
+    description: Adversaries use the Unix shell to execute commands and scripts.
+    language: "AppleScript"
+    command: |-
+      do shell script "#{bashCommand}"
+    args:
+      bashCommand: "sw_vers -productVersion"
