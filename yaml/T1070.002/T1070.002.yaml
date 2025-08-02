@@ -6,6 +6,6 @@ tests:
     language: AppleScript
     tcc_required: true
     command: |
-      tell application "Finder" to delete POSIX file "#{system_log_path}"'
+      tell application "Finder" to delete POSIX file "#{logPath}"
     args:
-      system_log_path: "/var/log/system.log"
+      logPath: "/var/log/system.log"

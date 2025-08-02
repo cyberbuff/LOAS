@@ -31,18 +31,18 @@ This test deletes the system log file using Finder application.
 
 | Argument | Type | Default Value |
 |----------|------|---------------|
-| system_log_path | str | `/var/log/system.log` |
+| logPath | str | `/var/log/system.log` |
 
 
 ```applescript tab="<Code /> Script"
-tell application "Finder" to delete POSIX file "/var/log/system.log"'
+tell application "Finder" to delete POSIX file "/var/log/system.log"
 
 ```
 
 
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
-osascript -e 'tell application "Finder" to delete POSIX file "/var/log/system.log"'"'"''
+osascript -e 'tell application "Finder" to delete POSIX file "/var/log/system.log"'
 
 # Or save to file and execute
 osascript delete_system_log_files.scpt

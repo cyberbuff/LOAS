@@ -1,0 +1,84 @@
+---
+title: T1552.003
+description: "Unsecured Credentials  Bash History"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may search the bash command history on compromised systems for insecurely stored credentials. Bash keeps track of the commands users type on the command-line with the "history" utility. Once a user logs out, the history is flushed to the user’s <code>.bash_history</code> file. For each user, this file resides at the same location: <code>~/.bash_history</code>. Typically, this file keeps track of the user’s last 500 commands. Users often type usernames and passwords on the command-line as parameters to programs, which then get saved to this file when they log out. Adversaries can abuse this by looking through the file for potential credentials. (Citation: External to DA, the OS X Way)
+
+
+## Tests
+
+### Test #1 - Search for passwords in history files
+
+This test searches for passwords in the bash history file.
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| filename | str | `.zsh_history` |
+| searchTerm | str | `password` |
+
+
+```applescript tab="<Code /> Script"
+set homeDir to (path to home folder as text)
+set historyPath to homeDir & ".zsh_history"
+
+try
+    set fileContent to read file historyPath
+    set lineList to paragraphs of fileContent
+    set matchCount to 0
+    set matchList to {}
+
+    repeat with currentLine in lineList
+        set lineText to currentLine as string
+
+        if lineText starts with ": " and lineText contains ";" then
+            set semicolonPos to offset of ";" in lineText
+            if semicolonPos > 0 then
+                set lineText to text (semicolonPos + 1) thru -1 of lineText
+            end if
+        end if
+
+        if lineText contains "password" then
+            set matchCount to matchCount + 1
+            if matchCount ≤ 10 then
+                set end of matchList to lineText
+            end if
+        end if
+    end repeat
+
+    return "Found " & matchCount & " matches:" & return & (matchList as string)
+on error errMsg
+    return "Error: " & errMsg
+end try
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'set homeDir to (path to home folder as text)' -e 'set historyPath to homeDir & ".zsh_history"' -e 'try' -e 'set fileContent to read file historyPath' -e 'set lineList to paragraphs of fileContent' -e 'set matchCount to 0' -e 'set matchList to {}' -e 'repeat with currentLine in lineList' -e 'set lineText to currentLine as string' -e 'if lineText starts with ": " and lineText contains ";" then' -e 'set semicolonPos to offset of ";" in lineText' -e 'if semicolonPos > 0 then' -e 'set lineText to text (semicolonPos + 1) thru -1 of lineText' -e 'end if' -e 'end if' -e 'if lineText contains "password" then' -e 'set matchCount to matchCount + 1' -e 'if matchCount ≤ 10 then' -e 'set end of matchList to lineText' -e 'end if' -e 'end if' -e 'end repeat' -e 'return "Found " & matchCount & " matches:" & return & (matchList as string)' -e 'on error errMsg' -e 'return "Error: " & errMsg' -e 'end try'
+
+# Or save to file and execute
+osascript search_for_passwords_in_history_files.scpt
+
+# With custom arguments
+osascript search_for_passwords_in_history_files.scpt ".zsh_history" "password"
+```
+
+**Download Files**
+
+<DownloadButton filename="search_for_passwords_in_history_files.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="search_for_passwords_in_history_files.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="search_for_passwords_in_history_files" type="binary" label="Download Binary" />
+<DownloadButton filename="search_for_passwords_in_history_files.app" type="app" label="Download Application Bundle" />
+
+## References
+
+- [MITRE ATT&CK T1552.003](https://attack.mitre.org/techniques/T1552/003/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

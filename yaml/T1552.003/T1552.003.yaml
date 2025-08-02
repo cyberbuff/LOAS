@@ -1,0 +1,40 @@
+name: "Unsecured Credentials: Bash History"
+tests:
+  - name: Search for passwords in history files
+    description: "This test searches for passwords in the bash history file."
+    language: "AppleScript"
+    command: |
+      set homeDir to (path to home folder as text)
+      set historyPath to homeDir & "#{filename}"
+
+      try
+          set fileContent to read file historyPath
+          set lineList to paragraphs of fileContent
+          set matchCount to 0
+          set matchList to {}
+
+          repeat with currentLine in lineList
+              set lineText to currentLine as string
+
+              if lineText starts with ": " and lineText contains ";" then
+                  set semicolonPos to offset of ";" in lineText
+                  if semicolonPos > 0 then
+                      set lineText to text (semicolonPos + 1) thru -1 of lineText
+                  end if
+              end if
+
+              if lineText contains "#{searchTerm}" then
+                  set matchCount to matchCount + 1
+                  if matchCount ≤ 10 then
+                      set end of matchList to lineText
+                  end if
+              end if
+          end repeat
+
+          return "Found " & matchCount & " matches:" & return & (matchList as string)
+      on error errMsg
+          return "Error: " & errMsg
+      end try
+    args:
+      filename: ".zsh_history"
+      searchTerm: "password"
