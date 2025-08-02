@@ -1,0 +1,42 @@
+name: "System Network Configuration Discovery: Internet Connection Discovery"
+tests:
+  - name: Test Internet connection
+    description: Adversaries may check for Internet connectivity on compromised systems.
+    language: "AppleScript"
+    command: |-
+      tell application "Safari"
+        try
+            activate
+            -- Open the URL in a new tab
+            tell window 1
+                set current tab to (make new tab with properties {URL:"#{testURL}"})
+            end tell
+
+            -- Wait for page to load
+            delay 3
+
+            -- Check if page loaded successfully by checking the URL or title
+            set currentURL to URL of current tab of window 1
+            set pageTitle to name of current tab of window 1
+
+            -- Close the test tab
+            close current tab of window 1
+
+            -- Check if we got a valid result
+            if currentURL contains "#{testURL}" and pageTitle does not contain "can't" and pageTitle does not contain "error" then
+              set connectionResult to true
+            else
+              set connectionResult to false
+            end if
+
+        on error
+          set connectionResult to false
+        end try
+
+        try
+          quit
+        end try
+        return connectionResult
+      end tell
+    args:
+      testURL: "https://www.google.com"
