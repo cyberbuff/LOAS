@@ -18,47 +18,7 @@ Adversaries may abuse AppleScript to execute various behaviors, such as interact
 
 ## Tests
 
-### Test #1 - Display dialog box to capture user password
-
-Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.
-
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
-
-**Input Arguments:**
-
-| Argument | Type | Default Value |
-|----------|------|---------------|
-| title | str | `Auto-Updates System` |
-| description | str | `The launcher needs permissions to enable background auto-updates.Please enter your password.` |
-
-
-```applescript tab="<Code /> Script"
-display dialog "The launcher needs permissions to enable background auto-updates.Please enter your password." with title "Auto-Updates System" default answer "" with icon caution buttons {"Continue"} default button "Continue" with hidden answer
-
-```
-
-
-```bash tab="<Terminal /> Execution"
-# Execute with default arguments
-osascript -e 'display dialog "The launcher needs permissions to enable background auto-updates.Please enter your password." with title "Auto-Updates System" default answer "" with icon caution buttons {"Continue"} default button "Continue" with hidden answer'
-
-# Or save to file and execute
-osascript display_dialog_box_to_capture_user_password.scpt
-
-# With custom arguments
-osascript display_dialog_box_to_capture_user_password.scpt "Auto-Updates System" "The launcher needs permissions to enable background auto-updates.Please enter your password."
-```
-
-**Download Files**
-
-<DownloadButton filename="display_dialog_box_to_capture_user_password.scpt" type="scpt" label="Download .scpt" />
-<DownloadButton filename="display_dialog_box_to_capture_user_password.swift" type="swift" label="Download .swift" />
-<DownloadButton filename="display_dialog_box_to_capture_user_password" type="binary" label="Download Binary" />
-<DownloadButton filename="display_dialog_box_to_capture_user_password.app" type="app" label="Download Application Bundle" />
-
----
-
-### Test #2 - Open application
+### Test #1 - Open application
 
 Opens an application on the system. The application will be in focus after running the command.
 
@@ -97,7 +57,7 @@ osascript open_application.scpt "Finder"
 
 ---
 
-### Test #3 - Launch application
+### Test #2 - Launch application
 
 Lauches an application on the system. The application will be in the background after running the command.
 
@@ -136,7 +96,7 @@ osascript launch_application.scpt "Finder"
 
 ---
 
-### Test #4 - Close application
+### Test #3 - Close application
 
 Closes an application on the system.
 

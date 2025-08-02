@@ -4,10 +4,10 @@ tests:
     language: AppleScript
     description: "Retrieves comprehensive system information including OS version, hardware details, and system configuration using the system info command. This provides detailed system reconnaissance capabilities without requiring elevated privileges."
     command: |
-      return (system info)
+      system info
 
   - name: Get disks
     language: AppleScript
     description: Lists all connected disks on the system using the list disks command.
     command: |-
-      return (list disks)
+      list disks

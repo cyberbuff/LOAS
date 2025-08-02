@@ -1,0 +1,64 @@
+---
+title: T1070.002
+description: "Indicator Removal on Host  Clear FreeBSD, Linux or Mac System Logs"
+---
+
+## Description from ATT&CK
+
+
+
+Adversaries may clear system logs to hide evidence of an intrusion. macOS and Linux both keep track of system or user-initiated actions via system logs. The majority of native system logging is stored under the <code>/var/log/</code> directory. Subfolders in this directory categorize logs by their related functions, such as:(Citation: Linux Logs)
+
+* <code>/var/log/messages:</code>: General and system-related messages
+* <code>/var/log/secure</code> or <code>/var/log/auth.log</code>: Authentication logs
+* <code>/var/log/utmp</code> or <code>/var/log/wtmp</code>: Login records
+* <code>/var/log/kern.log</code>: Kernel logs
+* <code>/var/log/cron.log</code>: Crond logs
+* <code>/var/log/maillog</code>: Mail server logs
+* <code>/var/log/httpd/</code>: Web server access and error logs
+
+
+
+## Tests
+
+### Test #1 - Delete system log files
+
+This test deletes the system log file using Finder application.
+
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| system_log_path | str | `/var/log/system.log` |
+
+
+```applescript tab="<Code /> Script"
+tell application "Finder" to delete POSIX file "/var/log/system.log"'
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "Finder" to delete POSIX file "/var/log/system.log"'"'"''
+
+# Or save to file and execute
+osascript delete_system_log_files.scpt
+
+# With custom arguments
+osascript delete_system_log_files.scpt "/var/log/system.log"
+```
+
+**Download Files**
+
+<DownloadButton filename="delete_system_log_files.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="delete_system_log_files.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="delete_system_log_files" type="binary" label="Download Binary" />
+<DownloadButton filename="delete_system_log_files.app" type="app" label="Download Application Bundle" />
+
+## References
+
+- [MITRE ATT&CK T1070.002](https://attack.mitre.org/techniques/T1070/002/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

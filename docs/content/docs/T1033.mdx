@@ -47,13 +47,13 @@ Retrieves the current user's username using the USER environment variable.
 
 
 ```applescript tab="<Code /> Script"
-return (system attribute "USER")
+system attribute "USER"
 
 ```
 
 
 ```bash tab="<Terminal /> Execution"
-osascript -e 'return (system attribute "USER")'
+osascript -e 'system attribute "USER"'
 ```
 
 **Download Files**
@@ -73,12 +73,12 @@ Listing the /Users folder will return the list of users on the system.
 
 
 ```applescript tab="<Code /> Script"
-return (list folder "/Users")
+list folder "/Users"
 ```
 
 
 ```bash tab="<Terminal /> Execution"
-osascript -e 'return (list folder "/Users")'
+osascript -e 'list folder "/Users"'
 ```
 
 **Download Files**

