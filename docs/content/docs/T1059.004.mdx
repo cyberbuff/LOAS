@@ -18,7 +18,7 @@ Some systems, such as embedded devices, lightweight Linux distributions, and ESX
 
 ## Tests
 
-### Test #1 - Execute a simple command
+### Test #1 - Execute shell script
 
 Adversaries use the Unix shell to execute commands and scripts.
 
@@ -39,18 +39,96 @@ do shell script "sw_vers -productVersion"
 osascript -e 'do shell script "sw_vers -productVersion"'
 
 # Or save to file and execute
-osascript execute_a_simple_command.scpt
+osascript execute_shell_script.scpt
 
 # With custom arguments
-osascript execute_a_simple_command.scpt "sw_vers -productVersion"
+osascript execute_shell_script.scpt "sw_vers -productVersion"
 ```
 
 **Download Files**
 
-<DownloadButton filename="execute_a_simple_command.scpt" type="scpt" label="Download .scpt" />
-<DownloadButton filename="execute_a_simple_command.swift" type="swift" label="Download .swift" />
-<DownloadButton filename="execute_a_simple_command" type="binary" label="Download Binary" />
-<DownloadButton filename="execute_a_simple_command.app" type="app" label="Download Application Bundle" />
+<DownloadButton filename="execute_shell_script.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="execute_shell_script.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="execute_shell_script" type="binary" label="Download Binary" />
+<DownloadButton filename="execute_shell_script.app" type="app" label="Download Application Bundle" />
+
+---
+
+### Test #2 - Execute shell script using administrator privileges
+
+Adversaries use the Unix shell to execute commands and scripts.
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| bashCommand | str | `whoami` |
+
+
+```applescript tab="<Code /> Script"
+do shell script "whoami" with administrator privileges
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'do shell script "whoami" with administrator privileges'
+
+# Or save to file and execute
+osascript execute_shell_script_using_administrator_privileges.scpt
+
+# With custom arguments
+osascript execute_shell_script_using_administrator_privileges.scpt "whoami"
+```
+
+**Download Files**
+
+<DownloadButton filename="execute_shell_script_using_administrator_privileges.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="execute_shell_script_using_administrator_privileges.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="execute_shell_script_using_administrator_privileges" type="binary" label="Download Binary" />
+<DownloadButton filename="execute_shell_script_using_administrator_privileges.app" type="app" label="Download Application Bundle" />
+
+---
+
+### Test #3 - Execute shell commands in Terminal
+
+Adversaries use the Unix shell to execute commands and scripts.
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| bashCommand | str | `sw_vers -productVersion` |
+
+
+```applescript tab="<Code /> Script"
+tell application "Terminal"
+  do script "sw_vers -productVersion"
+  delay 3
+  try
+    quit
+  end try
+end tell
+```
+
+
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "Terminal"' -e 'do script "sw_vers -productVersion"' -e 'delay 3' -e 'try' -e 'quit' -e 'end try' -e 'end tell'
+
+# Or save to file and execute
+osascript execute_shell_commands_in_terminal.scpt
+
+# With custom arguments
+osascript execute_shell_commands_in_terminal.scpt "sw_vers -productVersion"
+```
+
+**Download Files**
+
+<DownloadButton filename="execute_shell_commands_in_terminal.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="execute_shell_commands_in_terminal.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="execute_shell_commands_in_terminal" type="binary" label="Download Binary" />
+<DownloadButton filename="execute_shell_commands_in_terminal.app" type="app" label="Download Application Bundle" />
 
 ## References
 

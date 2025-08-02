@@ -1,9 +1,31 @@
 name: "Command and Scripting Interpreter: Unix Shell"
 tests:
-  - name: Execute a simple command
+  - name: Execute shell script
     description: Adversaries use the Unix shell to execute commands and scripts.
     language: "AppleScript"
     command: |-
       do shell script "#{bashCommand}"
+    args:
+      bashCommand: "sw_vers -productVersion"
+
+  - name: Execute shell script using administrator privileges
+    description: Adversaries use the Unix shell to execute commands and scripts.
+    language: "AppleScript"
+    command: |-
+      do shell script "#{bashCommand}" with administrator privileges
+    args:
+      bashCommand: "whoami"
+
+  - name: Execute shell commands in Terminal
+    description: Adversaries use the Unix shell to execute commands and scripts.
+    language: "AppleScript"
+    command: |-
+      tell application "Terminal"
+        do script "#{bashCommand}"
+        delay 3
+        try
+          quit
+        end try
+      end tell
     args:
       bashCommand: "sw_vers -productVersion"
