@@ -1,23 +1,19 @@
 [project]
 name = "loas"
 version = "0.1.9"
-description = "Add your description here"
+description = "Helper file for loas.dev"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "mitreattack-python>=4.0.2",
-    "pydantic>=2.11.7",
-    "pyyaml>=6.0.2",
-    "typer>=0.16.0",
-    "requests>=2.25.0",
+  "mitreattack-python>=4.0.2",
+  "pydantic>=2.11.7",
+  "pyyaml>=6.0.2",
+  "typer>=0.16.0",
+  "requests>=2.25.0",
 ]
 
 [dependency-groups]
-dev = [
-    "bump-my-version>=1.2.0",
-    "pre-commit>=4.2.0",
-    "ruff>=0.12.0",
-]
+dev = ["bump-my-version>=1.2.0", "pre-commit>=4.2.0", "ruff>=0.12.0"]
 
 [tool.bumpversion]
 current_version = "0.1.9"
