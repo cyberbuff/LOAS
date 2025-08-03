@@ -1,15 +1,36 @@
 import "./global.css";
 import { RootProvider } from "fumadocs-ui/provider";
-import { Inter } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import type { ReactNode } from "react";
+import type { Metadata } from "next/types";
 
-const inter = Inter({
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Living off the Orchard: Apple Script",
+    default: "Living off the Orchard: Apple Script",
+  },
+  description:
+    "A comprehensive database documenting how AppleScript and JXA are leveraged by threat actors for malicious purposes.",
+  metadataBase: new URL("https://loas.dev/"),
+};
+
+const geist = Geist({
+  variable: "--font-sans",
+  subsets: ["latin"],
+});
+
+const mono = Geist_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${geist.variable} ${mono.variable}`}
+      suppressHydrationWarning
+    >
       <body className="flex flex-col min-h-screen">
         <RootProvider>{children}</RootProvider>
       </body>
