@@ -3,6 +3,7 @@ tests:
   - name: Test Internet connection
     description: Adversaries may check for Internet connectivity on compromised systems.
     language: "AppleScript"
+    tcc_required: true
     command: |-
       tell application "Safari"
         try

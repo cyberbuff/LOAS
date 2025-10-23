@@ -59,7 +59,7 @@
     "command": "tell application \"Safari\"\n  try\n      activate\n      -- Open the URL in a new tab\n      tell window 1\n          set current tab to (make new tab with properties {URL:\"#{testURL}\"})\n      end tell\n\n      -- Wait for page to load\n      delay 3\n\n      -- Check if page loaded successfully by checking the URL or title\n      set currentURL to URL of current tab of window 1\n      set pageTitle to name of current tab of window 1\n\n      -- Close the test tab\n      close current tab of window 1\n\n      -- Check if we got a valid result\n      if currentURL contains \"#{testURL}\" and pageTitle does not contain \"can't\" and pageTitle does not contain \"error\" then\n        set connectionResult to true\n      else\n        set connectionResult to false\n      end if\n\n  on error\n    set connectionResult to false\n  end try\n\n  try\n    quit\n  end try\n  return connectionResult\nend tell",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": true,
     "description": "Adversaries may check for Internet connectivity on compromised systems.",
     "technique_id": "T1016.001",
     "technique_name": "System Network Configuration Discovery: Internet Connection Discovery",

@@ -1,4 +1,3 @@
-import getConfig from "next/config";
 import { Button } from "@/components/ui/button";
 
 interface DownloadButtonProps {
@@ -14,8 +13,7 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
   filename,
   type,
 }) => {
-  const { publicRuntimeConfig } = getConfig();
-  const version = publicRuntimeConfig?.version || "1.0.0";
+  const version = process.env.NEXT_PUBLIC_APP_VERSION || "1.0.0";
 
   // If href is provided, use it directly
   if (href) {
