@@ -11,14 +11,26 @@
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "indentWidth": 2
+    "indentWidth": 2,
+    "includes": [
+      "**",
+      "!src/components/data-table-filter/**",
+      "!src/components/ui/**"
+    ]
   },
   "linter": {
     "enabled": true,
+    "includes": [
+      "**",
+      "!src/components/data-table-filter/**",
+      "!src/components/ui/**"
+    ],
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noExplicitAny": "off"
+        "noExplicitAny": "off",
+        "noUnknownAtRules": "off",
+        "noArrayIndexKey": "off"
       },
       "style": {
         "noParameterAssign": "error",

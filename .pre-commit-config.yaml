@@ -32,13 +32,12 @@ repos:
 
   - repo: local
     hooks:
-      - id: local-biome-check
+      - id: biome-check
         name: biome check
-        entry: cd docs && pnpm run format
+        entry: bash -c 'cd docs && npx --no @biomejs/biome@2.2.7 check --write --files-ignore-unknown=true --no-errors-on-unmatched'
         language: system
-        types:
-          - text
-        files: '^docs/.*\.(js|ts|jsx|tsx|json|mdx|md)$'
+        files: '^docs/.*\.(js|ts|jsx|tsx|json|jsonc|mdx|md|css)$'
+        pass_filenames: false
 
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.9.5
