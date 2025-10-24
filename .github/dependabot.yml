@@ -1,0 +1,63 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/docs"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 2
+    labels:
+      - "dependencies"
+      - "npm"
+    versioning-strategy: increase
+    groups:
+      all-npm-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      all-npm-major-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 1
+    labels:
+      - "dependencies"
+      - "github-actions"
+    groups:
+      all-github-actions:
+        patterns:
+          - "*"
+
+  # Enable version updates for Python (if using uv or pip)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 2
+    labels:
+      - "dependencies"
+      - "python"
+    groups:
+      all-python-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      all-python-major-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
