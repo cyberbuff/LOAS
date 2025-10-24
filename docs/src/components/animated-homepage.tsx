@@ -1,11 +1,10 @@
 "use client";
 
 import { motion } from "motion/react";
-import { DataTableWithFilters } from "@/components/data-table-with-filters";
-import { columns, type Script } from "@/components/scripts-columns";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { CircleQuestionMark } from "lucide-react";
+import { DataTableWithFilters } from "@/components/data-table-with-filters";
+import { columns, type Script } from "@/components/scripts-columns";
 
 interface AnimatedHomepageProps {
   scripts: Script[];
@@ -130,7 +129,7 @@ export function AnimatedHomepage({
               <motion.div
                 className="text-2xl font-bold text-primary mb-1"
                 animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
               >
                 2
               </motion.div>
@@ -145,7 +144,7 @@ export function AnimatedHomepage({
               <motion.div
                 className="text-2xl font-bold text-primary mb-1"
                 animate={{ y: [0, -2, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+                transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
               >
                 {uniqueTechniques}
               </motion.div>
@@ -162,7 +161,7 @@ export function AnimatedHomepage({
               <motion.div
                 className="text-2xl font-bold text-primary mb-1"
                 animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 2.5, repeat: Infinity }}
+                transition={{ duration: 2.5, repeat: Number.POSITIVE_INFINITY }}
               >
                 {scripts.length}
               </motion.div>
@@ -183,7 +182,7 @@ export function AnimatedHomepage({
               <motion.div
                 className="w-2 h-2 bg-primary rounded-full"
                 animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
               />
               <h2 className="text-2xl font-semibold text-foreground">
                 Script Database

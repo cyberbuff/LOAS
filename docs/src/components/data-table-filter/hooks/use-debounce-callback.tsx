@@ -3,61 +3,61 @@ import { debounce } from "../lib/debounce";
 import { useUnmount } from "./use-unmount";
 
 type DebounceOptions = {
-	leading?: boolean;
-	trailing?: boolean;
-	maxWait?: number;
+  leading?: boolean;
+  trailing?: boolean;
+  maxWait?: number;
 };
 
 type ControlFunctions = {
-	cancel: () => void;
-	flush: () => void;
-	isPending: () => boolean;
+  cancel: () => void;
+  flush: () => void;
+  isPending: () => boolean;
 };
 
 export type DebouncedState<T extends (...args: any) => ReturnType<T>> = ((
-	...args: Parameters<T>
+  ...args: Parameters<T>
 ) => ReturnType<T> | undefined) &
-	ControlFunctions;
+  ControlFunctions;
 
 export function useDebounceCallback<T extends (...args: any) => ReturnType<T>>(
-	func: T,
-	delay = 500,
-	options?: DebounceOptions,
+  func: T,
+  delay = 500,
+  options?: DebounceOptions,
 ): DebouncedState<T> {
-	const debouncedFunc = useRef<ReturnType<typeof debounce>>(null);
+  const debouncedFunc = useRef<ReturnType<typeof debounce>>(null);
 
-	useUnmount(() => {
-		if (debouncedFunc.current) {
-			debouncedFunc.current.cancel();
-		}
-	});
+  useUnmount(() => {
+    if (debouncedFunc.current) {
+      debouncedFunc.current.cancel();
+    }
+  });
 
-	const debounced = useMemo(() => {
-		const debouncedFuncInstance = debounce(func, delay, options);
+  const debounced = useMemo(() => {
+    const debouncedFuncInstance = debounce(func, delay, options);
 
-		const wrappedFunc: DebouncedState<T> = (...args: Parameters<T>) => {
-			return debouncedFuncInstance(...args);
-		};
+    const wrappedFunc: DebouncedState<T> = (...args: Parameters<T>) => {
+      return debouncedFuncInstance(...args);
+    };
 
-		wrappedFunc.cancel = () => {
-			debouncedFuncInstance.cancel();
-		};
+    wrappedFunc.cancel = () => {
+      debouncedFuncInstance.cancel();
+    };
 
-		wrappedFunc.isPending = () => {
-			return !!debouncedFunc.current;
-		};
+    wrappedFunc.isPending = () => {
+      return !!debouncedFunc.current;
+    };
 
-		wrappedFunc.flush = () => {
-			return debouncedFuncInstance.flush();
-		};
+    wrappedFunc.flush = () => {
+      return debouncedFuncInstance.flush();
+    };
 
-		return wrappedFunc;
-	}, [func, delay, options]);
+    return wrappedFunc;
+  }, [func, delay, options]);
 
-	// Update the debounced function ref whenever func, wait, or options change
-	useEffect(() => {
-		debouncedFunc.current = debounce(func, delay, options);
-	}, [func, delay, options]);
+  // Update the debounced function ref whenever func, wait, or options change
+  useEffect(() => {
+    debouncedFunc.current = debounce(func, delay, options);
+  }, [func, delay, options]);
 
-	return debounced;
+  return debounced;
 }
