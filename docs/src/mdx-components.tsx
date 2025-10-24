@@ -6,13 +6,13 @@ import DownloadButton from "./components/DownloadButton";
 
 // use this function to get MDX components, you will need it for rendering MDX
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
-	return {
-		...defaultMdxComponents,
-		...TabsComponents,
-		// Lucide icons
-		Code,
-		Terminal,
-		DownloadButton,
-		...components,
-	};
+  return {
+    ...defaultMdxComponents,
+    ...TabsComponents,
+    // Lucide icons
+    Code,
+    Terminal,
+    DownloadButton,
+    ...components,
+  };
 }
