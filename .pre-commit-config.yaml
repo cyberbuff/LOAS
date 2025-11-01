@@ -22,7 +22,7 @@ repos:
       - id: yamlfmt
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.2
+    rev: v0.14.3
     hooks:
       - id: ruff
         args:
@@ -34,12 +34,12 @@ repos:
     hooks:
       - id: biome-check
         name: biome check
-        entry: bash -c 'cd docs && npx --no @biomejs/biome@2.2.7 check --write --files-ignore-unknown=true --no-errors-on-unmatched'
+        entry: bash -c 'cd docs && biome check --write --files-ignore-unknown=true --no-errors-on-unmatched'
         language: system
         files: '^docs/.*\.(js|ts|jsx|tsx|json|jsonc|mdx|md|css)$'
         pass_filenames: false
 
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.9.5
+    rev: 0.9.7
     hooks:
       - id: uv-lock
