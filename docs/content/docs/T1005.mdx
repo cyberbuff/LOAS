@@ -5,13 +5,9 @@ description: "Data from Local System"
 
 ## Description from ATT&CK
 
-
-
-Adversaries may search local system sources, such as file systems, configuration files, local databases, or virtual machine files, to find files of interest and sensitive data prior to Exfiltration.
+Adversaries may search local system sources, such as file systems, configuration files, local databases, virtual machine files, or process memory, to find files of interest and sensitive data prior to Exfiltration.
 
 Adversaries may do this using a [Command and Scripting Interpreter](https://attack.mitre.org/techniques/T1059), such as [cmd](https://attack.mitre.org/software/S0106) as well as a [Network Device CLI](https://attack.mitre.org/techniques/T1059/008), which have functionality to interact with the file system to gather information.(Citation: show_run_config_cmd_cisco) Adversaries may also use [Automated Collection](https://attack.mitre.org/techniques/T1119) on the local system.
-
-
 
 ## Tests
 
@@ -19,14 +15,15 @@ Adversaries may do this using a [Command and Scripting Interpreter](https://atta
 
 This command will copy Safari BinaryCookies files using AppleScript as seen in Atomic Stealer.
 
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">
+	⚠️ TCC Required
+</span>
 
 **Input Arguments:**
 
-| Argument | Type | Default Value |
-|----------|------|---------------|
-| destination_path | str | `/tmp` |
-
+| Argument         | Type | Default Value |
+| ---------------- | ---- | ------------- |
+| destination_path | str  | `/tmp`        |
 
 ```applescript tab="<Code /> Script"
 tell application "Finder"
@@ -41,7 +38,6 @@ end tell
 
 ```
 
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'tell application "Finder"' -e 'set destinationFolderPath to POSIX file "/tmp"' -e 'set notesFolderPath to (path to home folder as text) & "Library:Group Containers:group.com.apple.notes:"' -e 'set notesFolder to folder notesFolderPath' -e 'set notesFiles to {file "NoteStore.sqlite", file "NoteStore.sqlite-shm", file "NoteStore.sqlite-wal"} of notesFolder' -e 'repeat with aFile in notesFiles' -e 'duplicate aFile to folder destinationFolderPath with replacing' -e 'end repeat' -e 'end tell'
@@ -55,10 +51,26 @@ osascript copy_apple_notes_database.scpt "/tmp"
 
 **Download Files**
 
-<DownloadButton filename="copy_apple_notes_database.scpt" type="scpt" label="Download .scpt" />
-<DownloadButton filename="copy_apple_notes_database.swift" type="swift" label="Download .swift" />
-<DownloadButton filename="copy_apple_notes_database" type="binary" label="Download Binary" />
-<DownloadButton filename="copy_apple_notes_database.app" type="app" label="Download Application Bundle" />
+<DownloadButton
+	filename="copy_apple_notes_database.scpt"
+	type="scpt"
+	label="Download .scpt"
+/>
+<DownloadButton
+	filename="copy_apple_notes_database.swift"
+	type="swift"
+	label="Download .swift"
+/>
+<DownloadButton
+	filename="copy_apple_notes_database"
+	type="binary"
+	label="Download Binary"
+/>
+<DownloadButton
+	filename="copy_apple_notes_database.app"
+	type="app"
+	label="Download Application Bundle"
+/>
 
 ## References
 
