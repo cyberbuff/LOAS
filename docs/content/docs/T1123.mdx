@@ -5,12 +5,9 @@ description: "Audio Capture"
 
 ## Description from ATT&CK
 
-
-
 An adversary can leverage a computer's peripheral devices (e.g., microphones and webcams) or applications (e.g., voice and video call services) to capture audio recordings for the purpose of listening into sensitive conversations to gather information.(Citation: ESET Attor Oct 2019)
 
 Malware or scripts may be used to interact with the devices through an available API provided by the operating system or an application to capture audio. Audio files may be written to disk and exfiltrated later.
-
 
 ## Tests
 
@@ -26,8 +23,6 @@ Capture audio using QuickTime Player
 |----------|------|---------------|
 | recordingTime | int | `3` |
 | filePath | str | `/tmp/recording.m4a` |
-
-
 ```applescript tab="<Code /> Script"
 tell application "QuickTime Player"
  	activate
@@ -42,8 +37,6 @@ tell application "QuickTime Player"
  	quit saving no
 end tell
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'tell application "QuickTime Player"' -e 'activate' -e 'new audio recording' -e 'delay 2' -e 'tell front document' -e 'start' -e 'delay "3"' -e 'stop' -e 'end tell' -e 'export front document in (POSIX file "/tmp/recording.m4a") using settings preset "Audio Only"' -e 'quit saving no' -e 'end tell'

@@ -5,14 +5,11 @@ description: "Clipboard Data"
 
 ## Description from ATT&CK
 
-
-
 Adversaries may collect data stored in the clipboard from users copying information within or between applications.
 
 For example, on Windows adversaries can access clipboard data by using <code>clip.exe</code> or <code>Get-Clipboard</code>.(Citation: MSDN Clipboard)(Citation: clip_win_server)(Citation: CISA_AA21_200B) Additionally, adversaries may monitor then replace users’ clipboard with their data (e.g., [Transmitted Data Manipulation](https://attack.mitre.org/techniques/T1565/002)).(Citation: mining_ruby_reversinglabs)
 
 macOS and Linux also have commands, such as <code>pbpaste</code>, to grab clipboard contents.(Citation: Operating with EmPyre)
-
 
 ## Tests
 
@@ -21,13 +18,9 @@ macOS and Linux also have commands, such as <code>pbpaste</code>, to grab clipbo
 Retrieves the current clipboard content using System Events.
 
 <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
-
-
 ```applescript tab="<Code /> Script"
 tell application "System Events" to get the clipboard
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 osascript -e 'tell application "System Events" to get the clipboard'
 ```
@@ -52,13 +45,9 @@ Sets the clipboard content to a specified value using System Events.
 | Argument | Type | Default Value |
 |----------|------|---------------|
 | clipboardContent | str | `Hello, world!` |
-
-
 ```applescript tab="<Code /> Script"
 tell application "System Events" to set the clipboard to "Hello, world!"
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'tell application "System Events" to set the clipboard to "Hello, world!"'
@@ -83,12 +72,9 @@ osascript set_clipboard_content_using_system_events.scpt "Hello, world!"
 
 Retrieves the current clipboard content using AppleScript's built-in clipboard command.
 
-
 ```applescript tab="<Code /> Script"
 the clipboard
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 osascript -e 'the clipboard'
 ```
@@ -106,18 +92,15 @@ osascript -e 'the clipboard'
 
 Sets the clipboard content to a specified value using AppleScript's built-in clipboard command.
 
+
 **Input Arguments:**
 
 | Argument | Type | Default Value |
 |----------|------|---------------|
 | textContent | str | `Hello, world!` |
-
-
 ```applescript tab="<Code /> Script"
 set the clipboard to "Hello, world!"
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'set the clipboard to "Hello, world!"'
@@ -142,7 +125,6 @@ osascript set_clipboard_content_using_applescript_defaults.scpt "Hello, world!"
 
 Retrieves clipboard content using Cocoa frameworks (Foundation and AppKit).
 
-
 ```applescript tab="<Code /> Script"
 use framework "Foundation"
 use framework "AppKit"
@@ -152,8 +134,6 @@ set clipboardContent to pasteboard's stringForType:"public.utf8-plain-text"
 clipboardContent
 
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 osascript -e 'use framework "Foundation"' -e 'use framework "AppKit"' -e 'set pasteboard to current application'"'"'s NSPasteboard'"'"'s generalPasteboard()' -e 'set clipboardContent to pasteboard'"'"'s stringForType:"public.utf8-plain-text"' -e 'clipboardContent'
 ```
@@ -171,13 +151,12 @@ osascript -e 'use framework "Foundation"' -e 'use framework "AppKit"' -e 'set pa
 
 Sets clipboard content using Cocoa frameworks (Foundation and AppKit).
 
+
 **Input Arguments:**
 
 | Argument | Type | Default Value |
 |----------|------|---------------|
 | textContent | str | `Hello, world!` |
-
-
 ```applescript tab="<Code /> Script"
 use framework "Foundation"
 use framework "AppKit"
@@ -186,8 +165,6 @@ set pasteboard to current application's NSPasteboard's generalPasteboard()
 pasteboard's setString:"Hello, world!" forType:"public.utf8-plain-text"
 
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'use framework "Foundation"' -e 'use framework "AppKit"' -e 'set pasteboard to current application'"'"'s NSPasteboard'"'"'s generalPasteboard()' -e 'pasteboard'"'"'s setString:"Hello, world!" forType:"public.utf8-plain-text"'
