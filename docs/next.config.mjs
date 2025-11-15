@@ -19,6 +19,14 @@ const config = {
   env: {
     NEXT_PUBLIC_APP_VERSION: version,
   },
+  async rewrites() {
+    return [
+      {
+        source: "/docs/:path*.mdx",
+        destination: "/llms.mdx/:path*",
+      },
+    ];
+  },
 };
 
 export default withMDX(config);
