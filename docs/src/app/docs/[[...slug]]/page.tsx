@@ -28,16 +28,16 @@ export default async function Page(props: {
       full={page.data.full}
     >
       <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription>
+      <DocsDescription className="-pb-2">
         {page.data.description}
-        <div className="flex flex-row gap-2 items-center border-b pt-4 pb-6">
-          <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
-          <ViewOptions
-            markdownUrl={`${page.url}.mdx`}
-            githubUrl={`https://github.com/cyberbuff/loas/blob/main/apps/docs/content/docs/${page.path}`}
-          />
-        </div>
       </DocsDescription>
+      <div className="flex flex-row gap-2 items-center border-b -mt-6 -pt-4 pb-6">
+        <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
+        <ViewOptions
+          markdownUrl={`${page.url}.mdx`}
+          githubUrl={`https://github.com/cyberbuff/loas/blob/main/apps/docs/content/docs/${page.path}`}
+        />
+      </div>
       <DocsBody>
         <MDXContent
           components={getMDXComponents({

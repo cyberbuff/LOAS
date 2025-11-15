@@ -1,3 +1,10 @@
 {
-  "pages": ["---Introduction---", "index", "execution", "---Scripts---", "..."]
+  "pages": [
+    "---Introduction---",
+    "index",
+    "execution",
+    "coverage",
+    "---Scripts---",
+    "..."
+  ]
 }
