@@ -34,11 +34,6 @@ repos:
     rev: v2.3.5
     hooks:
       - id: biome-check
-        name: biome check
-        entry: bash -c 'cd docs && npx --no @biomejs/biome check --write --files-ignore-unknown=true --no-errors-on-unmatched'
-        language: system
-        files: '^docs/.*\.(js|ts|jsx|tsx|json|jsonc|mdx|md|css)$'
-        pass_filenames: false
 
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.9.9
