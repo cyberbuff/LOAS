@@ -1,0 +1,11 @@
+{
+  "aliases": {
+    "uiDir": "./components/fumadocs",
+    "componentsDir": "./components",
+    "blockDir": "./components",
+    "cssDir": "./styles",
+    "libDir": "./lib"
+  },
+  "baseDir": "src",
+  "commands": {}
+}

@@ -11,5 +11,8 @@ export const baseOptions: BaseLayoutProps = {
   nav: {
     title: <>🍎</>,
   },
+  themeSwitch: {
+    enabled: false,
+  },
   githubUrl: "https://github.com/cyberbuff/loas",
 };
