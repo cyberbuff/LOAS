@@ -5,8 +5,6 @@ description: "Command and Scripting Interpreter  Unix Shell"
 
 ## Description from ATT&CK
 
-
-
 Adversaries may abuse Unix shell commands and scripts for execution. Unix shells are the primary command prompt on Linux, macOS, and ESXi systems, though many variations of the Unix shell exist (e.g. sh, ash, bash, zsh, etc.) depending on the specific OS or distribution.(Citation: DieNet Bash)(Citation: Apple ZShell) Unix shells can control every aspect of a system, with certain commands requiring elevated privileges.
 
 Unix shells also support scripts that enable sequential execution of commands as well as other typical programming operations such as conditionals and loops. Common uses of shell scripts include long or repetitive tasks, or the need to run the same set of commands on multiple systems.
@@ -15,25 +13,21 @@ Adversaries may abuse Unix shells to execute various commands or payloads. Inter
 
 Some systems, such as embedded devices, lightweight Linux distributions, and ESXi servers, may leverage stripped-down Unix shells via Busybox, a small executable that contains a variety of tools, including a simple shell.
 
-
 ## Tests
 
 ### Test #1 - Execute shell script
 
 Adversaries use the Unix shell to execute commands and scripts.
 
+
 **Input Arguments:**
 
 | Argument | Type | Default Value |
 |----------|------|---------------|
 | bashCommand | str | `sw_vers -productVersion` |
-
-
 ```applescript tab="<Code /> Script"
 do shell script "sw_vers -productVersion"
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'do shell script "sw_vers -productVersion"'
@@ -58,18 +52,17 @@ osascript execute_shell_script.scpt "sw_vers -productVersion"
 
 Adversaries use the Unix shell to execute commands and scripts.
 
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ Elevation Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+
 **Input Arguments:**
 
 | Argument | Type | Default Value |
 |----------|------|---------------|
 | bashCommand | str | `whoami` |
-
-
 ```applescript tab="<Code /> Script"
 do shell script "whoami" with administrator privileges
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'do shell script "whoami" with administrator privileges'
@@ -94,13 +87,12 @@ osascript execute_shell_script_using_administrator_privileges.scpt "whoami"
 
 Adversaries use the Unix shell to execute commands and scripts.
 
+
 **Input Arguments:**
 
 | Argument | Type | Default Value |
 |----------|------|---------------|
 | bashCommand | str | `sw_vers -productVersion` |
-
-
 ```applescript tab="<Code /> Script"
 tell application "Terminal"
   do script "sw_vers -productVersion"
@@ -110,8 +102,6 @@ tell application "Terminal"
   end try
 end tell
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'tell application "Terminal"' -e 'do script "sw_vers -productVersion"' -e 'delay 3' -e 'try' -e 'quit' -e 'end try' -e 'end tell'

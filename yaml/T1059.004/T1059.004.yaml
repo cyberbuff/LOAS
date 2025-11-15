@@ -11,6 +11,8 @@ tests:
   - name: Execute shell script using administrator privileges
     description: Adversaries use the Unix shell to execute commands and scripts.
     language: "AppleScript"
+    elevation_required: true
+    tcc_required: true
     command: |-
       do shell script "#{bashCommand}" with administrator privileges
     args:

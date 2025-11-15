@@ -5,14 +5,11 @@ description: "Process Discovery"
 
 ## Description from ATT&CK
 
-
-
 Adversaries may attempt to get information about running processes on a system. Information obtained could be used to gain an understanding of common software/applications running on systems within the network. Administrator or otherwise elevated access may provide better process details. Adversaries may use the information from [Process Discovery](https://attack.mitre.org/techniques/T1057) during automated discovery to shape follow-on behaviors, including whether or not the adversary fully infects the target and/or attempts specific actions.
 
 In Windows environments, adversaries could obtain details on running processes using the [Tasklist](https://attack.mitre.org/software/S0057) utility via [cmd](https://attack.mitre.org/software/S0106) or <code>Get-Process</code> via [PowerShell](https://attack.mitre.org/techniques/T1059/001). Information about processes can also be extracted from the output of [Native API](https://attack.mitre.org/techniques/T1106) calls such as <code>CreateToolhelp32Snapshot</code>. In Mac and Linux, this is accomplished with the <code>ps</code> command. Adversaries may also opt to enumerate processes via `/proc`. ESXi also supports use of the `ps` command, as well as `esxcli system process list`.(Citation: Sygnia ESXi Ransomware 2025)(Citation: Crowdstrike Hypervisor Jackpotting Pt 2 2021)
 
 On network devices, [Network Device CLI](https://attack.mitre.org/techniques/T1059/008) commands such as `show processes` can be used to display current running processes.(Citation: US-CERT-TA18-106A)(Citation: show_processes_cisco_cmd)
-
 
 ## Tests
 
@@ -21,14 +18,10 @@ On network devices, [Network Device CLI](https://attack.mitre.org/techniques/T10
 Retrieves a list of all running processes on the system using System Events. This provides comprehensive process enumeration capabilities and may require TCC approval for System Events access.
 
 <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
-
-
 ```applescript tab="<Code /> Script"
 tell application "System Events" to get name of every process
 
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 osascript -e 'tell application "System Events" to get name of every process'
 ```
@@ -47,8 +40,6 @@ osascript -e 'tell application "System Events" to get name of every process'
 Retrieves only user-facing application processes (excluding system processes and daemons). This focuses on applications that users typically interact with and may require TCC approval for System Events access.
 
 <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
-
-
 ```applescript tab="<Code /> Script"
 tell application "System Events"
   set runningApps to name of every application process
@@ -57,8 +48,6 @@ tell application "System Events"
   end repeat
 end tell
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 osascript -e 'tell application "System Events"' -e 'set runningApps to name of every application process' -e 'repeat with appName in runningApps' -e 'log appName' -e 'end repeat' -e 'end tell'
 ```
@@ -77,8 +66,6 @@ osascript -e 'tell application "System Events"' -e 'set runningApps to name of e
 Retrieves running applications using AppKit framework.
 
 <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
-
-
 ```applescript tab="<Code /> Script"
 use framework "AppKit"
 use framework "Foundation"
@@ -97,8 +84,6 @@ repeat with anApp in activeApps
 end repeat
 return r
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 osascript -e 'use framework "AppKit"' -e 'use framework "Foundation"' -e 'set r to {}' -e 'set activeApps to current application'"'"'s NSWorkspace'"'"'s sharedWorkspace'"'"'s runningApplications()' -e 'repeat with anApp in activeApps' -e 'try' -e 'set this_app to anApp'"'"'s localizedName() as text' -e 'if this_app is not missing value and this_app is not "" then' -e 'set end of r to this_app' -e 'end if' -e 'on error' -e '-- Skip apps without names' -e 'end try' -e 'end repeat' -e 'return r'
 ```
