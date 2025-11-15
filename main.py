@@ -941,6 +941,11 @@ def build(
     if not dump_scripts_json(yaml_dir):
         raise typer.Exit(1)
 
+    # Generate attack navigator layer
+    console.print("\n[bold]Step 7: Attack Navigator Layer Generation[/bold]")
+    if not generate_attack_navigator_layer(yaml_dir):
+        raise typer.Exit(1)
+
     console.print("\n[bold green]🎉 Build completed successfully![/bold green]")
 
 
@@ -1155,11 +1160,126 @@ def generate_docs(
         raise typer.Exit(1)
 
 
+def generate_attack_navigator_layer(
+    yaml_dir: Annotated[
+        str, typer.Option("--yaml-dir", "-y", help="Directory containing YAML files")
+    ] = "yaml",
+) -> None:
+    """Generate ATT&CK Navigator layer JSON file from YAML techniques"""
+
+    output_file = "docs/public/api/attack_navigator_layer.json"
+
+    if not check_directory_exists(yaml_dir, "YAML"):
+        raise typer.Exit(1)
+
+    console.print("[blue]Generating ATT&CK Navigator layer...[/blue]")
+
+    # Get all technique directories
+    technique_dirs = [
+        d for d in os.listdir(yaml_dir) if os.path.isdir(os.path.join(yaml_dir, d))
+    ]
+
+    # Collect all techniques and their parent techniques
+    all_techniques = set()
+    for technique_id in technique_dirs:
+        all_techniques.add(technique_id)
+        # If this is a subtechnique (contains a dot), also add the parent
+        if "." in technique_id:
+            parent_id = technique_id.split(".")[0]
+            all_techniques.add(parent_id)
+
+    # Create techniques list for the layer
+    techniques = []
+    for technique_id in sorted(all_techniques):
+        # Check if this is an actual covered technique or a parent of subtechniques
+        is_direct_coverage = technique_id in technique_dirs
+        comment = (
+            "Covered by LOAS project"
+            if is_direct_coverage
+            else "Parent technique - subtechnique(s) covered"
+        )
+
+        techniques.append(
+            {
+                "techniqueID": technique_id,
+                "score": 1,
+                "color": "#00ff00",
+                "comment": comment,
+                "enabled": True,
+            }
+        )
+
+    # Create the layer data structure
+    layer_data = {
+        "name": "LOAS - Living Off the Orchard: AppleScript",
+        "versions": {
+            "attack": "18",
+            "navigator": "5.1.0",
+            "layer": "4.5",
+        },
+        "domain": "enterprise-attack",
+        "description": "ATT&CK techniques covered by the LOAS (Living Off the Orchard: AppleScript) project.",
+        "filters": {"platforms": ["macOS"]},
+        "sorting": 0,
+        "layout": {
+            "layout": "side",
+            "aggregateFunction": "average",
+            "showID": True,
+            "showName": True,
+            "showAggregateScores": False,
+            "countUnscored": False,
+        },
+        "hideDisabled": False,
+        "techniques": techniques,
+        "gradient": {
+            "colors": ["#ffffff", "#00ff00"],
+            "minValue": 0,
+            "maxValue": 1,
+        },
+        "legendItems": [
+            {
+                "label": "Technique covered by LOAS",
+                "color": "#00ff00",
+            }
+        ],
+        "metadata": [],
+        "links": [],
+        "showTacticRowBackground": False,
+        "tacticRowBackground": "#dddddd",
+        "selectTechniquesAcrossTactics": True,
+        "selectSubtechniquesWithParent": False,
+    }
+
+    # Ensure output directory exists
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
+    # Save to file with proper JSON formatting
+    import json
+
+    with open(output_file, "w", encoding="utf-8") as f:
+        json.dump(layer_data, f, indent=2, ensure_ascii=False)
+
+    console.print(
+        f"[green]✅ Generated ATT&CK Navigator layer with {len(techniques)} techniques[/green]"
+    )
+
+
+@app.command()
+def generate_navigator():
+    """Generate ATT&CK Navigator layer JSON file"""
+    try:
+        generate_attack_navigator_layer()
+    except Exception as e:
+        console.print(f"[red]❌ Failed to generate navigator layer: {e}[/red]")
+        raise typer.Exit(1)
+
+
 @app.command()
 def deploy():
     """Generate markdown documentation and JSON"""
-    generate_docs()
     dump_json()
+    generate_docs()
+    generate_attack_navigator_layer()
 
 
 if __name__ == "__main__":

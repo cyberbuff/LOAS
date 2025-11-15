@@ -1,0 +1,327 @@
+{
+  "name": "LOAS - Living Off the Orchard: AppleScript",
+  "versions": {
+    "attack": "18",
+    "navigator": "5.1.0",
+    "layer": "4.5"
+  },
+  "domain": "enterprise-attack",
+  "description": "ATT&CK techniques covered by the LOAS (Living Off the Orchard: AppleScript) project.",
+  "filters": {
+    "platforms": [
+      "macOS"
+    ]
+  },
+  "sorting": 0,
+  "layout": {
+    "layout": "side",
+    "aggregateFunction": "average",
+    "showID": true,
+    "showName": true,
+    "showAggregateScores": false,
+    "countUnscored": false
+  },
+  "hideDisabled": false,
+  "techniques": [
+    {
+      "techniqueID": "T1005",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1010",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1016",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1016.001",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1018",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1033",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1056",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1056.002",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1057",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1059",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1059.002",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1059.004",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1070",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1070.002",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1070.009",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1082",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1083",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1087",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1087.001",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1113",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1115",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1120",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1123",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1124",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1217",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1489",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1491",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1491.001",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1518",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1518.001",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1529",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1539",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1547",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1547.015",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1552",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1552.003",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1564",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1564.003",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1614",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1614.001",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    }
+  ],
+  "gradient": {
+    "colors": [
+      "#ffffff",
+      "#00ff00"
+    ],
+    "minValue": 0,
+    "maxValue": 1
+  },
+  "legendItems": [
+    {
+      "label": "Technique covered by LOAS",
+      "color": "#00ff00"
+    }
+  ],
+  "metadata": [],
+  "links": [],
+  "showTacticRowBackground": false,
+  "tacticRowBackground": "#dddddd",
+  "selectTechniquesAcrossTactics": true,
+  "selectSubtechniquesWithParent": false
+}
