@@ -4,24 +4,25 @@ description: "LOAS is a collection of scripts that are used to perform various o
 icon: CircleQuestionMark
 ---
 
-<b>L</b>iving off the <b>O</b>rchard: <b>A</b>pple <b>S</b>cript is
-designed to provide detailed information on various scripts(AppleScript, JXA) and how
-they are being used by threat actors for malicious purposes.
+<b>L</b>iving off the <b>O</b>rchard: <b>A</b>pple <b>S</b>cript is designed to
+provide detailed information on various scripts(AppleScript, JXA) and how they
+are being used by threat actors for malicious purposes.
 
 ## Writing YAML Test Files
 
 This repository uses YAML files to define offensive security tests that can be executed on macOS systems. Each YAML file represents a specific MITRE ATT&CK technique and contains multiple atomic tests.
 
 ### YAML File Structure
+
 The reason for using YAML instead of script files(`.scpt`) is to make it easier to generate the files for each of the execution methods(`.scpt`, `.swift`, `.app`, `binary`).
 
 Also it's easier to make slight transformations to add these tests to [Atomic Red Team](https://github.com/redcanaryco/atomic-red-team).
 
 You can use the following command to generate the atomics:
 
- ```bash
- uv run main.py generate-atomics
- ```
+```bash
+uv run main.py generate-atomics
+```
 
 Each YAML file should be placed in a directory named after the MITRE ATT&CK technique ID (e.g., `yaml/T1033/T1033.yaml`). The file structure follows this format:
 
@@ -95,14 +96,14 @@ tests:
 For tests that accept parameters, use the `args` field to define input arguments with default values:
 
 ```yaml
-  - name: Delete a login item
-    language: AppleScript
-    description: Removes a specified login item from the user's login items list.
-    tcc_required: true
-    command: |
-      tell application "System Events" to delete login item "#{loginItemName}"
-    args:
-      loginItemName: "Calculator"
+- name: Delete a login item
+  language: AppleScript
+  description: Removes a specified login item from the user's login items list.
+  tcc_required: true
+  command: |
+    tell application "System Events" to delete login item "#{loginItemName}"
+  args:
+    loginItemName: "Calculator"
 ```
 
 In the command, use `#{argumentName}` syntax to reference arguments. These will be replaced with the provided values when the script is executed.
@@ -119,12 +120,14 @@ In the command, use `#{argumentName}` syntax to reference arguments. These will 
 ### Validation
 
 The repository includes a validation system that checks YAML files for:
+
 - Required field presence
 - Unique test names across all files
 - Proper YAML syntax
 - Valid field types and values
 
 Run validation using:
+
 ```bash
 uv sync
 uv run main.py validate
