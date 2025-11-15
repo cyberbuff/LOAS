@@ -51,11 +51,7 @@ export function AnimatedHomepage({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <Badge
-            href="/docs/T1005"
-            text="AppleScript Collection ->"
-            icon="🍎"
-          />
+          <Badge href="/docs/T1005" text="AppleScript Collection →" icon="🍎" />
 
           {/* Title */}
           <div className="relative">
