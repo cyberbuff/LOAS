@@ -1,6 +1,6 @@
 {
   "aliases": {
-    "uiDir": "./components/ui",
+    "uiDir": "./components/fumadocs",
     "componentsDir": "./components",
     "blockDir": "./components",
     "cssDir": "./styles",
