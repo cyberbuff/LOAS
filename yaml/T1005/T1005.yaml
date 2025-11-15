@@ -2,6 +2,7 @@ name: Data from Local System
 tests:
   - name: Copy Apple Notes database
     description: This command will copy Apple Notes database files using AppleScript as seen in Atomic Stealer.
+    #TODO: replace with Atomic Stealer URL
     reference: https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1005/T1005.yaml
     language: AppleScript
     tcc_required: true
