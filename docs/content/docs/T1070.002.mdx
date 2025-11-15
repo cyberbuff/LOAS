@@ -5,8 +5,6 @@ description: "Indicator Removal on Host  Clear FreeBSD, Linux or Mac System Logs
 
 ## Description from ATT&CK
 
-
-
 Adversaries may clear system logs to hide evidence of an intrusion. macOS and Linux both keep track of system or user-initiated actions via system logs. The majority of native system logging is stored under the <code>/var/log/</code> directory. Subfolders in this directory categorize logs by their related functions, such as:(Citation: Linux Logs)
 
 * <code>/var/log/messages:</code>: General and system-related messages
@@ -16,7 +14,6 @@ Adversaries may clear system logs to hide evidence of an intrusion. macOS and Li
 * <code>/var/log/cron.log</code>: Crond logs
 * <code>/var/log/maillog</code>: Mail server logs
 * <code>/var/log/httpd/</code>: Web server access and error logs
-
 
 
 ## Tests
@@ -32,14 +29,10 @@ This test deletes the system log file using Finder application.
 | Argument | Type | Default Value |
 |----------|------|---------------|
 | logPath | str | `/var/log/system.log` |
-
-
 ```applescript tab="<Code /> Script"
 tell application "Finder" to delete POSIX file "/var/log/system.log"
 
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'tell application "Finder" to delete POSIX file "/var/log/system.log"'

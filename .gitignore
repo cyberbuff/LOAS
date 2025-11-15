@@ -5,3 +5,4 @@ osascripts/
 swift/
 binaries/
 .DS_Store
+__pycache__/

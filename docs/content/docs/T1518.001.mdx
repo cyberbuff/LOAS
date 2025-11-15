@@ -5,21 +5,17 @@ description: "Security Software Discovery"
 
 ## Description from ATT&CK
 
-
-
 Adversaries may attempt to get a listing of security software, configurations, defensive tools, and sensors that are installed on a system or in a cloud environment. This may include things such as cloud monitoring agents and anti-virus. Adversaries may use the information from [Security Software Discovery](https://attack.mitre.org/techniques/T1518/001) during automated discovery to shape follow-on behaviors, including whether or not the adversary fully infects the target and/or attempts specific actions.
 
 Example commands that can be used to obtain security software information are [netsh](https://attack.mitre.org/software/S0108), <code>reg query</code> with [Reg](https://attack.mitre.org/software/S0075), <code>dir</code> with [cmd](https://attack.mitre.org/software/S0106), and [Tasklist](https://attack.mitre.org/software/S0057), but other indicators of discovery behavior may be more specific to the type of software or security system the adversary is looking for. It is becoming more common to see macOS malware perform checks for LittleSnitch and KnockKnock software.
 
 Adversaries may also utilize the [Cloud API](https://attack.mitre.org/techniques/T1059/009) to discover cloud-native security software installed on compute infrastructure, such as the AWS CloudWatch agent, Azure VM Agent, and Google Cloud Monitor agent. These agents  may collect  metrics and logs from the VM, which may be centrally aggregated in a cloud-based monitoring platform.
 
-
 ## Tests
 
 ### Test #1 - Check XProtect version
 
 This test checks the version of XProtect, the built-in antivirus in macOS. XCSSET checks whether the version of XProtect is less than 5287.
-
 
 ```applescript tab="<Code /> Script"
 use framework "Foundation"
@@ -29,8 +25,6 @@ set plistDict to current application's NSDictionary's dictionaryWithContentsOfUR
 set bundleVersion to plistDict's objectForKey:"CFBundleShortVersionString"
 return bundleVersion as string
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 osascript -e 'use framework "Foundation"' -e 'set plistPath to "/Library/Apple/System/Library/CoreServices/XProtect.bundle/Contents/Info.plist"' -e 'set plistURL to current application'"'"'s NSURL'"'"'s fileURLWithPath:plistPath' -e 'set plistDict to current application'"'"'s NSDictionary'"'"'s dictionaryWithContentsOfURL:plistURL' -e 'set bundleVersion to plistDict'"'"'s objectForKey:"CFBundleShortVersionString"' -e 'return bundleVersion as string'
 ```

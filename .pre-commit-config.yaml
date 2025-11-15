@@ -22,7 +22,7 @@ repos:
       - id: yamlfmt
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.3
+    rev: v0.14.5
     hooks:
       - id: ruff
         args:
@@ -31,11 +31,11 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/biomejs/pre-commit
-    rev: v2.3.2
+    rev: v2.3.5
     hooks:
       - id: biome-check
 
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.9.7
+    rev: 0.9.9
     hooks:
       - id: uv-lock

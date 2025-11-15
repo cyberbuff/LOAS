@@ -5,12 +5,9 @@ description: "System Network Configuration Discovery  Internet Connection Discov
 
 ## Description from ATT&CK
 
-
-
 Adversaries may check for Internet connectivity on compromised systems. This may be performed during automated discovery and can be accomplished in numerous ways such as using [Ping](https://attack.mitre.org/software/S0097), <code>tracert</code>, and GET requests to websites, or performing initial speed testing to confirm bandwidth.
 
 Adversaries may use the results and responses from these requests to determine if the system is capable of communicating with their C2 servers before attempting to connect to them. The results may also be used to identify routes, redirectors, and proxy servers.
-
 
 ## Tests
 
@@ -25,8 +22,6 @@ Adversaries may check for Internet connectivity on compromised systems.
 | Argument | Type | Default Value |
 |----------|------|---------------|
 | testURL | str | `https://www.google.com` |
-
-
 ```applescript tab="<Code /> Script"
 tell application "Safari"
   try
@@ -63,8 +58,6 @@ tell application "Safari"
   return connectionResult
 end tell
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'tell application "Safari"' -e 'try' -e 'activate' -e '-- Open the URL in a new tab' -e 'tell window 1' -e 'set current tab to (make new tab with properties {URL:"https://www.google.com"})' -e 'end tell' -e '-- Wait for page to load' -e 'delay 3' -e '-- Check if page loaded successfully by checking the URL or title' -e 'set currentURL to URL of current tab of window 1' -e 'set pageTitle to name of current tab of window 1' -e '-- Close the test tab' -e 'close current tab of window 1' -e '-- Check if we got a valid result' -e 'if currentURL contains "https://www.google.com" and pageTitle does not contain "can'"'"'t" and pageTitle does not contain "error" then' -e 'set connectionResult to true' -e 'else' -e 'set connectionResult to false' -e 'end if' -e 'on error' -e 'set connectionResult to false' -e 'end try' -e 'try' -e 'quit' -e 'end try' -e 'return connectionResult' -e 'end tell'

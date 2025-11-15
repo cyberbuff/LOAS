@@ -5,14 +5,11 @@ description: "File and Directory Discovery"
 
 ## Description from ATT&CK
 
-
-
 Adversaries may enumerate files and directories or may search in specific locations of a host or network share for certain information within a file system. Adversaries may use the information from [File and Directory Discovery](https://attack.mitre.org/techniques/T1083) during automated discovery to shape follow-on behaviors, including whether or not the adversary fully infects the target and/or attempts specific actions.
 
 Many command shell utilities can be used to obtain this information. Examples include <code>dir</code>, <code>tree</code>, <code>ls</code>, <code>find</code>, and <code>locate</code>.(Citation: Windows Commands JPCERT) Custom tools may also be used to gather file and directory information and interact with the [Native API](https://attack.mitre.org/techniques/T1106). Adversaries may also leverage a [Network Device CLI](https://attack.mitre.org/techniques/T1059/008) on network devices to gather file and directory information (e.g. <code>dir</code>, <code>show flash</code>, and/or <code>nvram</code>).(Citation: US-CERT-TA18-106A)
 
 Some files and directories may require elevated or specific user permissions to access.
-
 
 ## Tests
 
@@ -20,13 +17,12 @@ Some files and directories may require elevated or specific user permissions to 
 
 FileGrabber grabs files from desktop and copies them to a temporary folder
 
+
 **Input Arguments:**
 
 | Argument | Type | Default Value |
 |----------|------|---------------|
 | destinationPath | str | `/tmp/FileGrabber` |
-
-
 ```applescript tab="<Code /> Script"
 set fileGrabberFolderPath to "/tmp/FileGrabber"
 set extensionsList to {"txt", "docx", "rtf", "doc", "wallet", "keys", "key", "env", "md", "kdbx"}
@@ -48,8 +44,6 @@ try
 end try
 
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'set fileGrabberFolderPath to "/tmp/FileGrabber"' -e 'set extensionsList to {"txt", "docx", "rtf", "doc", "wallet", "keys", "key", "env", "md", "kdbx"}' -e 'try' -e 'set desktopFiles to every file of desktop' -e 'repeat with aFile in desktopFiles' -e 'try' -e 'set fileExtension to name extension of aFile' -e 'if fileExtension is in extensionsList then' -e 'set fileSize to size of aFile' -e 'if fileSize < 51200 then' -e 'set destinationFolder to (POSIX file fileGrabberFolderPath) as alias' -e 'duplicate aFile to destinationFolder with replacing' -e 'end if' -e 'end if' -e 'end try' -e 'end repeat' -e 'end try'
@@ -81,14 +75,10 @@ Enumerate files and directories in the root filesystem using Finder application 
 | Argument | Type | Default Value |
 |----------|------|---------------|
 | folderName | str | `/` |
-
-
 ```applescript tab="<Code /> Script"
 tell application "Finder" to get name of every item of folder POSIX file "/"
 
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'tell application "Finder" to get name of every item of folder POSIX file "/"'
@@ -113,19 +103,16 @@ osascript list_files_and_directories_in_macintosh_hd.scpt "/"
 
 Perform directory listing of root filesystem using AppleScript list folder command
 
+
 **Input Arguments:**
 
 | Argument | Type | Default Value |
 |----------|------|---------------|
 | folderName | str | `/` |
-
-
 ```applescript tab="<Code /> Script"
 list folder "/"
 
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'list folder "/"'

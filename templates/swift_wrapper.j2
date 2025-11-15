@@ -1,0 +1,115 @@
+#!/usr/bin/env swift
+
+import Foundation
+
+func showHelp() {
+    print("{{ name }}")
+    print("")
+    print("Usage: Run this script to execute the AppleScript command.")
+{%- if args %}
+    print("")
+    print("Available arguments (in order):")
+{%- for arg_name, default_value in args.items() %}
+    print("  {{ loop.index }}. {{ arg_name }}: {{ default_value.__class__.__name__ }} (default: {{ default_value }})")
+{%- endfor %}
+    print("")
+    print("Usage examples:")
+    print("  swift script.swift                    # Use all defaults")
+{%- if args|length == 1 %}
+{%- set arg_name = args.keys()|list|first %}
+    print("  swift script.swift [value]            # Set {{ arg_name }}")
+{%- else %}
+    print("  swift script.swift [arg1]             # Set first argument")
+    print("  swift script.swift [arg1] [arg2] ...  # Set all arguments")
+{%- endif %}
+{%- endif %}
+}
+
+{%- if args %}
+
+func main({{ param_types|join(', ') }}) {
+{%- else %}
+
+func main() {
+{%- endif %}
+    let script = """
+{%- for line in command_lines %}
+{%- if line.strip() %}
+    {{ line.strip() }}
+{%- endif %}
+{%- endfor %}
+    """
+
+    let appleScript = NSAppleScript(source: script)
+    var error: NSDictionary?
+    let result = appleScript?.executeAndReturnError(&error)
+
+    if let error = error {
+        print("Error executing AppleScript: \(error)")
+    } else {
+        print("\(result?.stringValue ?? result?.debugDescription ?? "No output")")
+    }
+}
+
+{%- if args %}
+
+// Example usage with default values:
+{%- set example_params = [] %}
+{%- for arg_name, default_value in args.items() %}
+{%- if default_value is string %}
+{%- set _ = example_params.append(arg_name + ': "' + default_value + '"') %}
+{%- elif default_value is sameas true %}
+{%- set _ = example_params.append(arg_name + ': true') %}
+{%- elif default_value is sameas false %}
+{%- set _ = example_params.append(arg_name + ': false') %}
+{%- else %}
+{%- set _ = example_params.append(arg_name + ': ' + default_value|string) %}
+{%- endif %}
+{%- endfor %}
+// main({{ example_params|join(', ') }})
+{%- endif %}
+
+// Handle command line arguments
+let arguments = CommandLine.arguments
+
+if arguments.count > 1 && arguments[1] == "-h" {
+    showHelp()
+    exit(0)
+}
+
+{%- if args %}
+
+{%- for arg_name, default_value in args.items() %}
+
+// Parse {{ arg_name }} (argument {{ loop.index }})
+var {{ arg_name }}: {{ swift_types[arg_name] }}
+{%- if default_value is string %}
+    = "{{ default_value }}"
+{%- elif default_value is sameas true %}
+    = true
+{%- elif default_value is sameas false %}
+    = false
+{%- else %}
+    = {{ default_value }}
+{%- endif %}
+if arguments.count > {{ loop.index }} {
+{%- if default_value is string %}
+    {{ arg_name }} = arguments[{{ loop.index }}]
+{%- elif default_value is sameas true or default_value is sameas false %}
+    {{ arg_name }} = arguments[{{ loop.index }}].lowercased() == "true"
+{%- elif default_value is integer %}
+    {{ arg_name }} = Int(arguments[{{ loop.index }}]) ?? {{ default_value }}
+{%- elif default_value is float %}
+    {{ arg_name }} = Double(arguments[{{ loop.index }}]) ?? {{ default_value }}
+{%- else %}
+    {{ arg_name }} = arguments[{{ loop.index }}]
+{%- endif %}
+}
+
+{%- endfor %}
+
+main({{ arg_names|join(', ') }})
+{%- else %}
+
+main()
+{%- endif %}

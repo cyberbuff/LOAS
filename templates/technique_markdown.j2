@@ -1,0 +1,98 @@
+---
+title: {{ technique_id }}
+description: "{{ technique_name.replace(':', ' ') }}"
+---
+
+## Description from ATT&CK
+
+{{ mitre_description }}
+
+## Tests
+
+{%- for test in tests %}
+
+### Test #{{ loop.index }} - {{ test.name }}
+
+{{ test.description }}
+{% if test.elevation_required or test.tcc_required -%}
+
+{%- if test.elevation_required %}
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ Elevation Required</span>
+{%- endif %}
+{%- if test.tcc_required %}
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+{%- endif %}
+{%- endif %}
+{%- if test.args %}
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+{%- for arg_name, default_value in test.args.items() %}
+| {{ arg_name }} | {{ default_value.__class__.__name__ }} | `{{ default_value }}` |
+{%- endfor %}
+{%- endif %}
+
+{%- if test.language == "AppleScript" %}
+```applescript tab="<Code /> Script"
+{%- elif test.language == "JavaScript" %}
+```javascript tab="<Code /> Script"
+{%- endif %}
+{{ test.display_command }}
+```
+
+{%- if test.language == "AppleScript" %}
+
+{%- if test.args %}
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript {{ test.formatted_command }}
+
+# Or save to file and execute
+osascript {{ test.filename }}
+
+# With custom arguments
+osascript {{ test.filename }} {{ test.example_args|join(' ') }}
+```
+{%- else %}
+```bash tab="<Terminal /> Execution"
+osascript {{ test.formatted_command }}
+```
+{%- endif %}
+
+{%- elif test.language == "JavaScript" %}
+```bash tab="<Terminal /> Execution"
+osascript -l JavaScript {{ test.formatted_command }}
+```
+{%- endif %}
+
+**Download Files**
+
+{%- if test.language == "AppleScript" %}
+
+<DownloadButton filename="{{ test.safe_name }}.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="{{ test.safe_name }}.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="{{ test.safe_name }}" type="binary" label="Download Binary" />
+<DownloadButton filename="{{ test.safe_name }}.app" type="app" label="Download Application Bundle" />
+
+{%- elif test.language == "JavaScript" %}
+
+<DownloadButton filename="{{ test.safe_name }}.js" type="js" label="Download .js" />
+<DownloadButton filename="{{ test.safe_name }}.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="{{ test.safe_name }}" type="binary" label="Download Binary" />
+<DownloadButton filename="{{ test.safe_name }}.app" type="app" label="Download Application Bundle" />
+
+{%- endif %}
+
+{%- if not loop.last %}
+
+---
+
+{%- endif %}
+{%- endfor %}
+
+## References
+
+- [MITRE ATT&CK {{ technique_id }}](https://attack.mitre.org/techniques/{{ technique_id.replace('.', '/') }}/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)
