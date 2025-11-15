@@ -5,8 +5,6 @@ description: "System Information Discovery"
 
 ## Description from ATT&CK
 
-
-
 An adversary may attempt to get detailed information about the operating system and hardware, including version, patches, hotfixes, service packs, and architecture. Adversaries may use this information to shape follow-on behaviors, including whether or not the adversary fully infects the target and/or attempts specific actions. This behavior is distinct from [Local Storage Discovery](https://attack.mitre.org/techniques/T1680) which is an adversary's discovery of local drive, disks and/or volumes.
 
 Tools such as [Systeminfo](https://attack.mitre.org/software/S0096) can be used to gather detailed system information. If running with privileged access, a breakdown of system data can be gathered through the <code>systemsetup</code> configuration tool on macOS. Adversaries may leverage a [Network Device CLI](https://attack.mitre.org/techniques/T1059/008) on network devices to gather detailed system information (e.g. <code>show version</code>).(Citation: US-CERT-TA18-106A) On ESXi servers, threat actors may gather system information from various esxcli utilities, such as `system hostname get` and `system version get`.(Citation: Crowdstrike Hypervisor Jackpotting Pt 2 2021)(Citation: Varonis)
@@ -15,20 +13,16 @@ Infrastructure as a Service (IaaS) cloud providers such as AWS, GCP, and Azure a
 
 [System Information Discovery](https://attack.mitre.org/techniques/T1082) combined with information gathered from other forms of discovery and reconnaissance can drive payload development and concealment.(Citation: OSX.FairyTale)(Citation: 20 macOS Common Tools and Techniques)
 
-
 ## Tests
 
 ### Test #1 - Get system information
 
 Retrieves comprehensive system information including OS version, hardware details, and system configuration using the system info command. This provides detailed system reconnaissance capabilities without requiring elevated privileges.
 
-
 ```applescript tab="<Code /> Script"
 system info
 
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 osascript -e 'system info'
 ```
@@ -46,12 +40,9 @@ osascript -e 'system info'
 
 Lists all connected disks on the system using the list disks command.
 
-
 ```applescript tab="<Code /> Script"
 list disks
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 osascript -e 'list disks'
 ```

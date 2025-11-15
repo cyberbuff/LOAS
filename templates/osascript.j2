@@ -1,0 +1,102 @@
+#!/usr/bin/osascript
+
+{%- if framework_lines %}
+{% for framework_line in framework_lines %}
+{{ framework_line }}
+{%- endfor %}
+
+{% endif %}
+
+on show_help()
+    log "{{ name }}"
+    log ""
+    log "Usage: Run this script to execute the command."
+{%- if args %}
+    log ""
+    log "Available arguments (in order):"
+{%- for arg_name, default_value in args.items() %}
+    log "  {{ loop.index }}. {{ arg_name }}: {{ default_value.__class__.__name__ }} (default: {{ default_value }})"
+{%- endfor %}
+    log ""
+    log "Usage examples:"
+    log "  osascript script.scpt                    # Use all defaults"
+{%- if args|length == 1 %}
+{%- set arg_name = args.keys()|list|first %}
+    log "  osascript script.scpt [value]            # Set {{ arg_name }}"
+{%- else %}
+    log "  osascript script.scpt [arg1]             # Set first argument"
+    log "  osascript script.scpt [arg1] [arg2] ...  # Set all arguments"
+{%- endif %}
+{%- endif %}
+end show_help
+
+{%- if args %}
+
+on main({{ args.keys()|join(', ') }})
+{%- for line in command_lines %}
+{%- if line.strip() %}
+    {{ line.strip() }}
+{%- endif %}
+{%- endfor %}
+end main
+
+-- Example usage with default values:
+{%- set example_params = [] %}
+{%- for arg_name, default_value in args.items() %}
+{%- if default_value is string %}
+{%- set _ = example_params.append('"' + default_value + '"') %}
+{%- elif default_value is sameas true %}
+{%- set _ = example_params.append('true') %}
+{%- elif default_value is sameas false %}
+{%- set _ = example_params.append('false') %}
+{%- else %}
+{%- set _ = example_params.append(default_value|string) %}
+{%- endif %}
+{%- endfor %}
+-- main({{ example_params|join(', ') }})
+
+-- Handle command line arguments
+on run argv
+    if (count of argv) > 0 and item 1 of argv is "-h" then
+        show_help()
+        return
+    end if
+
+{%- for arg_name, default_value in args.items() %}
+    -- Parse {{ arg_name }} (argument {{ loop.index }})
+    if (count of argv) > {{ loop.index0 }} then
+        set {{ arg_name }} to item {{ loop.index }} of argv
+    else
+{%- if default_value is string %}
+        set {{ arg_name }} to "{{ default_value }}"
+{%- elif default_value is sameas true %}
+        set {{ arg_name }} to true
+{%- elif default_value is sameas false %}
+        set {{ arg_name }} to false
+{%- else %}
+        set {{ arg_name }} to {{ default_value }}
+{%- endif %}
+    end if
+
+{%- endfor %}
+    main({{ args.keys()|join(', ') }})
+end run
+{%- else %}
+
+on main()
+{%- for line in command_lines %}
+{%- if line.strip() %}
+    {{ line.strip() }}
+{%- endif %}
+{%- endfor %}
+end main
+
+on run argv
+    if (count of argv) > 0 and item 1 of argv is "-h" then
+        show_help()
+        return
+    end if
+
+    main()
+end run
+{%- endif %}

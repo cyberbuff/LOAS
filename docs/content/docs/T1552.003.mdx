@@ -5,8 +5,6 @@ description: "Unsecured Credentials  Bash History"
 
 ## Description from ATT&CK
 
-
-
 Adversaries may search the command history on compromised systems for insecurely stored credentials.
 
 On Linux and macOS systems, shells such as Bash and Zsh keep track of the commands users type on the command-line with the "history" utility. Once a user logs out, the history is flushed to the user's history file. For each user, this file resides at the same location: for example, `~/.bash_history` or `~/.zsh_history`. Typically, these files keeps track of the user's last 1000 commands.
@@ -15,12 +13,12 @@ On Windows, PowerShell has both a command history that is wiped after the sessio
 
 Users often type usernames and passwords on the command-line as parameters to programs, which then get saved to this file when they log out. Adversaries can abuse this by looking through the file for potential credentials.(Citation: External to DA, the OS X Way)
 
-
 ## Tests
 
 ### Test #1 - Search for passwords in history files
 
 This test searches for passwords in the bash history file.
+
 
 **Input Arguments:**
 
@@ -28,8 +26,6 @@ This test searches for passwords in the bash history file.
 |----------|------|---------------|
 | filename | str | `.zsh_history` |
 | searchTerm | str | `password` |
-
-
 ```applescript tab="<Code /> Script"
 set homeDir to (path to home folder as text)
 set historyPath to homeDir & ".zsh_history"
@@ -64,8 +60,6 @@ on error errMsg
 end try
 
 ```
-
-
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'set homeDir to (path to home folder as text)' -e 'set historyPath to homeDir & ".zsh_history"' -e 'try' -e 'set fileContent to read file historyPath' -e 'set lineList to paragraphs of fileContent' -e 'set matchCount to 0' -e 'set matchList to {}' -e 'repeat with currentLine in lineList' -e 'set lineText to currentLine as string' -e 'if lineText starts with ": " and lineText contains ";" then' -e 'set semicolonPos to offset of ";" in lineText' -e 'if semicolonPos > 0 then' -e 'set lineText to text (semicolonPos + 1) thru -1 of lineText' -e 'end if' -e 'end if' -e 'if lineText contains "password" then' -e 'set matchCount to matchCount + 1' -e 'if matchCount ≤ 10 then' -e 'set end of matchList to lineText' -e 'end if' -e 'end if' -e 'end repeat' -e 'return "Found " & matchCount & " matches:" & return & (matchList as string)' -e 'on error errMsg' -e 'return "Error: " & errMsg' -e 'end try'

@@ -1,19 +1,22 @@
-from pydantic import BaseModel, ValidationError
-from typing import Literal, Optional, Annotated
-import os
 import glob
-import yaml
+import json
+import os
 import re
+import shutil
 import subprocess
+import tempfile
+from pathlib import Path
+from typing import Annotated, Literal, Optional
+
+import requests
 import typer
+from jinja2 import Environment, FileSystemLoader
+from mitreattack.stix20 import MitreAttackData
+from pydantic import BaseModel, ValidationError
 from rich.console import Console
 from rich.table import Table
-import json
-from pathlib import Path
-import requests
-import tempfile
-import shutil
-from mitreattack.stix20 import MitreAttackData
+
+import yaml
 
 app = typer.Typer(
     name="LOAS",
@@ -21,6 +24,10 @@ app = typer.Typer(
     add_completion=False,
 )
 console = Console()
+
+# Setup Jinja2 environment
+template_dir = os.path.join(os.path.dirname(__file__), "templates")
+jinja_env = Environment(loader=FileSystemLoader(template_dir))
 
 # Global variable to cache MITRE ATT&CK data
 _mitre_attack_data = None
@@ -138,155 +145,40 @@ class Script(BaseModel):
 
     def to_osascript(self) -> str:
         """Convert the script to OSAScript/JavaScript format with help function and parameter handling"""
-        script_lines = ["#!/usr/bin/osascript\n"]
+        template = jinja_env.get_template("osascript.j2")
 
         command = self.command
-        # Check if command uses frameworks and add them at the top level
+        framework_lines = []
+        command_lines = []
+
+        # Check if command uses frameworks and separate them
         if "use framework" in command:
-            framework_lines = []
-            command_lines = []
             for line in command.strip().split("\n"):
                 if line.strip().startswith("use framework"):
                     framework_lines.append(line.strip())
                 else:
                     command_lines.append(line)
-
-            # Add frameworks at the top
-            for framework_line in framework_lines:
-                script_lines.append(framework_line)
-            script_lines.append("")
-
-            # Update command to exclude framework declarations
-            command = "\n".join(command_lines)
-
-        # Add help function
-        script_lines.append("on show_help()")
-        script_lines.append(f'    log "{self.name}"')
-        script_lines.append('    log ""')
-        script_lines.append('    log "Usage: Run this script to execute the command."')
-
-        if self.args:
-            script_lines.append('    log ""')
-            script_lines.append('    log "Available arguments (in order):"')
-            for i, (arg_name, default_value) in enumerate(self.args.items(), 1):
-                # Escape special characters and avoid bullet points that might cause issues
-                script_lines.append(
-                    f'    log "  {i}. {arg_name}: {type(default_value).__name__} (default: {default_value})"'
-                )
-
-            script_lines.append('    log ""')
-            script_lines.append('    log "Usage examples:"')
-            script_lines.append(
-                '    log "  osascript script.scpt                    # Use all defaults"'
-            )
-
-            # Show examples with different numbers of arguments (avoid nested quotes)
-            if len(self.args) == 1:
-                arg_name = list(self.args.keys())[0]
-                script_lines.append(
-                    f'    log "  osascript script.scpt [value]            # Set {arg_name}"'
-                )
-            else:
-                script_lines.append(
-                    '    log "  osascript script.scpt [arg1]             # Set first argument"'
-                )
-                script_lines.append(
-                    '    log "  osascript script.scpt [arg1] [arg2] ...  # Set all arguments"'
-                )
-
-        script_lines.append("end show_help")
-        script_lines.append("")
-
-        if self.args:
-            # Create main function with regular parameters
-            param_list = list(self.args.keys())
-            script_lines.append(f"on main({', '.join(param_list)})")
-
-            # Replace template variables in command
-            for arg_name, default_value in self.args.items():
-                # Replace "#{arg_name}" (with quotes) with just the parameter name
-                command = command.replace(f'"#{{{arg_name}}}"', arg_name)
-                # Replace #{arg_name} (without quotes) with the parameter name
-                command = command.replace(f"#{{{arg_name}}}", arg_name)
-
-            # Add the command to the function
-            for line in command.strip().split("\n"):
-                if line.strip():  # Only add non-empty lines
-                    script_lines.append(f"    {line.strip()}")
-
-            script_lines.append("end main")
-            script_lines.append("")
-
-            # Add example usage with default values
-            script_lines.append("-- Example usage with default values:")
-            example_params = []
-            for arg_name, default_value in self.args.items():
-                if isinstance(default_value, str):
-                    example_params.append(f'"{default_value}"')
-                elif isinstance(default_value, bool):
-                    example_params.append("true" if default_value else "false")
-                else:
-                    example_params.append(str(default_value))
-
-            script_lines.append(f"-- main({', '.join(example_params)})")
-            script_lines.append("")
-
-            # Add command line argument handling
-            script_lines.append("-- Handle command line arguments")
-            script_lines.append("on run argv")
-            script_lines.append(
-                '    if (count of argv) > 0 and item 1 of argv is "-h" then'
-            )
-            script_lines.append("        show_help()")
-            script_lines.append("        return")
-            script_lines.append("    end if")
-            script_lines.append("    ")
-
-            # Generate argument parsing logic
-            arg_names = list(self.args.keys())
-            for i, (arg_name, default_value) in enumerate(self.args.items()):
-                script_lines.append(f"    -- Parse {arg_name} (argument {i + 1})")
-                script_lines.append(f"    if (count of argv) > {i} then")
-                script_lines.append(f"        set {arg_name} to item {i + 1} of argv")
-                script_lines.append("    else")
-                if isinstance(default_value, str):
-                    script_lines.append(f'        set {arg_name} to "{default_value}"')
-                elif isinstance(default_value, bool):
-                    script_lines.append(
-                        f"        set {arg_name} to {'true' if default_value else 'false'}"
-                    )
-                else:
-                    script_lines.append(f"        set {arg_name} to {default_value}")
-                script_lines.append("    end if")
-                script_lines.append("    ")
-
-            # Call main with parsed arguments
-            param_list = arg_names
-            script_lines.append(f"    main({', '.join(param_list)})")
-            script_lines.append("end run")
-
         else:
-            # Simple script without parameters
-            script_lines.append("on main()")
-            for line in command.strip().split("\n"):
-                if line.strip():  # Only add non-empty lines
-                    script_lines.append(f"    {line.strip()}")
-            script_lines.append("end main")
-            script_lines.append("")
+            command_lines = command.strip().split("\n")
 
-            # Add command line argument handling
-            script_lines.append("on run argv")
-            script_lines.append(
-                '    if (count of argv) > 0 and item 1 of argv is "-h" then'
-            )
-            script_lines.append("        show_help()")
-            script_lines.append("        return")
-            script_lines.append("    end if")
-            script_lines.append("    ")
-            script_lines.append("    main()")
-            script_lines.append("end run")
+        # Replace template variables in command if args exist
+        if self.args:
+            processed_lines = []
+            for line in command_lines:
+                for arg_name in self.args.keys():
+                    # Replace "#{arg_name}" (with quotes) with just the parameter name
+                    line = line.replace(f'"#{{{arg_name}}}"', arg_name)
+                    # Replace #{arg_name} (without quotes) with the parameter name
+                    line = line.replace(f"#{{{arg_name}}}", arg_name)
+                processed_lines.append(line)
+            command_lines = processed_lines
 
-        return "\n".join(script_lines)
+        return template.render(
+            name=self.name,
+            framework_lines=framework_lines,
+            command_lines=command_lines,
+            args=self.args or {},
+        )
 
     def to_javascript(self) -> str:
         """Convert the script to JavaScript format"""
@@ -294,137 +186,31 @@ class Script(BaseModel):
 
     def to_swift_wrapper(self) -> str:
         """Convert the AppleScript to a Swift wrapper that executes it via NSAppleScript"""
-        swift_lines = []
+        template = jinja_env.get_template("swift_wrapper.j2")
 
-        # Add header comment
-        swift_lines.append("#!/usr/bin/env swift")
-        swift_lines.append("")
-        swift_lines.append("import Foundation")
-        swift_lines.append("")
-
-        # Add help function
-        swift_lines.append("func showHelp() {")
-        swift_lines.append(f'    print("{self.name}")')
-        swift_lines.append('    print("")')
-        swift_lines.append(
-            '    print("Usage: Run this script to execute the AppleScript command.")'
-        )
-
-        if self.args:
-            swift_lines.append('    print("")')
-            swift_lines.append('    print("Available arguments (in order):")')
-            for i, (arg_name, default_value) in enumerate(self.args.items(), 1):
-                swift_lines.append(
-                    f'    print("  {i}. {arg_name}: {type(default_value).__name__} (default: {default_value})")'
-                )
-
-            swift_lines.append('    print("")')
-            swift_lines.append('    print("Usage examples:")')
-            swift_lines.append(
-                '    print("  swift script.swift                    # Use all defaults")'
-            )
-
-            if len(self.args) == 1:
-                arg_name = list(self.args.keys())[0]
-                swift_lines.append(
-                    f'    print("  swift script.swift [value]            # Set {arg_name}")'
-                )
-            else:
-                swift_lines.append(
-                    '    print("  swift script.swift [arg1]             # Set first argument")'
-                )
-                swift_lines.append(
-                    '    print("  swift script.swift [arg1] [arg2] ...  # Set all arguments")'
-                )
-
-        swift_lines.append("}")
-        swift_lines.append("")
-
-        # Add main function
-        if self.args:
-            param_list = list(self.args.keys())
-            param_types = []
-            for arg_name, default_value in self.args.items():
-                if isinstance(default_value, str):
-                    param_types.append(f"{arg_name}: String")
-                elif isinstance(default_value, bool):
-                    param_types.append(f"{arg_name}: Bool")
-                elif isinstance(default_value, int):
-                    param_types.append(f"{arg_name}: Int")
-                elif isinstance(default_value, float):
-                    param_types.append(f"{arg_name}: Double")
-                else:
-                    param_types.append(f"{arg_name}: String")
-
-            swift_lines.append(f"func main({', '.join(param_types)}) {{")
-        else:
-            swift_lines.append("func main() {")
+        command = self.command
+        command_lines = []
 
         # Process the AppleScript command
-        command = self.command
+        if self.args:
+            # Replace template variables
+            for line in command.strip().split("\n"):
+                for arg_name in self.args.keys():
+                    # Replace #{arg_name} (without quotes) with Swift string interpolation
+                    line = line.replace(f"#{{{arg_name}}}", f"\\({arg_name})")
+                command_lines.append(line)
+        else:
+            command_lines = command.strip().split("\n")
 
-        # Replace template variables if args exist
+        # Build param_types and swift_types for template
+        param_types = []
+        swift_types = {}
+        arg_names = []
+
         if self.args:
             for arg_name, default_value in self.args.items():
-                # Replace #{arg_name} (without quotes) with the parameter name
-                command = command.replace(f"#{{{arg_name}}}", f"\\({arg_name})")
+                arg_names.append(f"{arg_name}: {arg_name}")
 
-        # Create the NSAppleScript execution
-        swift_lines.append('    let script = """')
-        # Add proper indentation to each line of the AppleScript command
-        for line in command.strip().split("\n"):
-            if line.strip():  # Only add non-empty lines
-                swift_lines.append(f"    {line.strip()}")
-        swift_lines.append('    """')
-        swift_lines.append("")
-        swift_lines.append("    let appleScript = NSAppleScript(source: script)")
-        swift_lines.append("    var error: NSDictionary?")
-        swift_lines.append(
-            "    let result = appleScript?.executeAndReturnError(&error)"
-        )
-        swift_lines.append("")
-        swift_lines.append("    if let error = error {")
-        swift_lines.append('        print("Error executing AppleScript: \\(error)")')
-        swift_lines.append("    } else {")
-        swift_lines.append(
-            '        print("\\(result?.stringValue ?? result?.debugDescription ?? "No output")")'
-        )
-        swift_lines.append("    }")
-        swift_lines.append("}")
-        swift_lines.append("")
-
-        # Add example usage with default values
-        if self.args:
-            swift_lines.append("// Example usage with default values:")
-            example_params = []
-            for arg_name, default_value in self.args.items():
-                if isinstance(default_value, str):
-                    example_params.append(f'{arg_name}: "{default_value}"')
-                elif isinstance(default_value, bool):
-                    example_params.append(f"{arg_name}: {str(default_value).lower()}")
-                else:
-                    example_params.append(f"{arg_name}: {default_value}")
-
-            swift_lines.append(f"// main({', '.join(example_params)})")
-            swift_lines.append("")
-
-        # Add command line argument handling
-        swift_lines.append("// Handle command line arguments")
-        swift_lines.append("let arguments = CommandLine.arguments")
-        swift_lines.append("")
-        swift_lines.append('if arguments.count > 1 && arguments[1] == "-h" {')
-        swift_lines.append("    showHelp()")
-        swift_lines.append("    exit(0)")
-        swift_lines.append("}")
-        swift_lines.append("")
-
-        if self.args:
-            # Generate argument parsing logic
-            arg_names = list(self.args.keys())
-            for i, (arg_name, default_value) in enumerate(self.args.items()):
-                swift_lines.append(f"// Parse {arg_name} (argument {i + 1})")
-
-                # Map Python types to Swift types
                 if isinstance(default_value, str):
                     swift_type = "String"
                 elif isinstance(default_value, bool):
@@ -436,182 +222,45 @@ class Script(BaseModel):
                 else:
                     swift_type = "String"
 
-                swift_lines.append(f"var {arg_name}: {swift_type}")
+                param_types.append(f"{arg_name}: {swift_type}")
+                swift_types[arg_name] = swift_type
 
-                if isinstance(default_value, str):
-                    swift_lines.append(f'    = "{default_value}"')
-                elif isinstance(default_value, bool):
-                    swift_lines.append(f"    = {str(default_value).lower()}")
-                elif isinstance(default_value, int):
-                    swift_lines.append(f"    = {default_value}")
-                elif isinstance(default_value, float):
-                    swift_lines.append(f"    = {default_value}")
-                else:
-                    swift_lines.append(f'    = "{default_value}"')
-
-                swift_lines.append(f"if arguments.count > {i + 1} {{")
-                if isinstance(default_value, str):
-                    swift_lines.append(f"    {arg_name} = arguments[{i + 1}]")
-                elif isinstance(default_value, bool):
-                    swift_lines.append(
-                        f'    {arg_name} = arguments[{i + 1}].lowercased() == "true"'
-                    )
-                elif isinstance(default_value, int):
-                    swift_lines.append(
-                        f"    {arg_name} = Int(arguments[{i + 1}]) ?? {default_value}"
-                    )
-                elif isinstance(default_value, float):
-                    swift_lines.append(
-                        f"    {arg_name} = Double(arguments[{i + 1}]) ?? {default_value}"
-                    )
-                else:
-                    swift_lines.append(f"    {arg_name} = arguments[{i + 1}]")
-                swift_lines.append("}")
-                swift_lines.append("")
-
-            # Call main with parsed arguments
-            param_list = [f"{arg_name}: {arg_name}" for arg_name in arg_names]
-            swift_lines.append(f"main({', '.join(param_list)})")
-        else:
-            swift_lines.append("main()")
-
-        return "\n".join(swift_lines)
+        return template.render(
+            name=self.name,
+            command_lines=command_lines,
+            args=self.args or {},
+            param_types=param_types,
+            swift_types=swift_types,
+            arg_names=arg_names,
+        )
 
     def to_swift_javascript_wrapper(self) -> str:
         """Convert the JavaScript to a Swift wrapper that executes it via OSAKit"""
-        swift_lines = []
+        template = jinja_env.get_template("swift_javascript_wrapper.j2")
 
-        # Add header comment
-        swift_lines.append("#!/usr/bin/env swift")
-        swift_lines.append("")
-        swift_lines.append("import Foundation")
-        swift_lines.append("import OSAKit")
-        swift_lines.append("")
-
-        # Add help function
-        swift_lines.append("func showHelp() {")
-        swift_lines.append(f'    print("{self.name}")')
-        swift_lines.append('    print("")')
-        swift_lines.append('    print("Usage: Run this script to execute the JXA.")')
-
-        if self.args:
-            swift_lines.append('    print("")')
-            swift_lines.append('    print("Available arguments (in order):")')
-            for i, (arg_name, default_value) in enumerate(self.args.items(), 1):
-                swift_lines.append(
-                    f'    print("  {i}. {arg_name}: {type(default_value).__name__} (default: {default_value})")'
-                )
-
-            swift_lines.append('    print("")')
-            swift_lines.append('    print("Usage examples:")')
-            swift_lines.append(
-                '    print("  swift script.swift                    # Use all defaults")'
-            )
-
-            if len(self.args) == 1:
-                arg_name = list(self.args.keys())[0]
-                swift_lines.append(
-                    f'    print("  swift script.swift [value]            # Set {arg_name}")'
-                )
-            else:
-                swift_lines.append(
-                    '    print("  swift script.swift [arg1]             # Set first argument")'
-                )
-                swift_lines.append(
-                    '    print("  swift script.swift [arg1] [arg2] ...  # Set all arguments")'
-                )
-
-        swift_lines.append("}")
-        swift_lines.append("")
-
-        # Add JXA execution function
-        swift_lines.append("// Execute JXA using OSAKit")
-        swift_lines.append("func executeJXA(_ script: String) -> String {")
-        swift_lines.append("    // Create an OSA script with JavaScript language")
-        swift_lines.append(
-            '    let osaScript = OSAScript(source: script, language: OSALanguage(forName: "JavaScript"))'
-        )
-        swift_lines.append("    ")
-        swift_lines.append("    // Execute the script")
-        swift_lines.append("    let result = osaScript.executeAndReturnError(nil)")
-        swift_lines.append("    ")
-        swift_lines.append("    return result?.stringValue ?? result.debugDescription")
-        swift_lines.append("}")
-        swift_lines.append("")
-
-        # Add main function
-        if self.args:
-            param_list = list(self.args.keys())
-            param_types = []
-            for arg_name, default_value in self.args.items():
-                if isinstance(default_value, str):
-                    param_types.append(f"{arg_name}: String")
-                elif isinstance(default_value, bool):
-                    param_types.append(f"{arg_name}: Bool")
-                elif isinstance(default_value, int):
-                    param_types.append(f"{arg_name}: Int")
-                elif isinstance(default_value, float):
-                    param_types.append(f"{arg_name}: Double")
-                else:
-                    param_types.append(f"{arg_name}: String")
-
-            swift_lines.append(f"func main({', '.join(param_types)}) {{")
-        else:
-            swift_lines.append("func main() {")
+        command = self.command
+        command_lines = []
 
         # Process the JavaScript command
-        command = self.command
+        if self.args:
+            # Replace template variables
+            for line in command.strip().split("\n"):
+                for arg_name in self.args.keys():
+                    # Replace #{arg_name} (without quotes) with Swift string interpolation
+                    line = line.replace(f"#{{{arg_name}}}", f"\\({arg_name})")
+                command_lines.append(line)
+        else:
+            command_lines = command.strip().split("\n")
 
-        # Replace template variables if args exist
+        # Build param_types and swift_types for template
+        param_types = []
+        swift_types = {}
+        arg_names = []
+
         if self.args:
             for arg_name, default_value in self.args.items():
-                # Replace #{arg_name} (without quotes) with the parameter name
-                command = command.replace(f"#{{{arg_name}}}", f"\\({arg_name})")
+                arg_names.append(f"{arg_name}: {arg_name}")
 
-        # Create the JXA script execution
-        swift_lines.append('    let jxaScript = """')
-        # Add proper indentation to each line of the JavaScript command
-        for line in command.strip().split("\n"):
-            if line.strip():  # Only add non-empty lines
-                swift_lines.append(f"    {line.strip()}")
-        swift_lines.append('    """')
-        swift_lines.append("")
-        swift_lines.append("    print(executeJXA(jxaScript))")
-        swift_lines.append("}")
-        swift_lines.append("")
-
-        # Add example usage with default values
-        if self.args:
-            swift_lines.append("// Example usage with default values:")
-            example_params = []
-            for arg_name, default_value in self.args.items():
-                if isinstance(default_value, str):
-                    example_params.append(f'{arg_name}: "{default_value}"')
-                elif isinstance(default_value, bool):
-                    example_params.append(f"{arg_name}: {str(default_value).lower()}")
-                else:
-                    example_params.append(f"{arg_name}: {default_value}")
-
-            swift_lines.append(f"// main({', '.join(example_params)})")
-            swift_lines.append("")
-
-        # Add command line argument handling
-        swift_lines.append("// Handle command line arguments")
-        swift_lines.append("let arguments = CommandLine.arguments")
-        swift_lines.append("")
-        swift_lines.append('if arguments.count > 1 && arguments[1] == "-h" {')
-        swift_lines.append("    showHelp()")
-        swift_lines.append("    exit(0)")
-        swift_lines.append("}")
-        swift_lines.append("")
-
-        if self.args:
-            # Generate argument parsing logic
-            arg_names = list(self.args.keys())
-            for i, (arg_name, default_value) in enumerate(self.args.items()):
-                swift_lines.append(f"// Parse {arg_name} (argument {i + 1})")
-
-                # Map Python types to Swift types
                 if isinstance(default_value, str):
                     swift_type = "String"
                 elif isinstance(default_value, bool):
@@ -623,46 +272,17 @@ class Script(BaseModel):
                 else:
                     swift_type = "String"
 
-                swift_lines.append(f"var {arg_name}: {swift_type}")
+                param_types.append(f"{arg_name}: {swift_type}")
+                swift_types[arg_name] = swift_type
 
-                if isinstance(default_value, str):
-                    swift_lines.append(f'    = "{default_value}"')
-                elif isinstance(default_value, bool):
-                    swift_lines.append(f"    = {str(default_value).lower()}")
-                elif isinstance(default_value, int):
-                    swift_lines.append(f"    = {default_value}")
-                elif isinstance(default_value, float):
-                    swift_lines.append(f"    = {default_value}")
-                else:
-                    swift_lines.append(f'    = "{default_value}"')
-
-                swift_lines.append(f"if arguments.count > {i + 1} {{")
-                if isinstance(default_value, str):
-                    swift_lines.append(f"    {arg_name} = arguments[{i + 1}]")
-                elif isinstance(default_value, bool):
-                    swift_lines.append(
-                        f'    {arg_name} = arguments[{i + 1}].lowercased() == "true"'
-                    )
-                elif isinstance(default_value, int):
-                    swift_lines.append(
-                        f"    {arg_name} = Int(arguments[{i + 1}]) ?? {default_value}"
-                    )
-                elif isinstance(default_value, float):
-                    swift_lines.append(
-                        f"    {arg_name} = Double(arguments[{i + 1}]) ?? {default_value}"
-                    )
-                else:
-                    swift_lines.append(f"    {arg_name} = arguments[{i + 1}]")
-                swift_lines.append("}")
-                swift_lines.append("")
-
-            # Call main with parsed arguments
-            param_list = [f"{arg_name}: {arg_name}" for arg_name in arg_names]
-            swift_lines.append(f"main({', '.join(param_list)})")
-        else:
-            swift_lines.append("main()")
-
-        return "\n".join(swift_lines)
+        return template.render(
+            name=self.name,
+            command_lines=command_lines,
+            args=self.args or {},
+            param_types=param_types,
+            swift_types=swift_types,
+            arg_names=arg_names,
+        )
 
     def get_filename(self) -> str:
         """Generate a safe filename for the script"""
@@ -673,6 +293,8 @@ class Script(BaseModel):
             return f"{safe_name.lower()}.scpt"
         elif self.language == "JavaScript":
             return f"{safe_name.lower()}.js"
+        else:
+            raise ValueError("Not Implemented")
 
 
 class File(BaseModel):
@@ -1116,69 +738,12 @@ def generate_technique_markdown(
     technique_id: str, technique_name: str, tests: list[Script]
 ) -> str:
     """Generate markdown content for a technique"""
+    template = jinja_env.get_template("technique_markdown.j2")
     mitre_description = get_technique_description(technique_id)
-    markdown_lines = []
 
-    # Frontmatter
-    markdown_lines.append("---")
-    markdown_lines.append(f"title: {technique_id}")
-    markdown_lines.append(f'description: "{technique_name.replace(":", " ")}"')
-    markdown_lines.append("---")
-    markdown_lines.append("")
-
-    # Description
-    markdown_lines.append("## Description from ATT&CK")
-    markdown_lines.append("")
-    markdown_lines.append(f"\n\n{mitre_description}\n\n")
-
-    # Tests section
-    markdown_lines.append("## Tests")
-    markdown_lines.append("")
-
-    for i, test in enumerate(tests, 1):
-        # Test header
-        markdown_lines.append(f"### Test #{i} - {test.name}")
-        markdown_lines.append("")
-
-        # Test description
-        markdown_lines.append(test.description)
-        markdown_lines.append("")
-
-        # Requirements
-        if test.elevation_required or test.tcc_required:
-
-            def create_warning_badge(y):
-                return f'<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">{y}</span>'
-
-            if test.elevation_required:
-                markdown_lines.append(create_warning_badge("⚠️ Elevation Required"))
-            if test.tcc_required:
-                markdown_lines.append(create_warning_badge("⚠️ TCC Required"))
-            markdown_lines.append("")
-
-        # Input arguments
-        if test.args:
-            markdown_lines.append("**Input Arguments:**")
-            markdown_lines.append("")
-            markdown_lines.append("| Argument | Type | Default Value |")
-            markdown_lines.append("|----------|------|---------------|")
-
-            for arg_name, default_value in test.args.items():
-                arg_type = type(default_value).__name__
-                markdown_lines.append(
-                    f"| {arg_name} | {arg_type} | `{default_value}` |"
-                )
-
-            markdown_lines.append("")
-
-        # Attack commands
-        markdown_lines.append("")
-
-        if test.language == "AppleScript":
-            markdown_lines.append('```applescript tab="<Code /> Script"')
-        elif test.language == "JavaScript":
-            markdown_lines.append('```javascript tab="<Code /> Script"')
-
+    # Prepare test data for template
+    test_data = []
+    for test in tests:
         # Format command for display
         display_command = test.command
         if test.args:
@@ -1188,129 +753,41 @@ def generate_technique_markdown(
                     f"#{{{arg_name}}}", str(default_value)
                 )
 
-        markdown_lines.append(display_command)
-        markdown_lines.append("```")
-        markdown_lines.append("")
-
-        # Execution instructions
-        markdown_lines.append("")
-
-        if test.language == "AppleScript":
-            if test.args:
-                # Show example with arguments
-                example_args = []
-                for arg_name, default_value in test.args.items():
-                    if isinstance(default_value, str):
-                        example_args.append(f'"{default_value}"')
-                    else:
-                        example_args.append(str(default_value))
-
-                markdown_lines.append('```bash tab="<Terminal /> Execution"')
-                markdown_lines.append("# Execute with default arguments")
-                markdown_lines.append(
-                    f"osascript {format_osascript_command(display_command)}"
-                )
-                markdown_lines.append("")
-                markdown_lines.append("# Or save to file and execute")
-                markdown_lines.append(f"osascript {test.get_filename()}")
-                markdown_lines.append("")
-                markdown_lines.append("# With custom arguments")
-                markdown_lines.append(
-                    f"osascript {test.get_filename()} {' '.join(example_args)}"
-                )
-                markdown_lines.append("```")
-            else:
-                markdown_lines.append('```bash tab="<Terminal /> Execution"')
-                markdown_lines.append(
-                    f"osascript {format_osascript_command(display_command)}"
-                )
-                markdown_lines.append("```")
-        elif test.language == "JavaScript":
-            markdown_lines.append('```bash tab="<Terminal /> Execution"')
-            markdown_lines.append(
-                f"osascript -l JavaScript {format_osascript_command(display_command)}"
-            )
-            markdown_lines.append("```")
-
-        markdown_lines.append("")
-
-        # Download buttons section
-        markdown_lines.append("**Download Files**")
-        markdown_lines.append("")
-
-        # Generate safe filename for the test
+        # Generate safe filename
         safe_name = re.sub(r"[^\w\s-]", "", test.name)
-        safe_name = re.sub(r"[-\s]+", "_", safe_name)
-        safe_name = safe_name.lower()
+        safe_name = re.sub(r"[-\s]+", "_", safe_name).lower()
 
-        # AppleScript file download
-        if test.language == "AppleScript":
-            scpt_filename = f"{safe_name}.scpt"
-            markdown_lines.append(
-                f'<DownloadButton filename="{scpt_filename}" type="scpt" label="Download .scpt" />'
-            )
+        # Prepare example args for AppleScript with arguments
+        example_args = []
+        if test.args:
+            for arg_name, default_value in test.args.items():
+                if isinstance(default_value, str):
+                    example_args.append(f'"{default_value}"')
+                else:
+                    example_args.append(str(default_value))
 
-            # Swift file download (for AppleScript tests)
-            swift_filename = f"{safe_name}.swift"
-            markdown_lines.append(
-                f'<DownloadButton filename="{swift_filename}" type="swift" label="Download .swift" />'
-            )
+        test_data.append(
+            {
+                "name": test.name,
+                "description": test.description,
+                "language": test.language,
+                "elevation_required": test.elevation_required,
+                "tcc_required": test.tcc_required,
+                "args": test.args,
+                "display_command": display_command,
+                "formatted_command": format_osascript_command(display_command),
+                "filename": test.get_filename(),
+                "safe_name": safe_name,
+                "example_args": example_args,
+            }
+        )
 
-            # Binary download (Swift executable)
-            binary_filename = safe_name
-            markdown_lines.append(
-                f'<DownloadButton filename="{binary_filename}" type="binary" label="Download Binary" />'
-            )
-
-            # App bundle download
-            app_filename = f"{safe_name}.app"
-            markdown_lines.append(
-                f'<DownloadButton filename="{app_filename}" type="app" label="Download Application Bundle" />'
-            )
-
-        elif test.language == "JavaScript":
-            js_filename = f"{safe_name}.js"
-            markdown_lines.append(
-                f'<DownloadButton filename="{js_filename}" type="js" label="Download .js" />'
-            )
-
-            # Swift file download (for JavaScript tests)
-            swift_filename = f"{safe_name}.swift"
-            markdown_lines.append(
-                f'<DownloadButton filename="{swift_filename}" type="swift" label="Download .swift" />'
-            )
-
-            # Binary download (Swift executable)
-            binary_filename = safe_name
-            markdown_lines.append(
-                f'<DownloadButton filename="{binary_filename}" type="binary" label="Download Binary" />'
-            )
-
-            # App bundle download (JavaScript files are compiled to .app)
-            app_filename = f"{safe_name}.app"
-            markdown_lines.append(
-                f'<DownloadButton filename="{app_filename}" type="app" label="Download Application Bundle" />'
-            )
-
-        markdown_lines.append("")
-
-        # Separator between tests
-        if i < len(tests):
-            markdown_lines.append("---")
-            markdown_lines.append("")
-
-    # Footer
-    markdown_lines.append("## References")
-    markdown_lines.append("")
-    markdown_lines.append(
-        f"- [MITRE ATT&CK {technique_id}](https://attack.mitre.org/techniques/{technique_id.replace('.', '/')}/)"
+    return template.render(
+        technique_id=technique_id,
+        technique_name=technique_name,
+        mitre_description=mitre_description,
+        tests=test_data,
     )
-    markdown_lines.append(
-        "- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)"
-    )
-    markdown_lines.append("")
-
-    return "\n".join(markdown_lines)
 
 
 @app.command()
