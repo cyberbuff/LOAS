@@ -3,7 +3,7 @@ name = "loas"
 version = "0.1.11"
 description = "Helper file for loas.dev"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
   "mitreattack-python>=4.0.2",
   "pydantic>=2.11.7",

@@ -7,6 +7,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 from typing import Annotated, Literal, Optional
+from uuid import UUID
 
 import requests
 import typer
@@ -142,6 +143,7 @@ class Script(BaseModel):
     args: Optional[dict] = None
     description: str
     references: Optional[list[str]] = None
+    guid: Optional[UUID] = None  # Can be reused in Atomic Red Team
 
     def to_osascript(self) -> str:
         """Convert the script to OSAScript/JavaScript format with help function and parameter handling"""
