@@ -2,7 +2,8 @@ name: "Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs"
 tests:
   - name: Delete system log files
     description: This test deletes the system log file using Finder application.
-    reference: https://www.atomicredteam.io/atomic-red-team/atomics/T1070.002#atomic-test-16---delete-system-log-files-using-osascript
+    references:
+      - https://www.atomicredteam.io/atomic-red-team/atomics/T1070.002#atomic-test-16---delete-system-log-files-using-osascript
     language: AppleScript
     tcc_required: true
     command: |

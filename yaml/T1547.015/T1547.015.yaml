@@ -2,7 +2,8 @@ name: "Boot or Logon Autostart Execution: Login Items"
 tests:
   - name: Create a login item
     language: AppleScript
-    reference: https://archive.orkl.eu/572da6b9974916ae9ca7e6887dc4add938f17642.pdf
+    references:
+      - https://archive.orkl.eu/572da6b9974916ae9ca7e6887dc4add938f17642.pdf
     description: Creates a new login item that will automatically start when the user logs in.
     tcc_required: true
     command: |
@@ -13,7 +14,8 @@ tests:
 
   - name: Discover login items
     language: AppleScript
-    reference: https://archive.orkl.eu/572da6b9974916ae9ca7e6887dc4add938f17642.pdf
+    references:
+      - https://archive.orkl.eu/572da6b9974916ae9ca7e6887dc4add938f17642.pdf
     description: Lists all login items.
     tcc_required: true
     command: |-

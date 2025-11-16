@@ -2,7 +2,8 @@ name: File and Directory Discovery
 tests:
   - name: Copy files from desktop
     description: FileGrabber grabs files from desktop and copies them to a temporary folder
-    reference: https://research.checkpoint.com/2025/banshee-macos-stealer-that-stole-code-from-macos-xprotect
+    references:
+      - https://research.checkpoint.com/2025/banshee-macos-stealer-that-stole-code-from-macos-xprotect
     language: AppleScript
     command: |
       set fileGrabberFolderPath to "#{destinationPath}"

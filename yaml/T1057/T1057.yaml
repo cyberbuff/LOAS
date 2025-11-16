@@ -20,7 +20,8 @@ tests:
       end tell
 
   - name: Get list of running processes using AppKit
-    reference: https://www.sentinelone.com/blog/how-offensive-actors-use-applescript-for-attacking-macos/
+    references:
+      - https://www.sentinelone.com/blog/how-offensive-actors-use-applescript-for-attacking-macos/
     language: AppleScript
     description: "Retrieves running applications using AppKit framework."
     tcc_required: true

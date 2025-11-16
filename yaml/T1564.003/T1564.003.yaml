@@ -2,7 +2,8 @@ name: "Hide Artifacts: Hidden Window"
 
 tests:
   - name: Hide Application Window
-    reference: https://www.th3protocol.com/2022/Choziosi-Loader
+    references:
+      - https://www.th3protocol.com/2022/Choziosi-Loader
     language: AppleScript
     description: Hides the Application window
     tcc_required: true
