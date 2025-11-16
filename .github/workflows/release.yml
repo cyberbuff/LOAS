@@ -46,6 +46,9 @@ jobs:
       - name: Install Python dependencies
         run: uv sync
 
+      - name: Add GUIDs to tests
+        run: uv run python add_guids.py
+
       - name: Run complete build process
         run: uv run main.py build
 
