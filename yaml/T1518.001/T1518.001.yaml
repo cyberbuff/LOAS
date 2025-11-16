@@ -1,7 +1,8 @@
 name: Security Software Discovery
 tests:
   - name: Check XProtect version
-    reference: https://www.microsoft.com/en-us/security/blog/2025/03/11/new-xcsset-malware-adds-new-obfuscation-persistence-techniques-to-infect-xcode-projects/
+    references:
+      - https://www.microsoft.com/en-us/security/blog/2025/03/11/new-xcsset-malware-adds-new-obfuscation-persistence-techniques-to-infect-xcode-projects/
     description: This test checks the version of XProtect, the built-in antivirus in macOS. XCSSET checks whether the version of XProtect is less than 5287.
     language: AppleScript
     command: |-

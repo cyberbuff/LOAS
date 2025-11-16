@@ -11,7 +11,8 @@ tests:
 
   - name: Launch application
     language: AppleScript
-    reference: https://redcanary.com/threat-detection-report/techniques/applescript/
+    references:
+      - https://redcanary.com/threat-detection-report/techniques/applescript/
     description: Lauches an application on the system. The application will be in the background after running the command.
     tcc_required: true
     command: |
@@ -21,7 +22,8 @@ tests:
 
   - name: Close application
     language: AppleScript
-    reference: https://redcanary.com/threat-detection-report/techniques/applescript/
+    references:
+      - https://redcanary.com/threat-detection-report/techniques/applescript/
     description: Closes an application on the system.
     tcc_required: true
     command: |
@@ -31,7 +33,8 @@ tests:
 
   - name: Mute Volume
     language: AppleScript
-    reference: https://research.checkpoint.com/2025/banshee-macos-stealer-that-stole-code-from-macos-xprotect/
+    references:
+      - https://research.checkpoint.com/2025/banshee-macos-stealer-that-stole-code-from-macos-xprotect/
     description: Mutes the volume on the system.
     command: |-
       set volume with output muted

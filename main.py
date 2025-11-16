@@ -141,7 +141,7 @@ class Script(BaseModel):
     tcc_required: Optional[bool] = False
     args: Optional[dict] = None
     description: str
-    reference: Optional[str] = None
+    references: Optional[list[str]] = None
 
     def to_osascript(self) -> str:
         """Convert the script to OSAScript/JavaScript format with help function and parameter handling"""
