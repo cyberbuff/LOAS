@@ -1166,13 +1166,13 @@ def generate_attack_navigator_layer(
     yaml_dir: Annotated[
         str, typer.Option("--yaml-dir", "-y", help="Directory containing YAML files")
     ] = "yaml",
-) -> None:
+) -> bool:
     """Generate ATT&CK Navigator layer JSON file from YAML techniques"""
 
     output_file = "docs/public/api/attack_navigator_layer.json"
 
     if not check_directory_exists(yaml_dir, "YAML"):
-        raise typer.Exit(1)
+        return False
 
     console.print("[blue]Generating ATT&CK Navigator layer...[/blue]")
 
@@ -1264,6 +1264,8 @@ def generate_attack_navigator_layer(
     console.print(
         f"[green]✅ Generated ATT&CK Navigator layer with {len(techniques)} techniques[/green]"
     )
+
+    return True
 
 
 @app.command()
