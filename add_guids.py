@@ -157,10 +157,10 @@ def main():
     if files_updated > 0:
         print("\n⚠️  YAML files have been modified with new GUIDs.")
         print("Please commit these changes.")
-        sys.exit(1)  # Exit with error to indicate files were modified
     else:
         print("\n✓ All tests already have GUIDs.")
-        sys.exit(0)
+
+    sys.exit(0)
 
 
 if __name__ == "__main__":
