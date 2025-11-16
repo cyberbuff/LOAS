@@ -1,6 +1,7 @@
 name: File and Directory Discovery
 tests:
   - name: Copy files from desktop
+    guid: 019a8de9-49b1-7352-a601-f5f2e52b859d
     description: FileGrabber grabs files from desktop and copies them to a temporary folder
     references:
       - https://research.checkpoint.com/2025/banshee-macos-stealer-that-stole-code-from-macos-xprotect
@@ -28,6 +29,7 @@ tests:
       destinationPath: "/tmp/FileGrabber"
 
   - name: List files and directories in Macintosh HD
+    guid: 019a8de9-49b1-7352-a601-f5f366ac4d2e
     description: Enumerate files and directories in the root filesystem using Finder application via AppleScript
     language: AppleScript
     tcc_required: true
@@ -37,6 +39,7 @@ tests:
       folderName: "/"
 
   - name: List files and directories in root directory
+    guid: 019a8de9-49b1-7352-a601-f5f43e6329e9
     description: Perform directory listing of root filesystem using AppleScript list folder command
     language: AppleScript
     command: |

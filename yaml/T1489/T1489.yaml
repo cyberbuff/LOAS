@@ -1,6 +1,7 @@
 name: Service Stop
 tests:
   - name: Stop Application
+    guid: 019a8de9-49b4-7094-989f-ab29172c9525
     description: Adversaries may stop or disable services on a system to render those services unavailable to legitimate users.
     tcc_required: true
     language: AppleScript

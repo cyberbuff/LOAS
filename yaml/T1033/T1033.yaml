@@ -1,6 +1,7 @@
 name: "System Owner/User Discovery"
 tests:
   - name: Get user (using System Info)
+    guid: 019a8de9-49b3-72d5-a43a-7dbb523bb7a9
     description: Retrieves the current user's short and long names using the system info command.
     language: AppleScript
     command: |
@@ -8,12 +9,14 @@ tests:
       long user name of (system info)
 
   - name: Get user (using environment variable)
+    guid: 019a8de9-49b3-72d5-a43a-7dbc1267b564
     description: Retrieves the current user's username using the USER environment variable.
     language: AppleScript
     command: |
       system attribute "USER"
 
   - name: Get user (using list folder)
+    guid: 019a8de9-49b3-72d5-a43a-7dbd166f9969
     description: |
       By default, the user's home directory is /Users/username.
       Listing the /Users folder will return the list of users on the system.
@@ -22,6 +25,7 @@ tests:
       list folder "/Users"
 
   - name: Get user information (using System Events JXA)
+    guid: 019a8de9-49b3-72d5-a43a-7dbea35eea57
     description: Retrieves the current user's username using the System Events JXA command.
     language: JavaScript
     tcc_required: true

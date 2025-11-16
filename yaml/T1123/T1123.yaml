@@ -1,6 +1,7 @@
 name: Audio Capture
 tests:
   - name: Capture Audio
+    guid: 019a8de9-49b3-72d5-a43a-7dc2abc60d67
     description: Capture audio using QuickTime Player
     language: AppleScript
     tcc_required: true

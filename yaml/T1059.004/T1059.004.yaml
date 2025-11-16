@@ -1,6 +1,7 @@
 name: "Command and Scripting Interpreter: Unix Shell"
 tests:
   - name: Execute shell script
+    guid: 019a8de9-49b4-7094-989f-ab1f5d30742a
     description: Adversaries use the Unix shell to execute commands and scripts.
     language: "AppleScript"
     command: |-
@@ -9,6 +10,7 @@ tests:
       bashCommand: "sw_vers -productVersion"
 
   - name: Execute shell script using administrator privileges
+    guid: 019a8de9-49b4-7094-989f-ab20aaf143a4
     description: Adversaries use the Unix shell to execute commands and scripts.
     language: "AppleScript"
     elevation_required: true
@@ -19,6 +21,7 @@ tests:
       bashCommand: "whoami"
 
   - name: Execute shell commands in Terminal
+    guid: 019a8de9-49b4-7094-989f-ab21b998d56d
     description: Adversaries use the Unix shell to execute commands and scripts.
     language: "AppleScript"
     command: |-

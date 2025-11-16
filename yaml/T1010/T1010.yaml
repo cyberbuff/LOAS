@@ -1,6 +1,7 @@
 name: Application Window Discovery
 tests:
   - name: Find all running applications which currently have a window
+    guid: 019a8de9-49b4-7094-989f-ab2abbed5c36
     description: This test uses System Events to find all running applications that currently have a window.
     language: AppleScript
     tcc_required: true

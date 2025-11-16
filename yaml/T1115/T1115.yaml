@@ -1,12 +1,14 @@
 name: Clipboard Data
 tests:
   - name: Get clipboard content (using System Events)
+    guid: 019a8de9-49b3-72d5-a43a-7dc37d848a41
     language: AppleScript
     description: Retrieves the current clipboard content using System Events.
     tcc_required: true
     command: tell application "System Events" to get the clipboard
 
   - name: Set clipboard content (using System Events)
+    guid: 019a8de9-49b3-72d5-a43a-7dc49223c6f3
     language: AppleScript
     description: Sets the clipboard content to a specified value using System Events.
     tcc_required: true
@@ -15,11 +17,13 @@ tests:
       clipboardContent: "Hello, world!"
 
   - name: Get clipboard content (using AppleScript defaults)
+    guid: 019a8de9-49b3-72d5-a43a-7dc5b8ae1fca
     language: AppleScript
     description: Retrieves the current clipboard content using AppleScript's built-in clipboard command.
     command: the clipboard
 
   - name: Set clipboard content (using AppleScript defaults)
+    guid: 019a8de9-49b3-72d5-a43a-7dc659d642eb
     language: AppleScript
     description: Sets the clipboard content to a specified value using AppleScript's built-in clipboard command.
     command: set the clipboard to "#{textContent}"
@@ -27,6 +31,7 @@ tests:
       textContent: "Hello, world!"
 
   - name: Get clipboard content (using Cocoa)
+    guid: 019a8de9-49b3-72d5-a43a-7dc733fec8d2
     language: AppleScript
     description: Retrieves clipboard content using Cocoa frameworks (Foundation and AppKit).
     command: |
@@ -38,6 +43,7 @@ tests:
       clipboardContent
 
   - name: Set clipboard content (using Cocoa)
+    guid: 019a8de9-49b3-72d5-a43a-7dc888960d72
     language: AppleScript
     description: Sets clipboard content using Cocoa frameworks (Foundation and AppKit).
     command: |

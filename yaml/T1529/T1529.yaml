@@ -1,6 +1,7 @@
 name: "System Shutdown/Reboot"
 tests:
   - name: Shutdown system (using System Events)
+    guid: 019a8de9-49b1-7352-a601-f5efb059f95f
     references:
       - https://research.checkpoint.com/2021/time-proven-tricks-in-a-new-environment-the-macos-evolution-of-formbook/
     language: AppleScript
@@ -10,6 +11,7 @@ tests:
       tell application "System Events" to shutdown
 
   - name: Reboot system (using System Events)
+    guid: 019a8de9-49b1-7352-a601-f5f0147b4123
     references:
       - https://research.checkpoint.com/2021/time-proven-tricks-in-a-new-environment-the-macos-evolution-of-formbook/
     language: AppleScript

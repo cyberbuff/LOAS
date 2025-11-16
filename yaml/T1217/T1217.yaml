@@ -1,6 +1,7 @@
 name: Browser Information Discovery
 tests:
   - name: Capture currently opened Safari URL
+    guid: 019a8de9-49b2-7670-9f84-b53696ecd447
     description: Adversaries use osascript to gather information about the victim's browsing habits and preferences.
     references:
       - https://www.crowdstrike.com/en-us/blog/how-crowdstrike-uncovered-a-new-macos-browser-hijacking-campaign/
