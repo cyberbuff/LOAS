@@ -1,6 +1,7 @@
 name: "Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs"
 tests:
   - name: Delete system log files
+    guid: 019a8de9-49b4-7094-989f-ab27f905d69a
     description: This test deletes the system log file using Finder application.
     references:
       - https://www.atomicredteam.io/atomic-red-team/atomics/T1070.002#atomic-test-16---delete-system-log-files-using-osascript

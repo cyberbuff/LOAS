@@ -2,6 +2,7 @@ name: "Hide Artifacts: Hidden Window"
 
 tests:
   - name: Hide Application Window
+    guid: 019a8de9-49b3-72d5-a43a-7dc04ce127a0
     references:
       - https://www.th3protocol.com/2022/Choziosi-Loader
     language: AppleScript

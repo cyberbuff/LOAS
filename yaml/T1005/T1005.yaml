@@ -1,6 +1,7 @@
 name: Data from Local System
 tests:
   - name: Copy Apple Notes database
+    guid: 019a8de9-49b2-7670-9f84-b53bc00bddf1
     description: This command will copy Apple Notes database files using AppleScript as seen in Atomic Stealer.
     #TODO: replace with Atomic Stealer URL
     references:

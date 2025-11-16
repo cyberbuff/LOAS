@@ -1,6 +1,7 @@
 name: Remote System Discovery
 tests:
   - name: Read local hosts file
+    guid: 019a8de9-49b4-7094-989f-ab28d585b482
     description: Adversaries may analyze data from local host file (/etc/hosts)
     language: AppleScript
     command: |-

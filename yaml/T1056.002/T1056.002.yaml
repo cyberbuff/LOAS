@@ -1,6 +1,7 @@
 name: "Input Capture: GUI Input Capture"
 tests:
   - name: Display dialog box to capture user password
+    guid: 019a8de9-49b1-7352-a601-f5eeeb9b0833
     references:
       - https://www.picussecurity.com/resource/blog/atomic-stealer-amos-macos-threat-analysis
     language: AppleScript

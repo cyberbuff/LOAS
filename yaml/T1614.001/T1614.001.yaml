@@ -1,12 +1,14 @@
 name: "System Location Discovery: System Language Discovery"
 tests:
   - name: Get System Locale
+    guid: 019a8de9-49b1-7352-a601-f5e8af72746d
     description: An adversary may gather the system locale settings in order to infer the geographical location of that host.
     language: AppleScript
     command: |-
       get user locale of (system info)
 
   - name: Get System Language using env variable
+    guid: 019a8de9-49b1-7352-a601-f5e9387c834d
     description: An adversary may gather the system language settings from the LANG environment variable.
     language: AppleScript
     command: |-

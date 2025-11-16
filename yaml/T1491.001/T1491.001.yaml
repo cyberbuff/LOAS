@@ -1,6 +1,7 @@
 name: "Defacement: Internal Defacement"
 tests:
   - name: Change Wallpaper
+    guid: 019a8de9-49b4-7094-989f-ab1e88125008
     description: Adveraries use osascript to change the device wallpaper.
     references:
       - https://www.trendmicro.com/en_us/research/24/j/fake-lockbit-real-damage-ransomware-samples-abuse-aws-s3-to-stea.html

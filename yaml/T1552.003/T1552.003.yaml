@@ -1,6 +1,7 @@
 name: "Unsecured Credentials: Bash History"
 tests:
   - name: Search for passwords in history files
+    guid: 019a8de9-49b2-7670-9f84-b535203e99d4
     description: "This test searches for passwords in the bash history file."
     language: "AppleScript"
     command: |

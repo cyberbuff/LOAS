@@ -1,6 +1,7 @@
 name: "Indicator Removal: Clear Persistence"
 tests:
   - name: Delete a login item
+    guid: 019a8de9-49b1-7352-a601-f5f186679610
     language: AppleScript
     description: Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.
     tcc_required: true

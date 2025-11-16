@@ -1,6 +1,7 @@
 name: Steal Web Session Cookie
 tests:
   - name: Copy Safari BinaryCookies
+    guid: 019a8de9-49b4-7094-989f-ab2285eeb0ab
     description: This command will copy Safari BinaryCookies files using AppleScript as seen in Atomic Stealer.
     #TODO: replace with Atomic Stealer URL
     references:

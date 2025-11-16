@@ -1,6 +1,7 @@
 name: "Boot or Logon Autostart Execution: Login Items"
 tests:
   - name: Create a login item
+    guid: 019a8de9-49b2-7670-9f84-b53cad04c84a
     language: AppleScript
     references:
       - https://archive.orkl.eu/572da6b9974916ae9ca7e6887dc4add938f17642.pdf
@@ -13,6 +14,7 @@ tests:
       isHidden: false
 
   - name: Discover login items
+    guid: 019a8de9-49b2-7670-9f84-b53dd1529cb1
     language: AppleScript
     references:
       - https://archive.orkl.eu/572da6b9974916ae9ca7e6887dc4add938f17642.pdf

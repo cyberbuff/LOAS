@@ -1,6 +1,7 @@
 name: Input Capture
 tests:
   - name: Take screenshot
+    guid: 019a8de9-49b3-72d5-a43a-7dc9b63bed4b
     description: Capture screenshot using System Events
     language: AppleScript
     tcc_required: true

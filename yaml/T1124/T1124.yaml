@@ -1,6 +1,7 @@
 name: System Time Discovery
 tests:
   - name: Get System Time
+    guid: 019a8de9-49b3-72d5-a43a-7dc1495850e0
     description: An adversary may gather the system time and/or time zone settings from a local or remote system.
     tcc_required: true
     language: AppleScript
