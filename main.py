@@ -390,7 +390,9 @@ def compile_osascript_files(
                 osascript_dir, output_dir
             )
             result = subprocess.run(
-                ["osacompile", "-o", output_file, file], capture_output=True, text=True
+                ["osacompile", "-x", "-o", output_file, file],
+                capture_output=True,
+                text=True,
             )
 
             if result.returncode == 0:
