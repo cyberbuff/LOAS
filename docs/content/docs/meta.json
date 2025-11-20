@@ -2,8 +2,8 @@
   "pages": [
     "---Introduction---",
     "index",
-    "execution",
     "coverage",
+    "contributing",
     "---Scripts---",
     "..."
   ]
