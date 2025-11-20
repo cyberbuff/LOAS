@@ -119,4 +119,4 @@ This project is intended for authorized security testing, research, and educatio
 
 ## License
 
-See [LICENSE](LICENSE) file for details.
+See [LICENSE](LICENSE.md) file for details.
