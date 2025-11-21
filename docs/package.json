@@ -28,7 +28,7 @@
     "fumadocs-core": "^16.0.12",
     "fumadocs-mdx": "^13.0.8",
     "fumadocs-ui": "^16.0.12",
-    "lucide-react": "^0.553.0",
+    "lucide-react": "^0.554.0",
     "motion": "^12.23.24",
     "next": "16.0.3",
     "react": "^19.2.0",
@@ -37,7 +37,7 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.5",
+    "@biomejs/biome": "2.3.7",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/mdx": "^2.0.13",
     "@types/node": "24.10.1",
