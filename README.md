@@ -3,9 +3,7 @@
 [![View in ATT&CK Navigator](https://img.shields.io/badge/ATT%26CK-Navigator-red?logo=mitre)](https://mitre-attack.github.io/attack-navigator/#layerURL=https://loas.dev/api/attack_navigator_layer.json)
 [![Documentation](https://img.shields.io/badge/docs-loas.dev-blue)](https://loas.dev)
 
-**L**iving off the **O**rchard: **A**pple **S**cript is designed to provide detailed information on various scripts (AppleScript, JXA) and how they are being used by threat actors for malicious purposes.
-
-LOAS is a collection of offensive security tests for macOS that can be executed in multiple formats, each generating different endpoint security logs. This makes it ideal for:
+**L**iving **O**ff the **O**rchard: **A**pple **S**cript is a library of AppleScript and JXA tests mapped to the [MITRE ATT&CK®](https://attack.mitre.org/) framework. Security teams can use LOAS to quickly, portably, and reproducibly test their macOS environments using multiple execution methods, each generating different endpoint security logs. This makes it ideal for:
 
 - Security testing and validation
 - Endpoint detection rule development

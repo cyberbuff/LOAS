@@ -950,6 +950,16 @@ def build(
     if not generate_attack_navigator_layer(yaml_dir):
         raise typer.Exit(1)
 
+    # Generate Atomic Red Team files
+    console.print("\n[bold]Step 8: Atomic Red Team Generation[/bold]")
+    try:
+        generate_atomics(yaml_dir=yaml_dir, output_dir="atomics")
+    except typer.Exit:
+        raise
+    except Exception as e:
+        console.print(f"[red]❌ Failed to generate atomics: {e}[/red]")
+        raise typer.Exit(1)
+
     console.print("\n[bold green]🎉 Build completed successfully![/bold green]")
 
 
@@ -1286,6 +1296,215 @@ def deploy():
     dump_json()
     generate_docs()
     generate_attack_navigator_layer()
+
+
+@app.command()
+def generate_atomics(
+    yaml_dir: Annotated[
+        str, typer.Option("--yaml-dir", "-y", help="Directory containing YAML files")
+    ] = "yaml",
+    output_dir: Annotated[
+        str,
+        typer.Option(
+            "--output-dir", "-o", help="Output directory for atomic YAML files"
+        ),
+    ] = "atomics",
+):
+    """Generate Atomic Red Team compatible YAML files from LOAS tests"""
+    console.print("[bold blue]🔬 Generating Atomic Red Team YAML files...[/bold blue]")
+
+    if not check_directory_exists(yaml_dir, "YAML"):
+        raise typer.Exit(1)
+
+    # Clean and create output directory
+    if os.path.exists(output_dir):
+        shutil.rmtree(output_dir)
+    os.makedirs(output_dir)
+
+    # Download models.py from Atomic Red Team repository
+    console.print("[blue]Downloading models.py from Atomic Red Team...[/blue]")
+    models_url = "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomic_red_team/models.py"
+
+    try:
+        response = requests.get(models_url)
+        response.raise_for_status()
+
+        # Save models.py to the project root
+        models_path = os.path.join(os.path.dirname(__file__), "atomic_models.py")
+        with open(models_path, "w") as f:
+            f.write(response.text)
+        console.print(f"[green]✅ Downloaded models.py to {models_path}[/green]")
+    except Exception as e:
+        console.print(f"[red]❌ Failed to download models.py: {e}[/red]")
+        raise typer.Exit(1)
+
+    # Import the models dynamically
+    try:
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("atomic_models", models_path)
+        atomic_models = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(atomic_models)
+        console.print("[green]✅ Loaded Atomic Red Team models[/green]")
+    except Exception as e:
+        console.print(f"[red]❌ Failed to load models: {e}[/red]")
+        raise typer.Exit(1)
+
+    generated_count = 0
+    errors = []
+
+    # Process each YAML file
+    for file_path in glob.glob(f"{yaml_dir}/**/*.yaml", recursive=True):
+        try:
+            with open(file_path, "r") as f:
+                data = yaml.safe_load(f)
+                file_obj = File(**data)
+
+            # Extract technique info
+            yaml_dir_path = os.path.dirname(file_path)
+            technique_id = os.path.basename(yaml_dir_path)
+            technique_name = file_obj.name
+
+            # Convert LOAS tests to Atomic tests
+            atomic_tests = []
+            for script in file_obj.tests:
+                # Map LOAS script to Atomic test format
+                executor_name = "sh"  # Default to sh for AppleScript/JavaScript
+
+                # Clean up the command - strip trailing whitespace and newlines
+                clean_command = script.command.strip()
+
+                if script.language == "AppleScript":
+                    # AppleScript commands are executed via osascript
+                    # Split into lines and join with -e flags (single line output)
+                    lines = [
+                        line.strip()
+                        for line in clean_command.split("\n")
+                        if line.strip()
+                    ]
+                    if len(lines) == 1:
+                        command = f"osascript -e '{lines[0]}'"
+                    else:
+                        command = "osascript " + " ".join(
+                            [f"-e '{line}'" for line in lines]
+                        )
+                elif script.language == "JavaScript":
+                    # JavaScript commands are executed via osascript with -l JavaScript (single line output)
+                    lines = [
+                        line.strip()
+                        for line in clean_command.split("\n")
+                        if line.strip()
+                    ]
+                    if len(lines) == 1:
+                        command = f"osascript -l JavaScript -e '{lines[0]}'"
+                    else:
+                        command = "osascript -l JavaScript " + " ".join(
+                            [f"-e '{line}'" for line in lines]
+                        )
+                else:
+                    command = clean_command
+
+                # Build input_arguments if args exist
+                input_arguments = {}
+                if script.args:
+                    for arg_name, default_value in script.args.items():
+                        # Determine type based on default value
+                        if isinstance(default_value, str):
+                            arg_type = "string"
+                        elif isinstance(default_value, bool):
+                            arg_type = "string"  # Atomic uses string for bool
+                            default_value = str(default_value).lower()
+                        elif isinstance(default_value, int):
+                            arg_type = "integer"
+                        elif isinstance(default_value, float):
+                            arg_type = "float"
+                        else:
+                            arg_type = "string"
+
+                        input_arguments[arg_name] = {
+                            "description": f"Parameter for {arg_name}",
+                            "type": arg_type,
+                            "default": default_value,
+                        }
+
+                # Create atomic test
+                atomic_test: dict[str, str | dict | list | int] = {
+                    "name": script.name,
+                }
+
+                # Add auto_generated_guid if available
+                if script.guid:
+                    atomic_test["auto_generated_guid"] = str(script.guid)
+
+                atomic_test["description"] = script.description
+                atomic_test["supported_platforms"] = ["macos"]
+
+                # Add input_arguments if present
+                if input_arguments:
+                    atomic_test["input_arguments"] = input_arguments
+
+                atomic_test["executor"] = {
+                    "name": executor_name,
+                    "elevation_required": script.elevation_required or False,
+                    "command": command,
+                }
+                atomic_tests.append(atomic_test)
+
+            # Create Atomic Red Team technique structure
+            atomic_technique = {
+                "attack_technique": technique_id,
+                "display_name": technique_name,
+                "atomic_tests": atomic_tests,
+            }
+
+            # Validate using Atomic Red Team models
+            try:
+                atomic_models.Technique(**atomic_technique)
+            except Exception as e:
+                console.print(
+                    f"[red]❌ Validation failed for {technique_id}: {e}[/red]"
+                )
+                raise typer.Exit(1)
+
+            # Create technique directory in output
+            technique_output_dir = os.path.join(output_dir, technique_id)
+            if not os.path.exists(technique_output_dir):
+                os.makedirs(technique_output_dir)
+
+            # Write Atomic YAML file
+            output_path = os.path.join(technique_output_dir, f"{technique_id}.yaml")
+
+            with open(output_path, "w") as out_file:
+                yaml.dump(
+                    atomic_technique,
+                    out_file,
+                    default_flow_style=False,
+                    sort_keys=False,
+                    allow_unicode=True,
+                    width=1000000,  # Prevent line wrapping by setting very large width
+                )
+
+            generated_count += 1
+            console.print(f"✅ [green]Generated[/green] {output_path}")
+
+        except Exception as e:
+            error_msg = f"Error processing {file_path}: {e}"
+            errors.append(error_msg)
+            console.print(f"❌ [red]Error[/red] processing {file_path}: {e}")
+
+    if errors:
+        console.print(
+            f"\n[yellow]Generation completed with {len(errors)} errors[/yellow]"
+        )
+        console.print(
+            f"[green]Successfully generated: {generated_count} atomic files[/green]"
+        )
+    else:
+        console.print(
+            f"\n[green]✅ Successfully generated {generated_count} Atomic Red Team YAML files[/green]"
+        )
+
+    console.print(f"[blue]ℹ️  Atomic files saved to: {output_dir}[/blue]")
 
 
 if __name__ == "__main__":

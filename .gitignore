@@ -539,3 +539,5 @@ http-client.private.env.json
 !.idea/runConfigurations
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains+all
+atomics/
+atomic_models.py
