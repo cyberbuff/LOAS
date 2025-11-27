@@ -1,6 +1,6 @@
 [project]
 name = "loas"
-version = "0.1.13"
+version = "1.0.0"
 description = "Helper file for loas.dev"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -17,7 +17,7 @@ dependencies = [
 dev = ["bump-my-version>=1.2.0", "pre-commit>=4.2.0", "ruff>=0.12.0"]
 
 [tool.bumpversion]
-current_version = "0.1.13"
+current_version = "1.0.0"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 serialize = ["{major}.{minor}.{patch}"]
 
