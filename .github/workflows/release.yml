@@ -75,6 +75,13 @@ jobs:
             cd ..
           fi
 
+      - name: Zip atomics directory
+        run: |
+          if [ -d "./atomics" ]; then
+            echo "Zipping atomics directory..."
+            zip -r atomics.zip atomics
+          fi
+
       - name: Bump version
         id: bump_version
         run: |
@@ -131,6 +138,7 @@ jobs:
             - **Compiled applications**: Built application bundles
             - **Swift files**: Swift source code
             - **Compiled binaries**: Executable binaries
+            - **Atomic Red Team files**: Atomic Red Team compatible YAML files
 
             Download the files above to get the complete build output.
           files: |
@@ -138,6 +146,7 @@ jobs:
             releases/T*/*.zip
             swift/**/*
             binaries/**/*
+            atomics.zip
           draft: false
           prerelease: false
           fail_on_unmatched_files: false
