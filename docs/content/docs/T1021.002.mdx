@@ -1,0 +1,54 @@
+---
+title: T1021.002
+description: "Remote Services  SMB/Windows Admin Shares"
+---
+
+## Description from ATT&CK
+
+Adversaries may use [Valid Accounts](https://attack.mitre.org/techniques/T1078) to interact with a remote network share using Server Message Block (SMB). The adversary may then perform actions as the logged-on user.
+
+SMB is a file, printer, and serial port sharing protocol for Windows machines on the same network or domain. Adversaries may use SMB to interact with file shares, allowing them to move laterally throughout a network. Linux and macOS implementations of SMB typically use Samba.
+
+Windows systems have hidden network shares that are accessible only to administrators and provide the ability for remote file copy and other administrative functions. Example network shares include `C$`, `ADMIN$`, and `IPC$`. Adversaries may use this technique in conjunction with administrator-level [Valid Accounts](https://attack.mitre.org/techniques/T1078) to remotely access a networked system over SMB,(Citation: Wikipedia Server Message Block) to interact with systems using remote procedure calls (RPCs),(Citation: TechNet RPC) transfer files, and run transferred binaries through remote Execution. Example execution techniques that rely on authenticated sessions over SMB/RPC are [Scheduled Task/Job](https://attack.mitre.org/techniques/T1053), [Service Execution](https://attack.mitre.org/techniques/T1569/002), and [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047). Adversaries can also use NTLM hashes to access administrator shares on systems with [Pass the Hash](https://attack.mitre.org/techniques/T1550/002) and certain configuration and patch levels.(Citation: Microsoft Admin Shares)
+
+## Tests
+
+### Test #1 - Mount SMB share via AppleScript
+
+Mount a remote SMB share using AppleScript's mount volume command. This bypasses the authentication error and GUI configuration step required when using the mount command-line utility, providing immediate filesystem-level access to the remote share.
+
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| username | str | `user` |
+| password | str | `password` |
+| target | str | `192.168.1.1` |
+| shareName | str | `share` |
+```applescript tab="<Code /> Script"
+mount volume "smb://user:password@192.168.1.1/share"
+
+```
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'mount volume "smb://user:password@192.168.1.1/share"'
+
+# Or save to file and execute
+osascript mount_smb_share_via_applescript.scpt
+
+# With custom arguments
+osascript mount_smb_share_via_applescript.scpt "user" "password" "192.168.1.1" "share"
+```
+
+**Download Files**
+
+<DownloadButton filename="mount_smb_share_via_applescript.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="mount_smb_share_via_applescript.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="mount_smb_share_via_applescript" type="binary" label="Download Binary" />
+<DownloadButton filename="mount_smb_share_via_applescript.app" type="app" label="Download Application Bundle" />
+
+## References
+
+- [MITRE ATT&CK T1021.002](https://attack.mitre.org/techniques/T1021/002/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

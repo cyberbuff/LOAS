@@ -59,6 +59,34 @@
       "enabled": true
     },
     {
+      "techniqueID": "T1021",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1021.002",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1021.005",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1027",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
       "techniqueID": "T1033",
       "score": 1,
       "color": "#00ff00",

@@ -1,6 +1,7 @@
 name: "Obfuscated Files or Information"
 tests:
   - name: Write payload to Finder comment
+    guid: 019db5ed-d042-7613-9dc0-1cb37f30f973
     language: AppleScript
     references:
       - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/

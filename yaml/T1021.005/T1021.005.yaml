@@ -1,6 +1,7 @@
 name: "Remote Services: Remote Apple Events"
 tests:
   - name: Enumerate remote volumes via RAE
+    guid: 019db5ed-d040-74c3-a4e7-66ecacfa0c24
     language: AppleScript
     references:
       - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/
@@ -13,6 +14,7 @@ tests:
       target: "192.168.1.1"
 
   - name: Remote execution via Terminal proxy via RAE
+    guid: 019db5ed-d040-74c3-a4e7-66edccb6275f
     language: AppleScript
     references:
       - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/
@@ -26,6 +28,7 @@ tests:
       command: "whoami"
 
   - name: Remote Finder comment staging via RAE
+    guid: 019db5ed-d040-74c3-a4e7-66eec187dc3e
     language: AppleScript
     references:
       - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/
