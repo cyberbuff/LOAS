@@ -134,6 +134,31 @@ def get_technique_description(technique_id: str) -> str:
         return f"This technique demonstrates various methods for {technique_id} using AppleScript and JavaScript."
 
 
+def _preprocess_eppc_command(command: str) -> str:
+    """Rewrite literal eppc:// tell blocks to avoid osacompile UI popups.
+
+    osacompile connects to any literal eppc:// URL at compile time to fetch the
+    app dictionary, which triggers a macOS permission popup. Using a variable
+    defers resolution to runtime. `using terms from` provides the local dictionary
+    so that app-specific terms (disk, do script, etc.) still resolve at compile time.
+    """
+    pattern = re.compile(
+        r'tell application "([^"]+)" of machine "eppc://([^"]*)"(.*?end tell)',
+        re.DOTALL,
+    )
+
+    def _replace(m: re.Match) -> str:
+        app, eppc_path, rest = m.group(1), m.group(2), m.group(3)
+        return (
+            f'set _machine to "eppc://" & "{eppc_path}"\n'
+            f'using terms from application "{app}"\n'
+            f'tell application "{app}" of machine _machine{rest}\n'
+            f"end using terms from"
+        )
+
+    return pattern.sub(_replace, command)
+
+
 class Script(BaseModel):
     name: str
     command: str
@@ -149,7 +174,7 @@ class Script(BaseModel):
         """Convert the script to OSAScript/JavaScript format with help function and parameter handling"""
         template = jinja_env.get_template("osascript.j2")
 
-        command = self.command
+        command = _preprocess_eppc_command(self.command)
         framework_lines = []
         command_lines = []
 
