@@ -82,11 +82,22 @@ Execute as a compiled binary:
 ./get_clipboard_content_using_applescript_defaults
 ```
 
+## LLM-Optimized Documentation
+
+Ready to use with Claude, ChatGPT, or Gemini right out of the box.
+
+- **[Full Documentation](https://loas.dev/llms-full.txt)** - Complete technique descriptions and implementation details in plain text format
+- **Individual Technique Documentation** - Access specific techniques at `https://loas.dev/docs/<technique-id>.mdx` (e.g., `T1005.mdx`, `T1087.001.mdx`)
+
+**Sample Prompt**:
+
+```
+Read https://loas.dev/llms-full.txt. I want to ask questions about the techniques.
+```
+
 ## MITRE ATT&CK Coverage
 
-LOAS implements various MITRE ATT&CK techniques using AppleScript and JXA. View the interactive coverage map:
-
-- [Interactive ATT&CK Navigator](https://mitre-attack.github.io/attack-navigator/#layerURL=https://loas.dev/api/attack_navigator_layer.json)
+LOAS implements various MITRE ATT&CK techniques using AppleScript and JXA. View the [interactive coverage map here](https://mitre-attack.github.io/attack-navigator/#layerURL=https://loas.dev/api/attack_navigator_layer.json)
 
 ## Contributing
 

@@ -1,0 +1,14 @@
+name: "Remote Services: SMB/Windows Admin Shares"
+tests:
+  - name: Mount SMB share via AppleScript
+    language: AppleScript
+    references:
+      - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/
+    description: Mount a remote SMB share using AppleScript's mount volume command. This bypasses the authentication error and GUI configuration step required when using the mount command-line utility, providing immediate filesystem-level access to the remote share.
+    command: |
+      mount volume "smb://#{username}:#{password}@#{target}/#{shareName}"
+    args:
+      username: "user"
+      password: "password"
+      target: "192.168.1.1"
+      shareName: "share"

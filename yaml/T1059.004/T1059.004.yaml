@@ -20,11 +20,14 @@ tests:
     args:
       bashCommand: "whoami"
 
-  - name: Execute shell commands in Terminal
+  - name: Use Terminal as execution proxy
     guid: 019a8de9-49b4-7094-989f-ab21b998d56d
-    description: Adversaries use the Unix shell to execute commands and scripts.
-    language: "AppleScript"
-    command: |-
+    language: AppleScript
+    references:
+      - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/
+    description: Use Terminal.app as an execution proxy for shell commands via AppleScript. Unlike System Events, Terminal.app accepts do script commands and is designed for shell interaction, enabling shell execution through Apple Events IPC.
+    tcc_required: true
+    command: |
       tell application "Terminal"
         do script "#{bashCommand}"
         delay 3

