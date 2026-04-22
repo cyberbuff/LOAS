@@ -9,7 +9,11 @@ import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
  */
 export const baseOptions: BaseLayoutProps = {
   nav: {
-    title: <>🍎</>,
+    title: (
+      <span className="flex items-center gap-2 font-semibold tracking-tight">
+        🍎 <span>LOAS</span>
+      </span>
+    ),
   },
   themeSwitch: {
     enabled: false,
