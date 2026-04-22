@@ -83,10 +83,11 @@ osascript execute_shell_script_using_administrator_privileges.scpt "whoami"
 
 ---
 
-### Test #3 - Execute shell commands in Terminal
+### Test #3 - Use Terminal as execution proxy
 
-Adversaries use the Unix shell to execute commands and scripts.
+Use Terminal.app as an execution proxy for shell commands via AppleScript. Unlike System Events, Terminal.app accepts do script commands and is designed for shell interaction, enabling shell execution through Apple Events IPC.
 
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
 
 **Input Arguments:**
 
@@ -101,24 +102,25 @@ tell application "Terminal"
     quit
   end try
 end tell
+
 ```
 ```bash tab="<Terminal /> Execution"
 # Execute with default arguments
 osascript -e 'tell application "Terminal"' -e 'do script "sw_vers -productVersion"' -e 'delay 3' -e 'try' -e 'quit' -e 'end try' -e 'end tell'
 
 # Or save to file and execute
-osascript execute_shell_commands_in_terminal.scpt
+osascript use_terminal_as_execution_proxy.scpt
 
 # With custom arguments
-osascript execute_shell_commands_in_terminal.scpt "sw_vers -productVersion"
+osascript use_terminal_as_execution_proxy.scpt "sw_vers -productVersion"
 ```
 
 **Download Files**
 
-<DownloadButton filename="execute_shell_commands_in_terminal.scpt" type="scpt" label="Download .scpt" />
-<DownloadButton filename="execute_shell_commands_in_terminal.swift" type="swift" label="Download .swift" />
-<DownloadButton filename="execute_shell_commands_in_terminal" type="binary" label="Download Binary" />
-<DownloadButton filename="execute_shell_commands_in_terminal.app" type="app" label="Download Application Bundle" />
+<DownloadButton filename="use_terminal_as_execution_proxy.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="use_terminal_as_execution_proxy.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="use_terminal_as_execution_proxy" type="binary" label="Download Binary" />
+<DownloadButton filename="use_terminal_as_execution_proxy.app" type="app" label="Download Application Bundle" />
 
 ## References
 

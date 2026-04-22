@@ -123,6 +123,7 @@ jobs:
         run: |
           VERSION="${{ steps.bump_version.outputs.version }}"
           git tag -a "$VERSION" -m "Release $VERSION"
+          git push origin HEAD:main
           git push origin "$VERSION"
 
       - name: Create Release
