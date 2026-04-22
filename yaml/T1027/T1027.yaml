@@ -1,0 +1,13 @@
+name: "Obfuscated Files or Information"
+tests:
+  - name: Write payload to Finder comment
+    language: AppleScript
+    references:
+      - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/
+    description: Store a Base64-encoded payload in the Finder comment (kMDItemFinderComment) Spotlight metadata field of a file. The payload resides outside the file's data fork, bypassing file-based security scanners and static analysis tools that focus on executable code and script contents.
+    tcc_required: true
+    command: |
+      tell application "Finder" to set comment of (POSIX file "#{filePath}" as alias) to "#{encodedPayload}"
+    args:
+      filePath: "/tmp/test.txt"
+      encodedPayload: "ZWNobyBoZWxsbyB3b3JsZA=="
