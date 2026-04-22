@@ -143,6 +143,50 @@
     "test_number": 3
   },
   {
+    "name": "Enumerate remote volumes via RAE",
+    "command": "tell application \"Finder\" of machine \"eppc://#{target}\"\n  get name of every disk\nend tell\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Remotely query the Finder for a list of mounted volumes on a target machine using Remote Apple Events (RAE) via the eppc:// protocol. Actions performed via Apple Events bypass security telemetry focused on process execution trees, making RAE a discreet lateral movement vector.",
+    "technique_id": "T1021.005",
+    "technique_name": "Remote Services: Remote Apple Events",
+    "test_number": 1
+  },
+  {
+    "name": "Remote execution via Terminal proxy via RAE",
+    "command": "tell application \"Terminal\" of machine \"eppc://#{target}\"\n  do script \"#{command}\"\nend tell\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Use Terminal.app as a remote execution proxy via Remote Apple Events (RAE) to bypass the -10016 Handler Error that prevents System Events from executing shell commands remotely. Terminal.app accepts do script commands over the eppc:// protocol and is designed for shell interaction.",
+    "technique_id": "T1021.005",
+    "technique_name": "Remote Services: Remote Apple Events",
+    "test_number": 2
+  },
+  {
+    "name": "Remote Finder comment staging via RAE",
+    "command": "tell application \"Finder\" of machine \"eppc://#{target}\"\n  set comment of (make new file at desktop with properties {name:\"#{filename}\"}) to \"#{encodedPayload}\"\nend tell\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Stage a Base64-encoded payload in the Finder comment (kMDItemFinderComment) of a newly created file on a remote machine via Remote Apple Events (RAE). Because the payload resides in Spotlight metadata rather than the file's data fork, it evades file-based EDR scanning of the target's filesystem.",
+    "technique_id": "T1021.005",
+    "technique_name": "Remote Services: Remote Apple Events",
+    "test_number": 3
+  },
+  {
+    "name": "Mount SMB share via AppleScript",
+    "command": "mount volume \"smb://#{username}:#{password}@#{target}/#{shareName}\"\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Mount a remote SMB share using AppleScript's mount volume command. This bypasses the authentication error and GUI configuration step required when using the mount command-line utility, providing immediate filesystem-level access to the remote share.",
+    "technique_id": "T1021.002",
+    "technique_name": "Remote Services: SMB/Windows Admin Shares",
+    "test_number": 1
+  },
+  {
     "name": "Get system information",
     "command": "system info\n",
     "language": "AppleScript",
@@ -462,12 +506,12 @@
     "test_number": 2
   },
   {
-    "name": "Execute shell commands in Terminal",
-    "command": "tell application \"Terminal\"\n  do script \"#{bashCommand}\"\n  delay 3\n  try\n    quit\n  end try\nend tell",
+    "name": "Use Terminal as execution proxy",
+    "command": "tell application \"Terminal\"\n  do script \"#{bashCommand}\"\n  delay 3\n  try\n    quit\n  end try\nend tell\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
-    "description": "Adversaries use the Unix shell to execute commands and scripts.",
+    "tcc_required": true,
+    "description": "Use Terminal.app as an execution proxy for shell commands via AppleScript. Unlike System Events, Terminal.app accepts do script commands and is designed for shell interaction, enabling shell execution through Apple Events IPC.",
     "technique_id": "T1059.004",
     "technique_name": "Command and Scripting Interpreter: Unix Shell",
     "test_number": 3
@@ -536,6 +580,17 @@
     "description": "This test deletes the system log file using Finder application.",
     "technique_id": "T1070.002",
     "technique_name": "Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs",
+    "test_number": 1
+  },
+  {
+    "name": "Write payload to Finder comment",
+    "command": "tell application \"Finder\" to set comment of (POSIX file \"#{filePath}\" as alias) to \"#{encodedPayload}\"\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Store a Base64-encoded payload in the Finder comment (kMDItemFinderComment) Spotlight metadata field of a file. The payload resides outside the file's data fork, bypassing file-based security scanners and static analysis tools that focus on executable code and script contents.",
+    "technique_id": "T1027",
+    "technique_name": "Obfuscated Files or Information",
     "test_number": 1
   },
   {
