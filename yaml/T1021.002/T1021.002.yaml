@@ -1,6 +1,7 @@
 name: "Remote Services: SMB/Windows Admin Shares"
 tests:
   - name: Mount SMB share via AppleScript
+    guid: 019db5f6-bea3-7304-9ab6-0e51f3592a8d
     language: AppleScript
     references:
       - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/
