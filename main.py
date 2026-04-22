@@ -134,6 +134,7 @@ def get_technique_description(technique_id: str) -> str:
         return f"This technique demonstrates various methods for {technique_id} using AppleScript and JavaScript."
 
 
+# temp fix for RAE commands
 def _preprocess_eppc_command(command: str) -> str:
     """Rewrite literal eppc:// tell blocks to avoid osacompile UI popups.
 
