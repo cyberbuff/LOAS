@@ -25,7 +25,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
-    "fumadocs-core": "^16.8.1",
+    "fumadocs-core": "^16.8.3",
     "fumadocs-mdx": "^14.3.1",
     "fumadocs-ui": "^16.8.1",
     "lucide-react": "^1.8.0",
