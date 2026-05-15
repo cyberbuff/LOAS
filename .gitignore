@@ -540,4 +540,5 @@ http-client.private.env.json
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains+all
 atomics/
+atomics.zip
 atomic_models.py
