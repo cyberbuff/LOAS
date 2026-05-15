@@ -55,7 +55,7 @@ export const columnsConfig = [
   dtf
     .option()
     .id("tcc_required")
-    .accessor((row) => row.tcc_required.toString())
+    .accessor((row) => (row.tcc_required.length > 0).toString())
     .displayName("TCC Required")
     .icon(Shield)
     .options([

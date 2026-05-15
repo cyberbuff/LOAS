@@ -4,7 +4,11 @@ tests:
     guid: 019a8de9-49b3-72d5-a43a-7dc2abc60d67
     description: Capture audio using QuickTime Player
     language: AppleScript
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+      - "Microphone"
+    safety:
+      modifies_system: true
     command: |-
       tell application "QuickTime Player"
        	activate
@@ -21,3 +25,7 @@ tests:
     args:
       recordingTime: 3
       filePath: "/tmp/recording.m4a"
+    cleanup:
+      - description: Remove the audio recording created by the test.
+        command: |-
+          do shell script "rm -f #{filePath}"

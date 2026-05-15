@@ -9,7 +9,10 @@ tests:
       - https://www.crowdstrike.com/blog/how-crowdstrike-uncovered-a-new-macos-browser-hijacking-campaign/
     language: AppleScript
     description: Hides the Application window
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      modifies_system: true
     command: |
       tell application "#{applicationName}" to set visible of front window to false
     args:

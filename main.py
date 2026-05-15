@@ -13,7 +13,7 @@ import requests
 import typer
 from jinja2 import Environment, FileSystemLoader
 from mitreattack.stix20 import MitreAttackData
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, Field, ValidationError
 from rich.console import Console
 from rich.table import Table
 
@@ -160,12 +160,24 @@ def _preprocess_eppc_command(command: str) -> str:
     return pattern.sub(_replace, command)
 
 
+class Safety(BaseModel):
+    destructive: bool = False
+    modifies_system: bool = False
+
+
+class CleanupStep(BaseModel):
+    description: str
+    command: str
+
+
 class Script(BaseModel):
     name: str
     command: str
     language: Literal["AppleScript", "JavaScript"]
     elevation_required: Optional[bool] = False
-    tcc_required: Optional[bool] = False
+    tcc_required: list[str] = Field(default_factory=list)
+    safety: Safety = Field(default_factory=Safety)
+    cleanup: list[CleanupStep] = Field(default_factory=list)
     args: Optional[dict] = None
     description: str
     references: Optional[list[str]] = None
@@ -647,7 +659,9 @@ def dump_scripts_json(
                         "command": script.command,
                         "language": script.language,
                         "elevation_required": script.elevation_required or False,
-                        "tcc_required": script.tcc_required or False,
+                        "tcc_required": script.tcc_required,
+                        "safety": script.safety.model_dump(),
+                        "cleanup": [step.model_dump() for step in script.cleanup],
                         "description": script.description,
                         "technique_id": technique_id,
                         "technique_name": technique_name,
@@ -805,6 +819,8 @@ def generate_technique_markdown(
                 "language": test.language,
                 "elevation_required": test.elevation_required,
                 "tcc_required": test.tcc_required,
+                "safety": test.safety,
+                "cleanup": test.cleanup,
                 "args": test.args,
                 "display_command": display_command,
                 "formatted_command": format_osascript_command(display_command),
@@ -1476,6 +1492,10 @@ def generate_atomics(
                     "elevation_required": script.elevation_required or False,
                     "command": command,
                 }
+                if script.cleanup:
+                    atomic_test["executor"]["cleanup_command"] = script.cleanup[
+                        0
+                    ].command
                 atomic_tests.append(atomic_test)
 
             # Create Atomic Red Team technique structure

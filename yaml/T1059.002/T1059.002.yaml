@@ -6,7 +6,10 @@ tests:
     references:
       - https://www.sentinelone.com/labs/20-common-tools-techniques-used-by-macos-threat-actors-malware/
     description: Opens an application on the system. The application will be in focus after running the command.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      modifies_system: true
     command: |
       tell application "#{applicationName}" to activate
     args:
@@ -18,7 +21,10 @@ tests:
     references:
       - https://redcanary.com/threat-detection-report/techniques/applescript/
     description: Lauches an application on the system. The application will be in the background after running the command.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      modifies_system: true
     command: |
       tell application "#{applicationName}" to launch
     args:
@@ -30,7 +36,10 @@ tests:
     references:
       - https://redcanary.com/threat-detection-report/techniques/applescript/
     description: Closes an application on the system.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      modifies_system: true
     command: |
       tell application "#{applicationName}" to close windows
     args:
@@ -42,5 +51,7 @@ tests:
     references:
       - https://research.checkpoint.com/2025/banshee-macos-stealer-that-stole-code-from-macos-xprotect/
     description: Mutes the volume on the system.
+    safety:
+      modifies_system: true
     command: |-
       set volume with output muted

@@ -6,7 +6,11 @@ tests:
       - https://research.checkpoint.com/2021/time-proven-tricks-in-a-new-environment-the-macos-evolution-of-formbook/
     language: AppleScript
     description: Shuts down the system using the shutdown command from System Events.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      destructive: true
+      modifies_system: true
     command: |-
       tell application "System Events" to shutdown
 
@@ -16,7 +20,11 @@ tests:
       - https://research.checkpoint.com/2021/time-proven-tricks-in-a-new-environment-the-macos-evolution-of-formbook/
     language: AppleScript
     description: Reboots the system using the reboot command from System Events.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      destructive: true
+      modifies_system: true
     command: |-
       tell application "System Events" to reboot
 
@@ -26,6 +34,9 @@ tests:
       - https://www.sentinelone.com/labs/20-common-tools-techniques-used-by-macos-threat-actors-malware/
     language: AppleScript
     description: Puts the system to sleep through Finder using AppleScript, matching EggShell tradecraft reported in the wild.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      modifies_system: true
     command: |-
       tell application "Finder" to sleep

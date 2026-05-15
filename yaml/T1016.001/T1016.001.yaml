@@ -4,7 +4,8 @@ tests:
     guid: 019a8de9-49b1-7352-a601-f5ed4a7648b3
     description: Adversaries may check for Internet connectivity on compromised systems.
     language: "AppleScript"
-    tcc_required: true
+    tcc_required:
+      - "Automation"
     command: |-
       tell application "Safari"
         try

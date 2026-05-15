@@ -4,6 +4,9 @@ tests:
     guid: 019a8de9-49b3-72d5-a43a-7dc9b63bed4b
     description: Capture screenshot using System Events
     language: AppleScript
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+      - "Accessibility"
+      - "Screen Recording"
     command: |-
       tell application "System Events" to key code 20 using {command down, shift down}

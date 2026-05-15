@@ -6,9 +6,16 @@ tests:
     references:
       - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/
     description: Store a Base64-encoded payload in the Finder comment (kMDItemFinderComment) Spotlight metadata field of a file. The payload resides outside the file's data fork, bypassing file-based security scanners and static analysis tools that focus on executable code and script contents.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      modifies_system: true
     command: |
       tell application "Finder" to set comment of (POSIX file "#{filePath}" as alias) to "#{encodedPayload}"
+    cleanup:
+      - description: Clear the Finder comment written by the test.
+        command: |
+          tell application "Finder" to set comment of (POSIX file "#{filePath}" as alias) to ""
     args:
       filePath: "/tmp/test.txt"
       encodedPayload: "ZWNobyBoZWxsbyB3b3JsZA=="

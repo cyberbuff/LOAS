@@ -9,7 +9,15 @@ export type Script = {
   command: string;
   language: "AppleScript" | "JavaScript";
   elevation_required: boolean;
-  tcc_required: boolean;
+  tcc_required: string[];
+  safety: {
+    destructive: boolean;
+    modifies_system: boolean;
+  };
+  cleanup: Array<{
+    description: string;
+    command: string;
+  }>;
   technique_id: string;
   technique_name: string;
   test_number: number;
@@ -116,14 +124,17 @@ export const columns: ColumnDef<Script>[] = [
     accessorKey: "tcc_required",
     header: "TCC",
     cell: ({ row }) => {
-      const tccRequired = row.getValue("tcc_required") as boolean;
+      const tccRequired = row.getValue("tcc_required") as string[];
       return (
         <div className="flex items-center gap-2">
-          {tccRequired ? (
+          {tccRequired.length > 0 ? (
             <CircleCheckBig className="h-4 w-4 text-green-500" />
           ) : (
             <CircleMinus className="h-4 w-4 text-red-500" />
           )}
+          <span className="text-xs text-muted-foreground">
+            {tccRequired.join(", ")}
+          </span>
         </div>
       );
     },

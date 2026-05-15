@@ -4,14 +4,18 @@ tests:
     guid: 019a8de9-49b3-72d5-a43a-7dc37d848a41
     language: AppleScript
     description: Retrieves the current clipboard content using System Events.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
     command: tell application "System Events" to get the clipboard
 
   - name: Set clipboard content (using System Events)
     guid: 019a8de9-49b3-72d5-a43a-7dc49223c6f3
     language: AppleScript
     description: Sets the clipboard content to a specified value using System Events.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      modifies_system: true
     command: tell application "System Events" to set the clipboard to "#{clipboardContent}"
     args:
       clipboardContent: "Hello, world!"
@@ -30,6 +34,8 @@ tests:
     references:
       - https://objective-see.com/blog/blog_0x59.html
     description: Sets the clipboard content to a specified value using AppleScript's built-in clipboard command.
+    safety:
+      modifies_system: true
     command: set the clipboard to "#{textContent}"
     args:
       textContent: "Hello, world!"
@@ -50,6 +56,8 @@ tests:
     guid: 019a8de9-49b3-72d5-a43a-7dc888960d72
     language: AppleScript
     description: Sets clipboard content using Cocoa frameworks (Foundation and AppKit).
+    safety:
+      modifies_system: true
     command: |
       use framework "Foundation"
       use framework "AppKit"

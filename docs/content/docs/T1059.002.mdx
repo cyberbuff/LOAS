@@ -19,7 +19,13 @@ Adversaries may abuse AppleScript to execute various behaviors, such as interact
 
 Opens an application on the system. The application will be in focus after running the command.
 
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC: Automation</span>
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| No | Yes |
 
 **Input Arguments:**
 
@@ -54,7 +60,13 @@ osascript open_application.scpt "Finder"
 
 Lauches an application on the system. The application will be in the background after running the command.
 
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC: Automation</span>
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| No | Yes |
 
 **Input Arguments:**
 
@@ -89,7 +101,13 @@ osascript launch_application.scpt "Finder"
 
 Closes an application on the system.
 
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC: Automation</span>
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| No | Yes |
 
 **Input Arguments:**
 
@@ -124,6 +142,12 @@ osascript close_application.scpt "Finder"
 
 Mutes the volume on the system.
 
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| No | Yes |
 ```applescript tab="<Code /> Script"
 set volume with output muted
 ```

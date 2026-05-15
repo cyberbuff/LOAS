@@ -19,7 +19,8 @@ tests:
       - https://objective-see.com/blog/blog_0x59.html
     language: "AppleScript"
     elevation_required: true
-    tcc_required: true
+    tcc_required:
+      - "Automation"
     command: |-
       do shell script "#{bashCommand}" with administrator privileges
     args:
@@ -31,7 +32,10 @@ tests:
     references:
       - https://blog.talosintelligence.com/bad-apples-weaponizing-native-macos-primitives-for-movement-and-execution/
     description: Use Terminal.app as an execution proxy for shell commands via AppleScript. Unlike System Events, Terminal.app accepts do script commands and is designed for shell interaction, enabling shell execution through Apple Events IPC.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      modifies_system: true
     command: |
       tell application "Terminal"
         do script "#{bashCommand}"
@@ -42,3 +46,6 @@ tests:
       end tell
     args:
       bashCommand: "sw_vers -productVersion"
+    cleanup:
+      - description: Close Terminal window created by the test.
+        command: tell application "Terminal" to quit

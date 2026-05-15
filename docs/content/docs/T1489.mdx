@@ -17,7 +17,13 @@ Threat actors may also disable or stop service in cloud environments. For exampl
 
 Adversaries may stop or disable services on a system to render those services unavailable to legitimate users.
 
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC: Automation</span>
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| No | Yes |
 
 **Input Arguments:**
 
@@ -51,6 +57,12 @@ osascript stop_application.scpt "Mail"
 
 Finds processes by name and terminates matching PIDs via AppleScript's do shell script command, as seen in macOS.OSAMiner anti-analysis behavior.
 
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| Yes | Yes |
 
 **Input Arguments:**
 

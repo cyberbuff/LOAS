@@ -4,7 +4,9 @@ tests:
     guid: 019a8de9-49b2-7670-9f84-b537e0dfc8f9
     language: AppleScript
     description: "Retrieves a list of all running processes on the system using System Events. This provides comprehensive process enumeration capabilities and may require TCC approval for System Events access."
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+      - "Accessibility"
     command: |
       tell application "System Events" to get name of every process
 
@@ -12,7 +14,9 @@ tests:
     guid: 019a8de9-49b2-7670-9f84-b538179c19b6
     language: AppleScript
     description: "Retrieves only user-facing application processes (excluding system processes and daemons). This focuses on applications that users typically interact with and may require TCC approval for System Events access."
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+      - "Accessibility"
     command: |-
       tell application "System Events"
         set runningApps to name of every application process
@@ -27,7 +31,8 @@ tests:
       - https://www.sentinelone.com/blog/how-offensive-actors-use-applescript-for-attacking-macos/
     language: AppleScript
     description: "Retrieves running applications using AppKit framework."
-    tcc_required: true
+    tcc_required:
+      - "Automation"
     command: |-
       use framework "AppKit"
       use framework "Foundation"

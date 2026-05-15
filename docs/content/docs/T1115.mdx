@@ -17,7 +17,7 @@ macOS and Linux also have commands, such as <code>pbpaste</code>, to grab clipbo
 
 Retrieves the current clipboard content using System Events.
 
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC: Automation</span>
 ```applescript tab="<Code /> Script"
 tell application "System Events" to get the clipboard
 ```
@@ -38,7 +38,13 @@ osascript -e 'tell application "System Events" to get the clipboard'
 
 Sets the clipboard content to a specified value using System Events.
 
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC: Automation</span>
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| No | Yes |
 
 **Input Arguments:**
 
@@ -92,6 +98,12 @@ osascript -e 'the clipboard'
 
 Sets the clipboard content to a specified value using AppleScript's built-in clipboard command.
 
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| No | Yes |
 
 **Input Arguments:**
 
@@ -151,6 +163,12 @@ osascript -e 'use framework "Foundation"' -e 'use framework "AppKit"' -e 'set pa
 
 Sets clipboard content using Cocoa frameworks (Foundation and AppKit).
 
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| No | Yes |
 
 **Input Arguments:**
 

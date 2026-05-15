@@ -20,8 +20,16 @@ description: "{{ technique_name.replace(':', ' ') }}"
 <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ Elevation Required</span>
 {%- endif %}
 {%- if test.tcc_required %}
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC: {{ test.tcc_required|join(", ") }}</span>
 {%- endif %}
+{%- endif %}
+{%- if test.safety.destructive or test.safety.modifies_system %}
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| {{ "Yes" if test.safety.destructive else "No" }} | {{ "Yes" if test.safety.modifies_system else "No" }} |
 {%- endif %}
 {%- if test.args %}
 
@@ -65,6 +73,20 @@ osascript {{ test.formatted_command }}
 ```bash tab="<Terminal /> Execution"
 osascript -l JavaScript {{ test.formatted_command }}
 ```
+{%- endif %}
+
+{%- if test.cleanup %}
+
+**Cleanup:**
+
+{%- for cleanup_step in test.cleanup %}
+
+- {{ cleanup_step.description }}
+
+```applescript
+{{ cleanup_step.command }}
+```
+{%- endfor %}
 {%- endif %}
 
 **Download Files**

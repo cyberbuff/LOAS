@@ -20,7 +20,13 @@ Adversaries may attempt to shutdown/reboot a system after impacting it in other 
 
 Shuts down the system using the shutdown command from System Events.
 
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC: Automation</span>
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| Yes | Yes |
 ```applescript tab="<Code /> Script"
 tell application "System Events" to shutdown
 ```
@@ -41,7 +47,13 @@ osascript -e 'tell application "System Events" to shutdown'
 
 Reboots the system using the reboot command from System Events.
 
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC: Automation</span>
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| Yes | Yes |
 ```applescript tab="<Code /> Script"
 tell application "System Events" to reboot
 ```
@@ -62,7 +74,13 @@ osascript -e 'tell application "System Events" to reboot'
 
 Puts the system to sleep through Finder using AppleScript, matching EggShell tradecraft reported in the wild.
 
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC: Automation</span>
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| No | Yes |
 ```applescript tab="<Code /> Script"
 tell application "Finder" to sleep
 ```

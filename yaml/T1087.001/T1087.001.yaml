@@ -4,6 +4,8 @@ tests:
     guid: 019a8de9-49b2-7670-9f84-b53ab72e5701
     description: Adversaries may attempt to get a listing of local system accounts.
     language: AppleScript
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+      - "Accessibility"
     command: |-
       tell application "System Events" to get name of every user

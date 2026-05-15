@@ -15,7 +15,13 @@ Malware or scripts may be used to interact with the devices through an available
 
 Capture audio using QuickTime Player
 
-<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC: Automation, Microphone</span>
+
+**Safety:**
+
+| Destructive | Modifies System |
+|-------------|-----------------|
+| No | Yes |
 
 **Input Arguments:**
 
@@ -46,6 +52,15 @@ osascript capture_audio.scpt
 
 # With custom arguments
 osascript capture_audio.scpt 3 "/tmp/recording.m4a"
+```
+
+**Cleanup:**
+
+- Remove the audio recording created by the test.
+
+```applescript
+do shell script "rm -f #{filePath}"
+
 ```
 
 **Download Files**

@@ -3,7 +3,10 @@ tests:
   - name: Stop Application
     guid: 019a8de9-49b4-7094-989f-ab29172c9525
     description: Adversaries may stop or disable services on a system to render those services unavailable to legitimate users.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      modifies_system: true
     language: AppleScript
     args:
       applicationName: "Mail"
@@ -17,6 +20,9 @@ tests:
       - https://www.sentinelone.com/labs/fade-dead-adventures-in-reversing-malicious-run-only-applescripts/
       - https://www.sentinelone.com/labs/20-common-tools-techniques-used-by-macos-threat-actors-malware/
     language: AppleScript
+    safety:
+      destructive: true
+      modifies_system: true
     args:
       processName: "Activity Monitor"
     command: |-

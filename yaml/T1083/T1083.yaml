@@ -8,6 +8,8 @@ tests:
       - https://www.bitdefender.com/blog/labs/when-stealers-converge-new-variant-of-atomic-stealer-in-the-wild/
       - https://spycloud.com/blog/reverse-engineering-atomic-macos-stealer/
     language: AppleScript
+    safety:
+      modifies_system: true
     command: |
       set fileGrabberFolderPath to "#{destinationPath}"
       set extensionsList to {"txt", "docx", "rtf", "doc", "wallet", "keys", "key", "env", "md", "kdbx"}
@@ -34,7 +36,8 @@ tests:
     guid: 019a8de9-49b1-7352-a601-f5f366ac4d2e
     description: Enumerate files and directories in the root filesystem using Finder application via AppleScript
     language: AppleScript
-    tcc_required: true
+    tcc_required:
+      - "Automation"
     command: |
       tell application "Finder" to get name of every item of folder POSIX file "#{folderName}"
     args:

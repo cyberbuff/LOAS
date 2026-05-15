@@ -6,7 +6,11 @@ tests:
     references:
       - https://www.atomicredteam.io/atomic-red-team/atomics/T1070.002#atomic-test-16---delete-system-log-files-using-osascript
     language: AppleScript
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      destructive: true
+      modifies_system: true
     command: |
       tell application "Finder" to delete POSIX file "#{logPath}"
     args:

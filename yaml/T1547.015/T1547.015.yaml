@@ -6,9 +6,15 @@ tests:
     references:
       - https://archive.orkl.eu/572da6b9974916ae9ca7e6887dc4add938f17642.pdf
     description: Creates a new login item that will automatically start when the user logs in.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
+    safety:
+      modifies_system: true
     command: |
       tell application "System Events" to make login item at end with properties {path:"#{itemPath}", hidden:"#{isHidden}"}
+    cleanup:
+      - description: Remove the login item created by the test.
+        command: tell application "System Events" to delete login item "Calculator"
     args:
       itemPath: "/System/Applications/Calculator.app"
       isHidden: false
@@ -19,7 +25,8 @@ tests:
     references:
       - https://archive.orkl.eu/572da6b9974916ae9ca7e6887dc4add938f17642.pdf
     description: Lists all login items.
-    tcc_required: true
+    tcc_required:
+      - "Automation"
     command: |-
       tell application "System Events" to get name of every login item
       tell application "System Events" to get the hidden of every login item
