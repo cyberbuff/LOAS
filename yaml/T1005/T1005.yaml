@@ -3,9 +3,9 @@ tests:
   - name: Copy Apple Notes database
     guid: 019a8de9-49b2-7670-9f84-b53bc00bddf1
     description: This command will copy Apple Notes database files using AppleScript as seen in Atomic Stealer.
-    #TODO: replace with Atomic Stealer URL
     references:
-      - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1005/T1005.yaml
+      - https://spycloud.com/blog/reverse-engineering-atomic-macos-stealer/
+      - https://www.kandji.io/blog/malware-cuckoo-infostealer-spyware
     language: AppleScript
     tcc_required: true
     command: |

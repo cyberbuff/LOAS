@@ -3,6 +3,8 @@ tests:
   - name: Open application
     guid: 019a8de9-49b4-7094-989f-ab233844e99b
     language: AppleScript
+    references:
+      - https://www.sentinelone.com/labs/20-common-tools-techniques-used-by-macos-threat-actors-malware/
     description: Opens an application on the system. The application will be in focus after running the command.
     tcc_required: true
     command: |

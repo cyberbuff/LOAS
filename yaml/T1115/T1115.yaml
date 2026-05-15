@@ -19,12 +19,16 @@ tests:
   - name: Get clipboard content (using AppleScript defaults)
     guid: 019a8de9-49b3-72d5-a43a-7dc5b8ae1fca
     language: AppleScript
+    references:
+      - https://www.sentinelone.com/blog/how-offensive-actors-use-applescript-for-attacking-macos/
     description: Retrieves the current clipboard content using AppleScript's built-in clipboard command.
     command: the clipboard
 
   - name: Set clipboard content (using AppleScript defaults)
     guid: 019a8de9-49b3-72d5-a43a-7dc659d642eb
     language: AppleScript
+    references:
+      - https://objective-see.com/blog/blog_0x59.html
     description: Sets the clipboard content to a specified value using AppleScript's built-in clipboard command.
     command: set the clipboard to "#{textContent}"
     args:
