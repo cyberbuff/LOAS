@@ -1,8 +1,8 @@
 "use client";
 
+import { Code2, Target, Terminal } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { Code2, Target, Terminal } from "lucide-react";
 
 import { DataTableWithFilters } from "@/components/data-table-with-filters";
 import { columns, type Script } from "@/components/scripts-columns";
@@ -47,7 +47,8 @@ export function AnimatedHomepage({
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: `linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)`,
+            backgroundImage:
+              "linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)",
             backgroundSize: "40px 40px",
           }}
         />
