@@ -1,0 +1,49 @@
+[tools]
+biome = "latest"
+bun = "latest"
+prek = "latest"
+uv = "latest"
+
+[tasks.install]
+description = "Install Python and docs dependencies"
+run = ["uv sync", "cd docs && bun install"]
+
+[tasks.lint]
+description = "Lint Python and docs"
+run = ["uv run ruff check .", "cd docs && bun run check"]
+
+[tasks.format]
+description = "Format Python and docs"
+run = ["uv run ruff format .", "cd docs && bun run format"]
+
+[tasks.dev]
+description = "Run the docs site in dev mode"
+run = "cd docs && bun run dev"
+
+[tasks.build]
+description = "Run the docs site in dev mode"
+run = [
+  "uv run main.py generate-docs",
+  "uv run main.py dump-json",
+  "cd docs && bunx tsc --noEmit",
+  "prek run -a || exit 0", # first one would fail because its gonna autoformat all the docs. so exit with 0
+  "prek run -a",
+]
+
+[tasks.prek]
+description = "Run pre-commit hooks on all files"
+run = "prek run --all-files"
+
+[tasks.clean]
+description = "Clean build artifacts, caches, and dependencies"
+run = ["uv run main.py clean", "rm -f atomics.zip", "uv run ruff clean"]
+
+[tasks.update]
+description = "Update all dependencies and tooling"
+run = [
+  "mise upgrade",
+  "uv sync --upgrade",
+  "cd docs && bun update --latest",
+  "biome migrate --write",
+  "prek autoupdate",
+]

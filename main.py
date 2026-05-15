@@ -670,6 +670,8 @@ def dump_scripts_json(
             f"[green]Successfully processed: {len(scripts_data)} scripts[/green]"
         )
 
+    scripts_data.sort(key=lambda s: (s["technique_id"], s["test_number"]))
+
     # Ensure output directory exists
     output_path = Path(output_file)
     output_path.parent.mkdir(parents=True, exist_ok=True)
