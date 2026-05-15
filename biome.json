@@ -1,12 +1,12 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.5/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["src/**/*", "content/**/*"]
+    "includes": ["docs/src/**/*", "docs/content/**/*"]
   },
   "formatter": {
     "enabled": true,
@@ -14,16 +14,16 @@
     "indentWidth": 2,
     "includes": [
       "**",
-      "!src/components/data-table-filter/**",
-      "!src/components/ui/**"
+      "!docs/src/components/data-table-filter/**",
+      "!docs/src/components/ui/**"
     ]
   },
   "linter": {
     "enabled": true,
     "includes": [
       "**",
-      "!src/components/data-table-filter/**",
-      "!src/components/ui/**"
+      "!docs/src/components/data-table-filter/**",
+      "!docs/src/components/ui/**"
     ],
     "rules": {
       "recommended": true,

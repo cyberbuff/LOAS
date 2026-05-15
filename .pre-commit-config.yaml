@@ -17,12 +17,12 @@ repos:
       - id: debug-statements
 
   - repo: https://github.com/google/yamlfmt
-    rev: v0.20.0
+    rev: v0.21.0
     hooks:
       - id: yamlfmt
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.5
+    rev: v0.15.13
     hooks:
       - id: ruff
         args:
@@ -31,12 +31,12 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/biomejs/pre-commit
-    rev: v2.3.5
+    rev: v2.4.15
     hooks:
       - id: biome-check
 
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.9.9
+    rev: 0.11.14
     hooks:
       - id: uv-lock
       - id: uv-sync
