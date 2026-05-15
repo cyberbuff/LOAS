@@ -3,9 +3,9 @@ tests:
   - name: Copy Safari BinaryCookies
     guid: 019a8de9-49b4-7094-989f-ab2285eeb0ab
     description: This command will copy Safari BinaryCookies files using AppleScript as seen in Atomic Stealer.
-    #TODO: replace with Atomic Stealer URL
     references:
-      - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1539/T1539.yaml
+      - https://www.bitdefender.com/blog/labs/when-stealers-converge-new-variant-of-atomic-stealer-in-the-wild/
+      - https://spycloud.com/blog/reverse-engineering-atomic-macos-stealer/
     language: AppleScript
     tcc_required: true
     command: |

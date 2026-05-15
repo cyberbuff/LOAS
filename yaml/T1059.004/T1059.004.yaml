@@ -3,6 +3,9 @@ tests:
   - name: Execute shell script
     guid: 019a8de9-49b4-7094-989f-ab1f5d30742a
     description: Adversaries use the Unix shell to execute commands and scripts.
+    references:
+      - https://www.group-ib.com/blog/stealthy-attributes-of-apt-lazarus/
+      - https://www.jamf.com/blog/bluenoroff-apt-targets-macos-rustbucket-malware/
     language: "AppleScript"
     command: |-
       do shell script "#{bashCommand}"
@@ -12,6 +15,8 @@ tests:
   - name: Execute shell script using administrator privileges
     guid: 019a8de9-49b4-7094-989f-ab20aaf143a4
     description: Adversaries use the Unix shell to execute commands and scripts.
+    references:
+      - https://objective-see.com/blog/blog_0x59.html
     language: "AppleScript"
     elevation_required: true
     tcc_required: true

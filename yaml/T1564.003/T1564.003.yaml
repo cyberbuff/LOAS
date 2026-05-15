@@ -5,6 +5,8 @@ tests:
     guid: 019a8de9-49b3-72d5-a43a-7dc04ce127a0
     references:
       - https://www.th3protocol.com/2022/Choziosi-Loader
+      - https://spycloud.com/blog/reverse-engineering-atomic-macos-stealer/
+      - https://www.crowdstrike.com/blog/how-crowdstrike-uncovered-a-new-macos-browser-hijacking-campaign/
     language: AppleScript
     description: Hides the Application window
     tcc_required: true

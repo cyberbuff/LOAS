@@ -3,6 +3,8 @@ tests:
   - name: Get system information
     guid: 019a8de9-49b2-7670-9f84-b5334d5730a9
     language: AppleScript
+    references:
+      - https://cedowens.medium.com/macos-ms-office-sandbox-brain-dump-4509b5fed49a
     description: "Retrieves comprehensive system information including OS version, hardware details, and system configuration using the system info command. This provides detailed system reconnaissance capabilities without requiring elevated privileges."
     command: |
       system info
@@ -13,3 +15,13 @@ tests:
     description: Lists all connected disks on the system using the list disks command.
     command: |-
       list disks
+
+  - name: Get system profiler details via shell
+    guid: 7a863a65-0ae3-4ef8-ac53-0882f22e14ab
+    language: AppleScript
+    references:
+      - https://denwp.com/amos-stealer-fud/
+      - https://www.elastic.co/security-labs/beyond-the-wail/
+    description: Retrieves hardware, software, and display information by invoking system_profiler through AppleScript.
+    command: |-
+      do shell script "system_profiler SPSoftwareDataType SPHardwareDataType SPDisplaysDataType"

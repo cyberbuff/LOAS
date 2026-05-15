@@ -1,0 +1,34 @@
+name: "Virtualization/Sandbox Evasion"
+tests:
+  - name: Check memory profiler for virtualization artifacts
+    guid: bd0112fd-7aef-4886-a509-d98f23375113
+    language: AppleScript
+    references:
+      - https://denwp.com/amos-stealer-fud/
+      - https://hunt.io/blog/macos-odyssey-amos-malware-campaign
+    description: Checks system memory profiler output for virtualization artifacts through AppleScript's do shell script command.
+    command: |
+      set memData to do shell script "system_profiler SPMemoryDataType"
+      if memData contains "QEMU" or memData contains "VMware" then
+        return "Virtualization artifact detected"
+      else
+        return "No virtualization artifacts detected"
+      end if
+
+  - name: Check hardware profiler for virtualization artifacts
+    guid: fe97d162-2ba4-4a07-aa0f-be654b88c702
+    language: AppleScript
+    references:
+      - https://www.elastic.co/security-labs/beyond-the-wail?ultron=esl:_threat_research%2Besl_blog_post&blade=twitter&hulk=social&utm_content=14389248623&linkId=549532028
+      - https://www.sentinelone.com/blog/atomic-stealer-threat-actor-spawns-second-variant-of-macos-malware-sold-on-telegram/
+      - https://www.sentinelone.com/labs/fade-dead-adventures-in-reversing-malicious-run-only-applescripts/
+    description: Checks hardware profiler output for common virtual machine indicators using AppleScript.
+    command: |-
+      set hardwareData to do shell script "system_profiler SPHardwareDataType"
+      ignoring case
+        if hardwareData contains "vmware" or hardwareData contains "virtualbox" or hardwareData contains "parallels" or hardwareData contains "qemu" then
+          return "Virtualization artifact detected"
+        else
+          return "No virtualization artifacts detected"
+        end if
+      end ignoring

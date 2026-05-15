@@ -5,6 +5,8 @@ tests:
     description: FileGrabber grabs files from desktop and copies them to a temporary folder
     references:
       - https://research.checkpoint.com/2025/banshee-macos-stealer-that-stole-code-from-macos-xprotect
+      - https://www.bitdefender.com/blog/labs/when-stealers-converge-new-variant-of-atomic-stealer-in-the-wild/
+      - https://spycloud.com/blog/reverse-engineering-atomic-macos-stealer/
     language: AppleScript
     command: |
       set fileGrabberFolderPath to "#{destinationPath}"

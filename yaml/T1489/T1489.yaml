@@ -9,3 +9,20 @@ tests:
       applicationName: "Mail"
     command: |-
       tell application "#{applicationName}" to quit
+
+  - name: Kill process by name via shell
+    guid: 220bb391-0f8c-4a30-b92e-599c254462df
+    description: Finds processes by name and terminates matching PIDs via AppleScript's do shell script command, as seen in macOS.OSAMiner anti-analysis behavior.
+    references:
+      - https://www.sentinelone.com/labs/fade-dead-adventures-in-reversing-malicious-run-only-applescripts/
+      - https://www.sentinelone.com/labs/20-common-tools-techniques-used-by-macos-threat-actors-malware/
+    language: AppleScript
+    args:
+      processName: "Activity Monitor"
+    command: |-
+      set pidList to do shell script "ps ax | grep " & quoted form of "#{processName}" & " | grep -v grep | awk '{print $1}'"
+      repeat with pid in paragraphs of pidList
+        if pid is not "" then
+          do shell script "kill -9 " & pid
+        end if
+      end repeat

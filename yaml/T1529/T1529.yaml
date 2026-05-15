@@ -19,3 +19,13 @@ tests:
     tcc_required: true
     command: |-
       tell application "System Events" to reboot
+
+  - name: Sleep system (using Finder)
+    guid: ed2d5f21-42e7-4eb7-89ff-780dfeee9e46
+    references:
+      - https://www.sentinelone.com/labs/20-common-tools-techniques-used-by-macos-threat-actors-malware/
+    language: AppleScript
+    description: Puts the system to sleep through Finder using AppleScript, matching EggShell tradecraft reported in the wild.
+    tcc_required: true
+    command: |-
+      tell application "Finder" to sleep

@@ -54,6 +54,26 @@ osascript -e 'list disks'
 <DownloadButton filename="get_disks" type="binary" label="Download Binary" />
 <DownloadButton filename="get_disks.app" type="app" label="Download Application Bundle" />
 
+---
+
+### Test #3 - Get system profiler details via shell
+
+Retrieves hardware, software, and display information by invoking system_profiler through AppleScript.
+
+```applescript tab="<Code /> Script"
+do shell script "system_profiler SPSoftwareDataType SPHardwareDataType SPDisplaysDataType"
+```
+```bash tab="<Terminal /> Execution"
+osascript -e 'do shell script "system_profiler SPSoftwareDataType SPHardwareDataType SPDisplaysDataType"'
+```
+
+**Download Files**
+
+<DownloadButton filename="get_system_profiler_details_via_shell.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="get_system_profiler_details_via_shell.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="get_system_profiler_details_via_shell" type="binary" label="Download Binary" />
+<DownloadButton filename="get_system_profiler_details_via_shell.app" type="app" label="Download Application Bundle" />
+
 ## References
 
 - [MITRE ATT&CK T1082](https://attack.mitre.org/techniques/T1082/)

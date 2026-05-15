@@ -45,6 +45,44 @@ osascript stop_application.scpt "Mail"
 <DownloadButton filename="stop_application" type="binary" label="Download Binary" />
 <DownloadButton filename="stop_application.app" type="app" label="Download Application Bundle" />
 
+---
+
+### Test #2 - Kill process by name via shell
+
+Finds processes by name and terminates matching PIDs via AppleScript's do shell script command, as seen in macOS.OSAMiner anti-analysis behavior.
+
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| processName | str | `Activity Monitor` |
+```applescript tab="<Code /> Script"
+set pidList to do shell script "ps ax | grep " & quoted form of "Activity Monitor" & " | grep -v grep | awk '{print $1}'"
+repeat with pid in paragraphs of pidList
+  if pid is not "" then
+    do shell script "kill -9 " & pid
+  end if
+end repeat
+```
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'set pidList to do shell script "ps ax | grep " & quoted form of "Activity Monitor" & " | grep -v grep | awk '"'"'{print $1}'"'"'"' -e 'repeat with pid in paragraphs of pidList' -e 'if pid is not "" then' -e 'do shell script "kill -9 " & pid' -e 'end if' -e 'end repeat'
+
+# Or save to file and execute
+osascript kill_process_by_name_via_shell.scpt
+
+# With custom arguments
+osascript kill_process_by_name_via_shell.scpt "Activity Monitor"
+```
+
+**Download Files**
+
+<DownloadButton filename="kill_process_by_name_via_shell.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="kill_process_by_name_via_shell.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="kill_process_by_name_via_shell" type="binary" label="Download Binary" />
+<DownloadButton filename="kill_process_by_name_via_shell.app" type="app" label="Download Application Bundle" />
+
 ## References
 
 - [MITRE ATT&CK T1489](https://attack.mitre.org/techniques/T1489/)
