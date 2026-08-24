@@ -484,6 +484,28 @@
     "test_number": 1
   },
   {
+    "name": "Get microphone input volume",
+    "command": "input volume of (get volume settings)",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Gets the current microphone input volume through AppleScript, as seen in OSX.Leverage.",
+    "technique_id": "T1123",
+    "technique_name": "Audio Capture",
+    "test_number": 2
+  },
+  {
+    "name": "Mute microphone input volume",
+    "command": "set volume input volume 0",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Sets the microphone input volume to zero through AppleScript, as seen in OSX.Leverage.",
+    "technique_id": "T1123",
+    "technique_name": "Audio Capture",
+    "test_number": 3
+  },
+  {
     "name": "Get System Time",
     "command": "current date",
     "language": "AppleScript",

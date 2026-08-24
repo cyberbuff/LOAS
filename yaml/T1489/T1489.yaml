@@ -11,7 +11,7 @@ tests:
       tell application "#{applicationName}" to quit
 
   - name: Kill process by name via shell
-    guid: 220bb391-0f8c-4a30-b92e-599c254462df
+    guid: 01a035fa-adc0-775f-b781-855a6a77e237
     description: Finds processes by name and terminates matching PIDs via AppleScript's do shell script command, as seen in macOS.OSAMiner anti-analysis behavior.
     references:
       - https://www.sentinelone.com/labs/fade-dead-adventures-in-reversing-malicious-run-only-applescripts/

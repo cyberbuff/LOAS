@@ -17,7 +17,7 @@ tests:
       list disks
 
   - name: Get system profiler details via shell
-    guid: 7a863a65-0ae3-4ef8-ac53-0882f22e14ab
+    guid: 01a035fa-adbf-7543-9b2c-94002807f048
     language: AppleScript
     references:
       - https://denwp.com/amos-stealer-fud/

@@ -1,7 +1,7 @@
 name: "Virtualization/Sandbox Evasion"
 tests:
   - name: Check memory profiler for virtualization artifacts
-    guid: bd0112fd-7aef-4886-a509-d98f23375113
+    guid: 01a035fa-adbe-757a-9914-7ab83d435c73
     language: AppleScript
     references:
       - https://denwp.com/amos-stealer-fud/
@@ -16,7 +16,7 @@ tests:
       end if
 
   - name: Check hardware profiler for virtualization artifacts
-    guid: fe97d162-2ba4-4a07-aa0f-be654b88c702
+    guid: 01a035fa-adbe-757a-9914-7ab954a84d47
     language: AppleScript
     references:
       - https://www.elastic.co/security-labs/beyond-the-wail?ultron=esl:_threat_research%2Besl_blog_post&blade=twitter&hulk=social&utm_content=14389248623&linkId=549532028

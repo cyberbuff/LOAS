@@ -55,6 +55,46 @@ osascript capture_audio.scpt 3 "/tmp/recording.m4a"
 <DownloadButton filename="capture_audio" type="binary" label="Download Binary" />
 <DownloadButton filename="capture_audio.app" type="app" label="Download Application Bundle" />
 
+---
+
+### Test #2 - Get microphone input volume
+
+Gets the current microphone input volume through AppleScript, as seen in OSX.Leverage.
+
+```applescript tab="<Code /> Script"
+input volume of (get volume settings)
+```
+```bash tab="<Terminal /> Execution"
+osascript -e 'input volume of (get volume settings)'
+```
+
+**Download Files**
+
+<DownloadButton filename="get_microphone_input_volume.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="get_microphone_input_volume.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="get_microphone_input_volume" type="binary" label="Download Binary" />
+<DownloadButton filename="get_microphone_input_volume.app" type="app" label="Download Application Bundle" />
+
+---
+
+### Test #3 - Mute microphone input volume
+
+Sets the microphone input volume to zero through AppleScript, as seen in OSX.Leverage.
+
+```applescript tab="<Code /> Script"
+set volume input volume 0
+```
+```bash tab="<Terminal /> Execution"
+osascript -e 'set volume input volume 0'
+```
+
+**Download Files**
+
+<DownloadButton filename="mute_microphone_input_volume.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="mute_microphone_input_volume.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="mute_microphone_input_volume" type="binary" label="Download Binary" />
+<DownloadButton filename="mute_microphone_input_volume.app" type="app" label="Download Application Bundle" />
+
 ## References
 
 - [MITRE ATT&CK T1123](https://attack.mitre.org/techniques/T1123/)

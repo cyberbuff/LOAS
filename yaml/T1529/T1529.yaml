@@ -21,7 +21,7 @@ tests:
       tell application "System Events" to reboot
 
   - name: Sleep system (using Finder)
-    guid: ed2d5f21-42e7-4eb7-89ff-780dfeee9e46
+    guid: 01a035fa-adbf-7543-9b2c-93ff901295d5
     references:
       - https://www.sentinelone.com/labs/20-common-tools-techniques-used-by-macos-threat-actors-malware/
     language: AppleScript

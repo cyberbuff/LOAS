@@ -23,6 +23,7 @@ tests:
       filePath: "/tmp/recording.m4a"
 
   - name: Get microphone input volume
+    guid: 01a035fa-adc0-775f-b781-8558324908be
     description: Gets the current microphone input volume through AppleScript, as seen in OSX.Leverage.
     references:
       - https://papers.vx-underground.org/papers/Malware%20Defense/Malware%20Analysis%202013/2013-09-24%20-%20OSX-Leverage.a%20Analysis.pdf
@@ -31,6 +32,7 @@ tests:
       input volume of (get volume settings)
 
   - name: Mute microphone input volume
+    guid: 01a035fa-adc0-775f-b781-85597928ccf8
     description: Sets the microphone input volume to zero through AppleScript, as seen in OSX.Leverage.
     references:
       - https://papers.vx-underground.org/papers/Malware%20Defense/Malware%20Analysis%202013/2013-09-24%20-%20OSX-Leverage.a%20Analysis.pdf
