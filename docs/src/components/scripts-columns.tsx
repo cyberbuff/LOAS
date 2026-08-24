@@ -2,6 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, CircleCheckBig, CircleMinus, Code } from "lucide-react";
+import type { dataTableFeatures } from "@/components/data-table-features";
 import { Button } from "@/components/ui/button";
 
 export type Script = {
@@ -15,7 +16,7 @@ export type Script = {
   test_number: number;
 };
 
-export const columns: ColumnDef<Script>[] = [
+export const columns: ColumnDef<typeof dataTableFeatures, Script>[] = [
   {
     accessorKey: "technique_id",
     header: ({ column }) => {

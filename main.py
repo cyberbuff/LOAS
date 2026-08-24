@@ -6,7 +6,7 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Literal
 from uuid import UUID
 
 import requests
@@ -48,7 +48,7 @@ def get_version() -> str:
             with open(package_json_path, "r") as f:
                 package_data = json.load(f)
                 return package_data.get("version", "0.1.4")
-    except Exception as e:
+    except (OSError, json.JSONDecodeError) as e:
         console.print(
             f"[yellow]Warning: Failed to read version from package.json: {e}[/yellow]"
         )
@@ -98,7 +98,7 @@ def get_mitre_attack_data():
             # Clean up temp file
             os.unlink(temp_file)
 
-        except Exception as e:
+        except (OSError, ValueError, requests.RequestException) as e:
             console.print(
                 f"[yellow]Warning: Failed to load MITRE ATT&CK data: {e}[/yellow]"
             )
@@ -120,14 +120,17 @@ def get_technique_description(technique_id: str) -> str:
         for technique in techniques:
             if hasattr(technique, "external_references"):
                 for ref in technique.external_references:
-                    if hasattr(ref, "external_id") and ref.external_id == technique_id:
-                        if hasattr(technique, "description"):
-                            return technique.description
+                    if (
+                        hasattr(ref, "external_id")
+                        and ref.external_id == technique_id
+                        and hasattr(technique, "description")
+                    ):
+                        return technique.description
 
         # If not found, return a generic description
         return f"This technique demonstrates various methods for {technique_id} using AppleScript and JavaScript."
 
-    except Exception as e:
+    except (AttributeError, OSError, ValueError, requests.RequestException) as e:
         console.print(
             f"[yellow]Warning: Failed to get technique description for {technique_id}: {e}[/yellow]"
         )
@@ -164,12 +167,12 @@ class Script(BaseModel):
     name: str
     command: str
     language: Literal["AppleScript", "JavaScript"]
-    elevation_required: Optional[bool] = False
-    tcc_required: Optional[bool] = False
-    args: Optional[dict] = None
+    elevation_required: bool | None = False
+    tcc_required: bool | None = False
+    args: dict | None = None
     description: str
-    references: Optional[list[str]] = None
-    guid: Optional[UUID] = None  # Can be reused in Atomic Red Team
+    references: list[str] | None = None
+    guid: UUID | None = None  # Can be reused in Atomic Red Team
 
     def to_osascript(self) -> str:
         """Convert the script to OSAScript/JavaScript format with help function and parameter handling"""
@@ -193,7 +196,7 @@ class Script(BaseModel):
         if self.args:
             processed_lines = []
             for line in command_lines:
-                for arg_name in self.args.keys():
+                for arg_name in self.args:
                     # Replace "#{arg_name}" (with quotes) with just the parameter name
                     line = line.replace(f'"#{{{arg_name}}}"', arg_name)
                     # Replace #{arg_name} (without quotes) with the parameter name
@@ -210,7 +213,7 @@ class Script(BaseModel):
 
     def to_javascript(self) -> str:
         """Convert the script to JavaScript format"""
-        return "\n".join(["#!/usr/bin/osascript -l JavaScript", self.command])
+        return f"#!/usr/bin/osascript -l JavaScript\n{self.command}"
 
     def to_swift_wrapper(self) -> str:
         """Convert the AppleScript to a Swift wrapper that executes it via NSAppleScript"""
@@ -223,7 +226,7 @@ class Script(BaseModel):
         if self.args:
             # Replace template variables
             for line in command.strip().split("\n"):
-                for arg_name in self.args.keys():
+                for arg_name in self.args:
                     # Replace #{arg_name} (without quotes) with Swift string interpolation
                     line = line.replace(f"#{{{arg_name}}}", f"\\({arg_name})")
                 command_lines.append(line)
@@ -273,7 +276,7 @@ class Script(BaseModel):
         if self.args:
             # Replace template variables
             for line in command.strip().split("\n"):
-                for arg_name in self.args.keys():
+                for arg_name in self.args:
                     # Replace #{arg_name} (without quotes) with Swift string interpolation
                     line = line.replace(f"#{{{arg_name}}}", f"\\({arg_name})")
                 command_lines.append(line)
@@ -374,7 +377,7 @@ def validate_yaml_files(yaml_dir: str = "yaml") -> bool:
             except ValidationError as e:
                 errors.append(f"Error validating {file}: {e}")
                 console.print(f"❌ [red]Error[/red] validating {file}: {e}")
-            except Exception as e:
+            except (OSError, TypeError, ValueError, yaml.YAMLError) as e:
                 errors.append(f"Unexpected error in {file}: {e}")
                 console.print(f"❌ [red]Unexpected error[/red] in {file}: {e}")
 
@@ -418,6 +421,7 @@ def compile_osascript_files(
             result = subprocess.run(
                 ["osacompile", "-x", "-o", output_file, file],
                 capture_output=True,
+                check=False,
                 text=True,
             )
 
@@ -431,7 +435,7 @@ def compile_osascript_files(
                     f"❌ [red]Failed[/red] to compile {file}: {result.stderr}"
                 )
 
-        except Exception as e:
+        except OSError as e:
             error_msg = f"Unexpected error compiling {file}: {e}"
             errors.append(error_msg)
             console.print(f"❌ [red]Unexpected error[/red] compiling {file}: {e}")
@@ -472,7 +476,10 @@ def compile_swift_files(swift_dir: str = "swift", output_dir: str = "binaries") 
 
             # Compile Swift file to executable
             result = subprocess.run(
-                ["swiftc", "-o", output_file, file], capture_output=True, text=True
+                ["swiftc", "-o", output_file, file],
+                capture_output=True,
+                check=False,
+                text=True,
             )
 
             if result.returncode == 0:
@@ -485,7 +492,7 @@ def compile_swift_files(swift_dir: str = "swift", output_dir: str = "binaries") 
                     f"❌ [red]Failed[/red] to compile {file}: {result.stderr}"
                 )
 
-        except Exception as e:
+        except OSError as e:
             error_msg = f"Unexpected error compiling {file}: {e}"
             errors.append(error_msg)
             console.print(f"❌ [red]Unexpected error[/red] compiling {file}: {e}")
@@ -597,7 +604,7 @@ def convert_yaml_to_script(
             error_msg = f"Validation error in {file_path}: {e}"
             errors.append(error_msg)
             console.print(f"❌ [red]Validation error[/red] in {file_path}: {e}")
-        except Exception as e:
+        except (OSError, TypeError, ValueError, yaml.YAMLError) as e:
             error_msg = f"Unexpected error processing {file_path}: {e}"
             errors.append(error_msg)
             console.print(f"❌ [red]Unexpected error[/red] processing {file_path}: {e}")
@@ -659,7 +666,7 @@ def dump_scripts_json(
             error_msg = f"Validation error in {file_path}: {e}"
             errors.append(error_msg)
             console.print(f"❌ [red]Validation error[/red] in {file_path}: {e}")
-        except Exception as e:
+        except (OSError, TypeError, ValueError, yaml.YAMLError) as e:
             error_msg = f"Unexpected error processing {file_path}: {e}"
             errors.append(error_msg)
             console.print(f"❌ [red]Unexpected error[/red] processing {file_path}: {e}")
@@ -685,7 +692,7 @@ def dump_scripts_json(
         console.print(f"[green]Total scripts: {len(scripts_data)}[/green]")
         return True
 
-    except Exception as e:
+    except OSError as e:
         console.print(f"❌ [red]Failed to write JSON file[/red]: {e}")
         return False
 
@@ -730,7 +737,7 @@ def generate_markdown_docs(
             error_msg = f"Validation error in {file_path}: {e}"
             errors.append(error_msg)
             console.print(f"❌ [red]Validation error[/red] in {file_path}: {e}")
-        except Exception as e:
+        except (OSError, TypeError, ValueError, yaml.YAMLError) as e:
             error_msg = f"Unexpected error processing {file_path}: {e}"
             errors.append(error_msg)
             console.print(f"❌ [red]Unexpected error[/red] processing {file_path}: {e}")
@@ -938,7 +945,7 @@ def build(
             binaries_dir="binaries",
             confirm=True,
         )
-    except Exception as e:
+    except OSError as e:
         console.print(f"[red]❌ Failed to clean[/red]: {e}")
         raise typer.Exit(1)
 
@@ -984,7 +991,13 @@ def build(
         generate_atomics(yaml_dir=yaml_dir, output_dir="atomics")
     except typer.Exit:
         raise
-    except Exception as e:
+    except (
+        OSError,
+        RuntimeError,
+        ValueError,
+        requests.RequestException,
+        yaml.YAMLError,
+    ) as e:
         console.print(f"[red]❌ Failed to generate atomics: {e}[/red]")
         raise typer.Exit(1)
 
@@ -1143,21 +1156,21 @@ def clean(
         try:
             shutil.rmtree(dir_path)
             console.print(f"✅ [green]Cleaned[/green] {dir_path}")
-        except Exception as e:
+        except OSError as e:
             console.print(f"❌ [red]Failed to clean[/red] {dir_path}: {e}")
 
     for file_path in files_to_clean:
         try:
             os.remove(file_path)
             console.print(f"✅ [green]Cleaned[/green] {file_path}")
-        except Exception as e:
+        except OSError as e:
             console.print(f"❌ [red]Failed to clean[/red] {file_path}: {e}")
 
     for file_path in docs_files_to_clean:
         try:
             os.remove(file_path)
             console.print(f"✅ [green]Cleaned[/green] {file_path}")
-        except Exception as e:
+        except OSError as e:
             console.print(f"❌ [red]Failed to clean[/red] {file_path}: {e}")
 
 
@@ -1313,7 +1326,7 @@ def generate_navigator():
     """Generate ATT&CK Navigator layer JSON file"""
     try:
         generate_attack_navigator_layer()
-    except Exception as e:
+    except (OSError, TypeError, ValueError, yaml.YAMLError) as e:
         console.print(f"[red]❌ Failed to generate navigator layer: {e}[/red]")
         raise typer.Exit(1)
 
@@ -1362,7 +1375,7 @@ def generate_atomics(
         with open(models_path, "w") as f:
             f.write(response.text)
         console.print(f"[green]✅ Downloaded models.py to {models_path}[/green]")
-    except Exception as e:
+    except (OSError, requests.RequestException) as e:
         console.print(f"[red]❌ Failed to download models.py: {e}[/red]")
         raise typer.Exit(1)
 
@@ -1371,10 +1384,13 @@ def generate_atomics(
         import importlib.util
 
         spec = importlib.util.spec_from_file_location("atomic_models", models_path)
+        if spec is None or spec.loader is None:
+            msg = f"Failed to create import spec for {models_path}"
+            raise ImportError(msg)
         atomic_models = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(atomic_models)
         console.print("[green]✅ Loaded Atomic Red Team models[/green]")
-    except Exception as e:
+    except (ImportError, OSError) as e:
         console.print(f"[red]❌ Failed to load models: {e}[/red]")
         raise typer.Exit(1)
 
@@ -1488,7 +1504,7 @@ def generate_atomics(
             # Validate using Atomic Red Team models
             try:
                 atomic_models.Technique(**atomic_technique)
-            except Exception as e:
+            except (TypeError, ValueError, ValidationError) as e:
                 console.print(
                     f"[red]❌ Validation failed for {technique_id}: {e}[/red]"
                 )
@@ -1515,7 +1531,7 @@ def generate_atomics(
             generated_count += 1
             console.print(f"✅ [green]Generated[/green] {output_path}")
 
-        except Exception as e:
+        except (OSError, TypeError, ValueError, yaml.YAMLError) as e:
             error_msg = f"Error processing {file_path}: {e}"
             errors.append(error_msg)
             console.print(f"❌ [red]Error[/red] processing {file_path}: {e}")

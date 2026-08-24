@@ -1,20 +1,17 @@
 "use client";
 
-import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  type SortingState,
-  useReactTable,
-  type VisibilityState,
-} from "@tanstack/react-table";
+import { useTable } from "@tanstack/react-table";
+import type {
+  ColumnDef,
+  ColumnFiltersState,
+  ColumnVisibilityState,
+  RowSelectionState,
+  SortingState,
+} from "@tanstack/table-core";
 import { ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
+import { dataTableFeatures } from "@/components/data-table-features";
 import {
   DataTableFilter,
   useDataTableFilters,
@@ -53,9 +50,9 @@ import {
 import type { Script } from "./scripts-columns";
 import { columnsConfig } from "./scripts-filter-config";
 
-interface DataTableWithFiltersProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface DataTableWithFiltersProps {
+  columns: ColumnDef<typeof dataTableFeatures, Script>[];
+  data: Script[];
 }
 
 // Simple client-side filtering function
@@ -107,10 +104,10 @@ function applyFilters<T>(data: T[], filters: any[], columns: any[]): T[] {
   });
 }
 
-export function DataTableWithFilters<TData, TValue>({
+export function DataTableWithFilters({
   columns,
   data,
-}: DataTableWithFiltersProps<TData, TValue>) {
+}: DataTableWithFiltersProps) {
   const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([
     {
@@ -122,10 +119,10 @@ export function DataTableWithFilters<TData, TValue>({
     [],
   );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({
+    React.useState<ColumnVisibilityState>({
       technique_name: false,
     });
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
   // Create the data table filters instance
   const {
@@ -135,7 +132,7 @@ export function DataTableWithFilters<TData, TValue>({
     strategy,
   } = useDataTableFilters({
     strategy: "client",
-    data: data as Script[],
+    data,
     columnsConfig,
   });
 
@@ -144,15 +141,12 @@ export function DataTableWithFilters<TData, TValue>({
     return applyFilters(data, filters, filterColumns);
   }, [data, filters, filterColumns]);
 
-  const table = useReactTable({
+  const table = useTable({
+    features: dataTableFeatures,
     data: filteredData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
@@ -165,8 +159,8 @@ export function DataTableWithFilters<TData, TValue>({
 
   // Calculate pagination info
   const pageCount = table.getPageCount();
-  const currentPage = table.getState().pagination.pageIndex + 1;
-  const pageSize = table.getState().pagination.pageSize;
+  const currentPage = table.state.pagination.pageIndex + 1;
+  const pageSize = table.state.pagination.pageSize;
 
   // Generate page numbers to display
   const getVisiblePages = () => {
@@ -278,10 +272,7 @@ export function DataTableWithFilters<TData, TValue>({
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                        : table.FlexRender({ header })}
                     </TableHead>
                   );
                 })}
@@ -299,10 +290,7 @@ export function DataTableWithFilters<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      {table.FlexRender({ cell })}
                     </TableCell>
                   ))}
                 </TableRow>

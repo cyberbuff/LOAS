@@ -5,16 +5,20 @@ description = "Helper file for loas.dev"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-  "mitreattack-python>=4.0.2",
-  "pydantic>=2.11.7",
-  "pyyaml>=6.0.2",
-  "typer>=0.16.0",
-  "requests>=2.25.0",
+  "mitreattack-python>=6.2.0",
+  "pydantic>=2.13.4",
+  "pyyaml>=6.0.3",
+  "typer>=0.27.1",
+  "requests>=2.34.2",
   "jinja2>=3.1.6",
 ]
 
 [dependency-groups]
-dev = ["bump-my-version>=1.2.0", "pre-commit>=4.2.0", "ruff>=0.12.0"]
+dev = [
+  "bump-my-version>=1.5.1",
+  "pre-commit>=4.6.2",
+  "ruff>=0.16.4",
+]
 
 [tool.bumpversion]
 current_version = "0.1.15"

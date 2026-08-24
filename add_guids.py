@@ -7,10 +7,13 @@ This should be run by the CI/CD pipeline before merging to main.
 import glob
 import re
 import sys
+from collections.abc import Callable
 from uuid import uuid7
 
 
-def generate_guids_for_yaml(path: str, get_guid: callable, existing_guids: set) -> bool:
+def generate_guids_for_yaml(
+    path: str, get_guid: Callable[[], str], existing_guids: set[str]
+) -> bool:
     """
     Add GUIDs to a YAML file using regex-based approach.
 
