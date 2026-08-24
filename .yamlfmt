@@ -10,4 +10,4 @@ formatter:
 
 exclude:
   - "node_modules/**"
-  - ".git/**"
+  - ".git"
