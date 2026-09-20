@@ -1,4 +1,4 @@
-name: "Obfuscated Files or Information"
+name: "Obfuscated Files or Information: Encrypted/Encoded File"
 tests:
   - name: Write payload to Finder comment
     guid: 019db5f6-bea4-76cb-b1d3-21355b8c02c6
