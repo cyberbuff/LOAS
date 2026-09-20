@@ -773,12 +773,29 @@ def format_osascript_command(command: str) -> str:
         return f"{chained_args}"
 
 
+def sanitize_mdx_text(text: str) -> str:
+    """Escape characters in prose that MDX would misparse.
+
+    MITRE descriptions embed intentional ``<code>`` spans but also contain
+    literal tildes inside paths (e.g. ``~/Library``). GFM parses ``~`` as a
+    strikethrough delimiter, which collides with the surrounding ``<code>``
+    tags and breaks the MDX build, so escape every tilde.
+
+    Args:
+        text: Raw description text destined for an ``.mdx`` file.
+
+    Returns:
+        The text with GFM-hazardous tildes escaped.
+    """
+    return text.replace("~", "\\~")
+
+
 def generate_technique_markdown(
     technique_id: str, technique_name: str, tests: list[Script]
 ) -> str:
     """Generate markdown content for a technique"""
     template = jinja_env.get_template("technique_markdown.j2")
-    mitre_description = get_technique_description(technique_id)
+    mitre_description = sanitize_mdx_text(get_technique_description(technique_id))
 
     # Prepare test data for template
     test_data = []
