@@ -11,3 +11,32 @@ tests:
         set curURL to URL in front document
         return curURL
       end tell
+
+  - name: Enumerate all Safari tab URLs
+    language: AppleScript
+    references:
+      - https://www.crowdstrike.com/en-us/blog/how-crowdstrike-uncovered-a-new-macos-browser-hijacking-campaign/
+    description: Iterates every Safari window and tab and returns the URL of each open tab, giving a fuller picture of the victim's browsing session than the single front-document URL.
+    tcc_required: true
+    command: |
+      set urlList to {}
+      tell application "Safari"
+        repeat with w in windows
+          repeat with t in tabs of w
+            set end of urlList to (URL of t)
+          end repeat
+        end repeat
+      end tell
+      return urlList
+
+  - name: Capture the active Google Chrome tab URL
+    language: AppleScript
+    references:
+      - https://www.sentinelone.com/blog/how-offensive-actors-use-applescript-for-attacking-macos/
+    description: Returns the URL of the active tab in the front Google Chrome window. Browser hijackers read the current Chrome URL before redirecting search queries to attacker-controlled destinations.
+    tcc_required: true
+    command: |-
+      tell application "Google Chrome"
+        set curURL to URL of active tab of front window
+        return curURL
+      end tell

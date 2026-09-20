@@ -7,3 +7,25 @@ tests:
     tcc_required: true
     command: |-
       tell application "System Events" to get name of every process whose background only is false
+
+  - name: Get the frontmost application (using AppKit)
+    language: AppleScript
+    references:
+      - https://www.sentinelone.com/blog/macos-red-team-calling-apple-apis-without-building-binaries/
+    description: Returns the name of the currently active (frontmost) application by calling NSWorkspace via AppleScript-ObjC. Malware watches for a spoofed target application becoming frontmost before socially engineering the user.
+    command: |
+      use framework "Foundation"
+      use framework "AppKit"
+
+      set frontApp to current application's NSWorkspace's sharedWorkspace's frontmostApplication()
+      set frontAppName to frontApp's localizedName() as text
+      return frontAppName
+
+  - name: Get the frontmost application (using System Events)
+    language: AppleScript
+    references:
+      - https://www.sentinelone.com/blog/macos-red-team-calling-apple-apis-without-building-binaries/
+    description: Returns the name of the frontmost application using vanilla System Events, an alternative to the AppKit approach that does not reach into Cocoa frameworks.
+    tcc_required: true
+    command: |-
+      tell application "System Events" to get name of first process whose frontmost is true

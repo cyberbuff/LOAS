@@ -13,3 +13,23 @@ tests:
       set plistDict to current application's NSDictionary's dictionaryWithContentsOfURL:plistURL
       set bundleVersion to plistDict's objectForKey:"CFBundleShortVersionString"
       return bundleVersion as string
+
+  - name: Detect security and analysis tools among running applications
+    language: AppleScript
+    references:
+      - https://www.sentinelone.com/blog/how-offensive-actors-use-applescript-for-attacking-macos/
+    description: Enumerates running applications via NSWorkspace and returns any that match a list of security or virtualization tools (for example Little Snitch or VM software). Offensive actors use this AppleScript-ObjC check to avoid running when monitoring or analysis software is present.
+    command: |-
+      use framework "Foundation"
+      use framework "AppKit"
+
+      set watchList to {"Little Snitch", "LuLu", "KnockKnock", "BlockBlock", "VirtualBox", "VMware Fusion", "Parallels Desktop", "Activity Monitor", "Wireshark"}
+      set foundList to {}
+      set activeApps to current application's NSWorkspace's sharedWorkspace's runningApplications()
+      repeat with anApp in activeApps
+        try
+          set appName to (anApp's localizedName() as text)
+          if watchList contains appName then set end of foundList to appName
+        end try
+      end repeat
+      return foundList
