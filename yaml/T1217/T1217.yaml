@@ -13,6 +13,7 @@ tests:
       end tell
 
   - name: Enumerate all Safari tab URLs
+    guid: 01a0c107-c31e-7772-b080-469cdbe7276d
     language: AppleScript
     references:
       - https://www.crowdstrike.com/en-us/blog/how-crowdstrike-uncovered-a-new-macos-browser-hijacking-campaign/
@@ -30,6 +31,7 @@ tests:
       return urlList
 
   - name: Capture the active Google Chrome tab URL
+    guid: 01a0c107-c31e-7772-b080-469d00e78743
     language: AppleScript
     references:
       - https://www.sentinelone.com/blog/how-offensive-actors-use-applescript-for-attacking-macos/

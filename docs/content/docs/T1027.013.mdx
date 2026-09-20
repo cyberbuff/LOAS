@@ -1,0 +1,57 @@
+---
+title: T1027.013
+description: "Obfuscated Files or Information  Encrypted/Encoded File"
+---
+
+## Description from ATT&CK
+
+Adversaries may encrypt or encode files to obfuscate strings, bytes, and other specific patterns to impede detection. Encrypting and/or encoding file content aims to conceal malicious artifacts within a file used in an intrusion. Many other techniques, such as [Software Packing](https://attack.mitre.org/techniques/T1027/002), [Steganography](https://attack.mitre.org/techniques/T1027/003), and [Embedded Payloads](https://attack.mitre.org/techniques/T1027/009), share this same broad objective. Encrypting and/or encoding files could lead to a lapse in detection of static signatures, only for this malicious content to be revealed (i.e., [Deobfuscate/Decode Files or Information](https://attack.mitre.org/techniques/T1140)) at the time of execution/use.
+
+This type of file obfuscation can be applied to many file artifacts present on victim hosts, such as malware log/configuration and payload files.(Citation: File obfuscation) Files can be encrypted with a hardcoded or user-supplied key, as well as otherwise obfuscated using standard encoding schemes such as Base64.
+
+The entire content of a file may be obfuscated, or just specific functions or values (such as C2 addresses). Encryption and encoding may also be applied in redundant layers for additional protection.
+
+For example, adversaries may abuse password-protected Word documents or self-extracting (SFX) archives as a method of encrypting/encoding a file such as a [Phishing](https://attack.mitre.org/techniques/T1566) payload. These files typically function by attaching the intended archived content to a decompressor stub that is executed when the file is invoked (e.g., [User Execution](https://attack.mitre.org/techniques/T1204)).(Citation: SFX - Encrypted/Encoded File) 
+
+Adversaries may also abuse file-specific as well as custom encoding schemes. For example, Byte Order Mark (BOM) headers in text files may be abused to manipulate and obfuscate file content until [Command and Scripting Interpreter](https://attack.mitre.org/techniques/T1059) execution.
+
+## Tests
+
+### Test #1 - Write payload to Finder comment
+
+Store a Base64-encoded payload in the Finder comment (kMDItemFinderComment) Spotlight metadata field of a file. The payload resides outside the file's data fork, bypassing file-based security scanners and static analysis tools that focus on executable code and script contents.
+
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| filePath | str | `/tmp/test.txt` |
+| encodedPayload | str | `ZWNobyBoZWxsbyB3b3JsZA==` |
+```applescript tab="<Code /> Script"
+tell application "Finder" to set comment of (POSIX file "/tmp/test.txt" as alias) to "ZWNobyBoZWxsbyB3b3JsZA=="
+
+```
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "Finder" to set comment of (POSIX file "/tmp/test.txt" as alias) to "ZWNobyBoZWxsbyB3b3JsZA=="'
+
+# Or save to file and execute
+osascript write_payload_to_finder_comment.scpt
+
+# With custom arguments
+osascript write_payload_to_finder_comment.scpt "/tmp/test.txt" "ZWNobyBoZWxsbyB3b3JsZA=="
+```
+
+**Download Files**
+
+<DownloadButton filename="write_payload_to_finder_comment.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="write_payload_to_finder_comment.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="write_payload_to_finder_comment" type="binary" label="Download Binary" />
+<DownloadButton filename="write_payload_to_finder_comment.app" type="app" label="Download Application Bundle" />
+
+## References
+
+- [MITRE ATT&CK T1027.013](https://attack.mitre.org/techniques/T1027/013/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)

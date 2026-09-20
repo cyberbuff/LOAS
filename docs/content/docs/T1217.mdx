@@ -34,6 +34,60 @@ osascript -e 'tell application "safari"' -e 'set curURL to URL in front document
 <DownloadButton filename="capture_currently_opened_safari_url" type="binary" label="Download Binary" />
 <DownloadButton filename="capture_currently_opened_safari_url.app" type="app" label="Download Application Bundle" />
 
+---
+
+### Test #2 - Enumerate all Safari tab URLs
+
+Iterates every Safari window and tab and returns the URL of each open tab, giving a fuller picture of the victim's browsing session than the single front-document URL.
+
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+```applescript tab="<Code /> Script"
+set urlList to {}
+tell application "Safari"
+  repeat with w in windows
+    repeat with t in tabs of w
+      set end of urlList to (URL of t)
+    end repeat
+  end repeat
+end tell
+return urlList
+
+```
+```bash tab="<Terminal /> Execution"
+osascript -e 'set urlList to {}' -e 'tell application "Safari"' -e 'repeat with w in windows' -e 'repeat with t in tabs of w' -e 'set end of urlList to (URL of t)' -e 'end repeat' -e 'end repeat' -e 'end tell' -e 'return urlList'
+```
+
+**Download Files**
+
+<DownloadButton filename="enumerate_all_safari_tab_urls.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="enumerate_all_safari_tab_urls.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="enumerate_all_safari_tab_urls" type="binary" label="Download Binary" />
+<DownloadButton filename="enumerate_all_safari_tab_urls.app" type="app" label="Download Application Bundle" />
+
+---
+
+### Test #3 - Capture the active Google Chrome tab URL
+
+Returns the URL of the active tab in the front Google Chrome window. Browser hijackers read the current Chrome URL before redirecting search queries to attacker-controlled destinations.
+
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+```applescript tab="<Code /> Script"
+tell application "Google Chrome"
+  set curURL to URL of active tab of front window
+  return curURL
+end tell
+```
+```bash tab="<Terminal /> Execution"
+osascript -e 'tell application "Google Chrome"' -e 'set curURL to URL of active tab of front window' -e 'return curURL' -e 'end tell'
+```
+
+**Download Files**
+
+<DownloadButton filename="capture_the_active_google_chrome_tab_url.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="capture_the_active_google_chrome_tab_url.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="capture_the_active_google_chrome_tab_url" type="binary" label="Download Binary" />
+<DownloadButton filename="capture_the_active_google_chrome_tab_url.app" type="app" label="Download Application Bundle" />
+
 ## References
 
 - [MITRE ATT&CK T1217](https://attack.mitre.org/techniques/T1217/)

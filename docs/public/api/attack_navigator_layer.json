@@ -83,6 +83,13 @@
       "techniqueID": "T1027",
       "score": 1,
       "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1027.013",
+      "score": 1,
+      "color": "#00ff00",
       "comment": "Covered by LOAS project",
       "enabled": true
     },
@@ -251,6 +258,13 @@
       "techniqueID": "T1497",
       "score": 1,
       "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1497.001",
+      "score": 1,
+      "color": "#00ff00",
       "comment": "Covered by LOAS project",
       "enabled": true
     },
@@ -305,6 +319,20 @@
     },
     {
       "techniqueID": "T1552.003",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Covered by LOAS project",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1555",
+      "score": 1,
+      "color": "#00ff00",
+      "comment": "Parent technique - subtechnique(s) covered",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1555.001",
       "score": 1,
       "color": "#00ff00",
       "comment": "Covered by LOAS project",

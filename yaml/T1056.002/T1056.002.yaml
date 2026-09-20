@@ -14,6 +14,7 @@ tests:
       description: "The launcher needs permissions to enable background auto-updates.Please enter your password."
 
   - name: Loop password prompt until an answer is supplied
+    guid: 01a0c107-c31e-7772-b080-469bf6ef3c55
     language: AppleScript
     references:
       - https://www.sentinelone.com/labs/atomic-stealer-threat-actor-spawns-second-variant-of-macos-malware-sold-on-telegram/

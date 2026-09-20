@@ -15,6 +15,7 @@ tests:
       return bundleVersion as string
 
   - name: Detect security and analysis tools among running applications
+    guid: 01a0c107-c31f-71b2-80ce-8ee812363b46
     language: AppleScript
     references:
       - https://www.sentinelone.com/blog/how-offensive-actors-use-applescript-for-attacking-macos/

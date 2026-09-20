@@ -36,6 +36,38 @@ osascript -e 'use framework "Foundation"' -e 'set plistPath to "/Library/Apple/S
 <DownloadButton filename="check_xprotect_version" type="binary" label="Download Binary" />
 <DownloadButton filename="check_xprotect_version.app" type="app" label="Download Application Bundle" />
 
+---
+
+### Test #2 - Detect security and analysis tools among running applications
+
+Enumerates running applications via NSWorkspace and returns any that match a list of security or virtualization tools (for example Little Snitch or VM software). Offensive actors use this AppleScript-ObjC check to avoid running when monitoring or analysis software is present.
+
+```applescript tab="<Code /> Script"
+use framework "Foundation"
+use framework "AppKit"
+
+set watchList to {"Little Snitch", "LuLu", "KnockKnock", "BlockBlock", "VirtualBox", "VMware Fusion", "Parallels Desktop", "Activity Monitor", "Wireshark"}
+set foundList to {}
+set activeApps to current application's NSWorkspace's sharedWorkspace's runningApplications()
+repeat with anApp in activeApps
+  try
+    set appName to (anApp's localizedName() as text)
+    if watchList contains appName then set end of foundList to appName
+  end try
+end repeat
+return foundList
+```
+```bash tab="<Terminal /> Execution"
+osascript -e 'use framework "Foundation"' -e 'use framework "AppKit"' -e 'set watchList to {"Little Snitch", "LuLu", "KnockKnock", "BlockBlock", "VirtualBox", "VMware Fusion", "Parallels Desktop", "Activity Monitor", "Wireshark"}' -e 'set foundList to {}' -e 'set activeApps to current application'"'"'s NSWorkspace'"'"'s sharedWorkspace'"'"'s runningApplications()' -e 'repeat with anApp in activeApps' -e 'try' -e 'set appName to (anApp'"'"'s localizedName() as text)' -e 'if watchList contains appName then set end of foundList to appName' -e 'end try' -e 'end repeat' -e 'return foundList'
+```
+
+**Download Files**
+
+<DownloadButton filename="detect_security_and_analysis_tools_among_running_applications.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="detect_security_and_analysis_tools_among_running_applications.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="detect_security_and_analysis_tools_among_running_applications" type="binary" label="Download Binary" />
+<DownloadButton filename="detect_security_and_analysis_tools_among_running_applications.app" type="app" label="Download Application Bundle" />
+
 ## References
 
 - [MITRE ATT&CK T1518.001](https://attack.mitre.org/techniques/T1518/001/)

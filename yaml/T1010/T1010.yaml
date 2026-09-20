@@ -9,6 +9,7 @@ tests:
       tell application "System Events" to get name of every process whose background only is false
 
   - name: Get the frontmost application (using AppKit)
+    guid: 01a0c107-c320-777a-812d-fb213477a0e3
     language: AppleScript
     references:
       - https://www.sentinelone.com/blog/macos-red-team-calling-apple-apis-without-building-binaries/
@@ -22,6 +23,7 @@ tests:
       return frontAppName
 
   - name: Get the frontmost application (using System Events)
+    guid: 01a0c107-c320-777a-812d-fb2249e326c9
     language: AppleScript
     references:
       - https://www.sentinelone.com/blog/macos-red-team-calling-apple-apis-without-building-binaries/

